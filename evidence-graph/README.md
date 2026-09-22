@@ -22,7 +22,7 @@ The working hypothesis is that this fusion can improve reachability and impact a
 
 ## Demo scenarios
 
-1. **Overview** — cross-domain graph.
+1. **Overview** — cross-domain graph and research hypothesis.
 2. **CAN IT?** — permission-aware reachability from an AI agent to sensitive data.
 3. **DID IT?** — runtime-observed path.
 4. **WHAT BREAKS?** — potential vs active blast radius for a simulated contract change.
@@ -34,15 +34,33 @@ https://asccjr.github.io/evidence-graph/
 
 ## Status
 
-`research / discovery / synthetic MVP v0.2`
+`research / discovery / synthetic MVP v0.3`
 
 All companies, assets, calls and telemetry shown in the interface are fictional.
+
+## Presentation controls
+
+- `←` / `→`: navigate scenarios
+- `1`–`5`: jump directly to a scenario
+- `P`: presentation layout
+- `N`: presenter notes
+- `F`: browser fullscreen
+- Enter in the search field: opens **CAN IT?**
+
+## v0.3 changes
+
+- directed arrows on graph relationships;
+- active runtime paths animate to emphasize observed behavior;
+- edge labels are generated from the graph model and filtered per scenario;
+- explicit evidence-source ribbon: CONFIG / CODE / IAM / OTEL / LINEAGE;
+- presenter notes with a short talk track for each scenario;
+- stronger visual distinction between reachability, runtime, change impact and evidence conflict.
 
 ## Project boundary
 
 The canonical **core** is independent from calls, competitions and grants.
 
-Opportunity-specific adaptations must stay under:
+Opportunity-specific adaptations stay under:
 
 ```text
 opportunities/
@@ -55,13 +73,6 @@ opportunities/campus-mobile-2026/
 ```
 
 The mobile requirement from Campus Mobile does not redefine the canonical core.
-
-## Presentation controls
-
-- `←` / `→`: navigate scenarios
-- `F`: toggle presentation layout
-- fullscreen button: browser fullscreen
-- Enter in the search field: opens the CAN IT? scenario
 
 ## Next technical milestone
 
