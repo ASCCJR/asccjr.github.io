@@ -1,6 +1,22 @@
 # Evidence Graph / Dependency Intelligence
 
-Interactive **synthetic research prototype** for exploring whether fusing heterogeneous evidence can make enterprise dependency analysis more reliable.
+Interactive **synthetic research prototype** for exploring whether fusing heterogeneous evidence can make dependency analysis more reliable in modern data, software and **agentic AI** environments.
+
+## Agent-first framing
+
+An AI agent is modeled not as "just an LLM", but as an operational entity with:
+
+- identity;
+- scopes / permissions;
+- tools;
+- MCP servers;
+- APIs;
+- services;
+- data reachability;
+- runtime traces;
+- external model destinations.
+
+This makes agentic AI a concrete use case for the broader Evidence Graph research hypothesis.
 
 ## Research hypothesis
 
@@ -22,11 +38,26 @@ The working hypothesis is that this fusion can improve reachability and impact a
 
 ## Demo scenarios
 
-1. **Overview** — cross-domain graph and research hypothesis.
+1. **Agent Review** — identity, tools, MCP, reachable APIs, sensitive data and possible overprivilege.
 2. **CAN IT?** — permission-aware reachability from an AI agent to sensitive data.
 3. **DID IT?** — runtime-observed path.
 4. **WHAT BREAKS?** — potential vs active blast radius for a simulated contract change.
 5. **Hidden dependency** — runtime behavior that conflicts with declared architecture.
+
+## Simulated agent run
+
+The demo can animate a synthetic production trace:
+
+```text
+Sales Agent
+  → MCP tool
+  → Customer API
+  → Customer Service
+  → customers
+  → customers.cpf
+```
+
+The animation is intentionally synthetic. Its purpose is to communicate what real OpenTelemetry / gateway / database evidence could later populate.
 
 ## Demo URL
 
@@ -34,7 +65,7 @@ https://asccjr.github.io/evidence-graph/
 
 ## Status
 
-`research / discovery / synthetic MVP v0.3`
+`research / discovery / synthetic MVP v0.4`
 
 All companies, assets, calls and telemetry shown in the interface are fictional.
 
@@ -45,34 +76,19 @@ All companies, assets, calls and telemetry shown in the interface are fictional.
 - `P`: presentation layout
 - `N`: presenter notes
 - `F`: browser fullscreen
-- Enter in the search field: opens **CAN IT?**
-
-## v0.3 changes
-
-- directed arrows on graph relationships;
-- active runtime paths animate to emphasize observed behavior;
-- edge labels are generated from the graph model and filtered per scenario;
-- explicit evidence-source ribbon: CONFIG / CODE / IAM / OTEL / LINEAGE;
-- presenter notes with a short talk track for each scenario;
-- stronger visual distinction between reachability, runtime, change impact and evidence conflict.
+- **Simulate agent run**: animate the synthetic runtime path
 
 ## Project boundary
 
-The canonical **core** is independent from calls, competitions and grants.
+The canonical core remains **Evidence Graph / Dependency Intelligence**.
 
-Opportunity-specific adaptations stay under:
+Agentic AI is a high-value, current use case — not a restriction of the core.
+
+Opportunity-specific adaptations remain under:
 
 ```text
 opportunities/
 ```
-
-For example:
-
-```text
-opportunities/campus-mobile-2026/
-```
-
-The mobile requirement from Campus Mobile does not redefine the canonical core.
 
 ## Next technical milestone
 
