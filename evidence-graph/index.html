@@ -3,62 +3,210 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Evidence Graph — Synthetic Research Prototype</title>
+<title>Evidence Graph — Research Prototype</title>
+<meta name="description" content="Synthetic research prototype for evidence-aware dependency intelligence.">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="shell">
-<aside class="sidebar">
-  <div class="brand"><div class="brandmark">EG</div><div><b>Evidence Graph</b><span>Dependency Intelligence</span></div></div>
-  <div class="env"><i></i><div><b>Acme Corp</b><span>synthetic · production</span></div></div>
-  <nav>
-    <button class="nav active" data-mode="overview">Overview</button>
-    <button class="nav" data-mode="can">CAN IT?</button>
-    <button class="nav" data-mode="did">DID IT?</button>
-    <button class="nav" data-mode="breaks">WHAT BREAKS?</button>
-    <button class="nav" data-mode="hidden">Hidden dependency</button>
-  </nav>
-  <div class="note"><b>RESEARCH PROTOTYPE</b><span>All assets and telemetry are synthetic.</span></div>
-</aside>
-<main>
-  <header>
-    <div><small>DEPENDENCY INTELLIGENCE</small><h1 id="title">Enterprise dependency map</h1></div>
-    <div class="search"><span>⌕</span><input value="customers.cpf" id="search"><kbd>Enter</kbd></div>
-  </header>
-  <section class="questions">
-    <button data-mode="can"><small>REACHABILITY</small><b>CAN IT?</b><span>Can this agent reach sensitive data?</span></button>
-    <button data-mode="did"><small>RUNTIME</small><b>DID IT?</b><span>Was that path actually observed?</span></button>
-    <button data-mode="breaks"><small>CHANGE IMPACT</small><b>WHAT BREAKS?</b><span>What is the active blast radius?</span></button>
-  </section>
-  <section class="workspace">
-    <div class="graphbox">
-      <div class="graphhead"><span id="caption">Cross-domain dependency graph</span><div class="legend">configured · observed · conflict</div></div>
-      <div class="stage" id="stage">
-        <svg id="edges" viewBox="0 0 1000 560" preserveAspectRatio="none"></svg>
-        <button class="node agent" data-id="sales-agent" style="left:7%;top:17%"><small>AGENT</small><b>Sales Agent</b><span>prod</span></button>
-        <button class="node identity" data-id="sales-role" style="left:25%;top:17%"><small>IDENTITY</small><b>sales-prod-role</b><span>customer.read</span></button>
-        <button class="node mcp" data-id="customer-mcp" style="left:43%;top:17%"><small>MCP TOOL</small><b>get_customer</b><span>Customer MCP</span></button>
-        <button class="node api" data-id="customer-api" style="left:62%;top:17%"><small>API</small><b>GET /customers/{id}</b><span>v2</span></button>
-        <button class="node service" data-id="customer-service" style="left:81%;top:17%"><small>SERVICE</small><b>Customer Service</b><span>prod</span></button>
-        <button class="node app" data-id="crm-app" style="left:57%;top:48%"><small>APPLICATION</small><b>CRM Web</b><span>active</span></button>
-        <button class="node agent dormant" data-id="analytics-agent" style="left:30%;top:48%"><small>AGENT</small><b>Analytics Agent</b><span>not observed · 180d</span></button>
-        <button class="node table" data-id="customers-table" style="left:81%;top:48%"><small>TABLE</small><b>customers</b><span>PostgreSQL</span></button>
-        <button class="node column" data-id="cpf" style="left:81%;top:78%"><small>COLUMN · PII</small><b>customers.cpf</b><span>sensitive</span></button>
-        <button class="node service hiddennode" data-id="legacy-service" style="left:56%;top:78%"><small>SERVICE</small><b>Legacy Exporter</b><span>undocumented</span></button>
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brandmark">EG</div>
+      <div>
+        <b>Evidence Graph</b>
+        <span>Dependency Intelligence</span>
       </div>
     </div>
-    <aside class="details">
-      <div class="detailtop"><small id="kicker">SELECTED ASSET</small><em id="badge">PII</em></div>
-      <h2 id="detailTitle">customers.cpf</h2>
-      <p id="detailCopy">Sensitive customer identifier with one authorized and observed agent path.</p>
-      <div class="metrics" id="metrics"></div>
-      <h3>Evidence</h3><div id="evidence"></div>
-      <h3>Why this matters</h3><div class="insight" id="insight">A single edge is not treated as truth. The prototype preserves the evidence that supports it.</div>
-    </aside>
-  </section>
-  <footer><span>● 8 observed edges · 3 configured-only · 1 conflict</span><span>synthetic telemetry refreshed 3 min ago</span></footer>
-</main>
+
+    <div class="prototype-badge">
+      <span class="live-dot"></span>
+      <div>
+        <b>Acme Corp</b>
+        <span>ambiente sintético · produção</span>
+      </div>
+    </div>
+
+    <div class="sidebar-label">CENÁRIOS</div>
+    <nav class="scenario-nav">
+      <button class="nav active" data-mode="overview">
+        <span class="nav-index">01</span>
+        <div><b>Visão geral</b><small>Mapa corporativo</small></div>
+      </button>
+      <button class="nav" data-mode="can">
+        <span class="nav-index">02</span>
+        <div><b>CAN IT?</b><small>Reachability</small></div>
+      </button>
+      <button class="nav" data-mode="did">
+        <span class="nav-index">03</span>
+        <div><b>DID IT?</b><small>Runtime evidence</small></div>
+      </button>
+      <button class="nav" data-mode="breaks">
+        <span class="nav-index">04</span>
+        <div><b>WHAT BREAKS?</b><small>Blast radius</small></div>
+      </button>
+      <button class="nav" data-mode="hidden">
+        <span class="nav-index">05</span>
+        <div><b>Conflito</b><small>Dependência oculta</small></div>
+      </button>
+    </nav>
+
+    <div class="research-card">
+      <span class="sidebar-label">HIPÓTESE</span>
+      <p>Correlacionar configuração, código, autorização, lineage e runtime pode produzir análises de dependência mais confiáveis.</p>
+    </div>
+
+    <div class="sidebar-foot">
+      <span>← → muda o cenário</span>
+      <span>F entra em tela cheia</span>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">RESEARCH PROTOTYPE · v0.2</div>
+        <h1 id="title">Um mapa não basta. Precisamos saber por que cada relação existe.</h1>
+        <p id="subtitle">A mesma dependência pode estar declarada, autorizada e observada — ou essas evidências podem discordar.</p>
+      </div>
+      <div class="top-actions">
+        <div class="searchbox">
+          <span>⌕</span>
+          <input id="search" aria-label="Pesquisar ativo" value="customers.cpf">
+          <kbd>Enter</kbd>
+        </div>
+        <button class="icon-btn" id="fullscreenBtn" title="Tela cheia">⛶</button>
+      </div>
+    </header>
+
+    <section class="question-row">
+      <button class="question q-can" data-mode="can">
+        <div class="q-icon">↗</div>
+        <div><small>REACHABILITY</small><b>CAN IT?</b><span>O agente consegue alcançar este dado?</span></div>
+      </button>
+      <button class="question q-did" data-mode="did">
+        <div class="q-icon">◎</div>
+        <div><small>RUNTIME</small><b>DID IT?</b><span>Esse caminho realmente aconteceu?</span></div>
+      </button>
+      <button class="question q-break" data-mode="breaks">
+        <div class="q-icon">⚡</div>
+        <div><small>CHANGE IMPACT</small><b>WHAT BREAKS?</b><span>O que muda se este contrato quebrar?</span></div>
+      </button>
+    </section>
+
+    <section class="workspace">
+      <div class="graph-card">
+        <div class="graph-toolbar">
+          <div>
+            <span class="mini-label" id="scenarioLabel">ENTERPRISE GRAPH</span>
+            <strong id="caption">Dados, software, identidade e agentes no mesmo modelo</strong>
+          </div>
+          <div class="legend">
+            <span><i class="line-sample configured"></i> configurado</span>
+            <span><i class="line-sample observed"></i> observado</span>
+            <span><i class="line-sample conflict"></i> conflito</span>
+          </div>
+        </div>
+
+        <div class="stage" id="stage">
+          <svg id="edges" viewBox="0 0 1200 620" preserveAspectRatio="none"></svg>
+
+          <button class="node agent" data-id="sales-agent" style="left:8%;top:17%">
+            <small>AI AGENT</small><b>Sales Agent</b><span>prod · owner: Sales AI</span>
+          </button>
+          <button class="node identity" data-id="sales-role" style="left:25%;top:17%">
+            <small>IDENTITY</small><b>sales-prod-role</b><span>scope: customer.read</span>
+          </button>
+          <button class="node mcp" data-id="customer-mcp" style="left:42%;top:17%">
+            <small>MCP TOOL</small><b>get_customer</b><span>Customer MCP</span>
+          </button>
+          <button class="node api" data-id="customer-api" style="left:60%;top:17%">
+            <small>API ENDPOINT</small><b>GET /customers/{id}</b><span>OpenAPI · v2</span>
+          </button>
+          <button class="node service" data-id="customer-service" style="left:79%;top:17%">
+            <small>SERVICE</small><b>Customer Service</b><span>prod · Python</span>
+          </button>
+
+          <button class="node agent dormant" data-id="analytics-agent" style="left:20%;top:50%">
+            <small>AI AGENT</small><b>Analytics Agent</b><span>configurado · inativo 180d</span>
+          </button>
+          <button class="node app" data-id="crm-app" style="left:48%;top:50%">
+            <small>APPLICATION</small><b>CRM Web</b><span>ativo · 4.8k req/dia</span>
+          </button>
+          <button class="node table" data-id="customers-table" style="left:79%;top:50%">
+            <small>TABLE</small><b>customers</b><span>PostgreSQL · prod</span>
+          </button>
+
+          <button class="node service hiddennode" data-id="legacy-service" style="left:48%;top:79%">
+            <small>UNMAPPED SERVICE</small><b>Legacy Exporter</b><span>runtime only</span>
+          </button>
+          <button class="node column pii" data-id="cpf" style="left:79%;top:79%">
+            <small>COLUMN · PII</small><b>customers.cpf</b><span>sensível · LGPD</span>
+          </button>
+
+          <div class="edge-label" data-edge-label="sales-agent-sales-role">HAS_IDENTITY</div>
+          <div class="edge-label" data-edge-label="sales-role-customer-mcp">ALLOWED_TO_USE</div>
+          <div class="edge-label" data-edge-label="customer-mcp-customer-api">CALLS</div>
+          <div class="edge-label" data-edge-label="customer-api-customer-service">ROUTES_TO</div>
+          <div class="edge-label" data-edge-label="customer-service-customers-table">READS_FROM</div>
+          <div class="edge-label" data-edge-label="customers-table-cpf">CONTAINS</div>
+        </div>
+
+        <div class="graph-bottom">
+          <div id="storyCallout" class="story-callout">
+            <span class="callout-icon">◇</span>
+            <div><b>Ideia central</b><span>Cada edge preserva sua origem: configuração, código, autorização, lineage ou execução.</span></div>
+          </div>
+          <div class="stepper">
+            <button id="prevBtn">←</button>
+            <span id="stepLabel">01 / 05</span>
+            <button id="nextBtn">→</button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="details-card">
+        <div class="detail-header">
+          <div>
+            <span class="mini-label" id="kicker">ATIVO SELECIONADO</span>
+            <h2 id="detailTitle">customers.cpf</h2>
+          </div>
+          <span class="status-badge" id="badge">PII</span>
+        </div>
+        <p id="detailCopy">Identificador pessoal alcançável por um agente através de um caminho autorizado e observado.</p>
+
+        <div class="metrics" id="metrics"></div>
+
+        <div class="section-head">
+          <span>MATRIZ DE EVIDÊNCIAS</span>
+          <small id="evidenceScore">4 / 5 sinais</small>
+        </div>
+        <div class="evidence-matrix" id="evidenceMatrix"></div>
+
+        <div class="section-head">
+          <span>POR QUE ISSO IMPORTA?</span>
+        </div>
+        <div class="insight" id="insight">
+          Um relacionamento não é tratado como verdade absoluta: a interface mostra quais sinais sustentam a conclusão.
+        </div>
+
+        <div class="section-head">
+          <span>PERGUNTA RESPONDIDA</span>
+        </div>
+        <div class="answer-box" id="answerBox">
+          <span class="answer-label">OVERVIEW</span>
+          <strong>Onde este dado entra na arquitetura?</strong>
+          <p>Ele está ligado a serviço, API, MCP, identidade e agente no mesmo grafo.</p>
+        </div>
+      </aside>
+    </section>
+
+    <footer class="statusbar">
+      <div><span class="pulse"></span><strong>Protótipo sintético</strong> · nenhum dado real de empresa é exibido</div>
+      <div><strong>8</strong> relações observadas · <strong>3</strong> configuradas · <strong>1</strong> conflito</div>
+    </footer>
+  </main>
 </div>
+
 <script src="app.js"></script>
 </body>
 </html>
