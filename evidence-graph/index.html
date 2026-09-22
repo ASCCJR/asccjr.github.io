@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Evidence Graph — Research Prototype</title>
-<meta name="description" content="Synthetic research prototype for evidence-aware dependency intelligence.">
+<title>Evidence Graph — Agentic AI Research Prototype</title>
+<meta name="description" content="Synthetic research prototype for evidence-aware dependency intelligence in agentic AI systems.">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -22,7 +22,7 @@
 
     <div class="sidebar-label">CENÁRIOS</div>
     <nav class="scenario-nav">
-      <button class="nav active" data-mode="overview"><span class="nav-index">01</span><div><b>Visão geral</b><small>Hipótese + mapa</small></div></button>
+      <button class="nav active" data-mode="agent"><span class="nav-index">01</span><div><b>Agent Review</b><small>Agentic AI readiness</small></div></button>
       <button class="nav" data-mode="can"><span class="nav-index">02</span><div><b>CAN IT?</b><small>Reachability</small></div></button>
       <button class="nav" data-mode="did"><span class="nav-index">03</span><div><b>DID IT?</b><small>Runtime evidence</small></div></button>
       <button class="nav" data-mode="breaks"><span class="nav-index">04</span><div><b>WHAT BREAKS?</b><small>Blast radius</small></div></button>
@@ -36,25 +36,26 @@
 
     <div class="sidebar-foot">
       <span><kbd>←</kbd> <kbd>→</kbd> navegar · <kbd>1–5</kbd> cenário</span>
-      <span><kbd>P</kbd> modo apresentação · <kbd>N</kbd> notas · <kbd>F</kbd> tela cheia</span>
+      <span><kbd>P</kbd> apresentação · <kbd>N</kbd> notas · <kbd>F</kbd> tela cheia</span>
     </div>
   </aside>
 
   <main class="main">
     <header class="topbar">
       <div>
-        <div class="eyebrow">RESEARCH PROTOTYPE · v0.3</div>
-        <h1 id="title">Um mapa não basta. Precisamos saber por que cada relação existe.</h1>
-        <p id="subtitle">A mesma dependência pode estar declarada, autorizada e observada — ou essas evidências podem discordar.</p>
+        <div class="eyebrow">AGENTIC AI · RESEARCH PROTOTYPE · v0.4</div>
+        <h1 id="title">Quando um agente entra em produção, sabemos realmente o que ele consegue alcançar?</h1>
+        <p id="subtitle">Agentes modernos têm identidade, tools, MCPs, APIs, modelos e acesso a dados. O desafio é correlacionar essas relações com evidência.</p>
       </div>
       <div class="top-actions">
-        <div class="searchbox"><span>⌕</span><input id="search" aria-label="Pesquisar ativo" value="customers.cpf"><kbd>Enter</kbd></div>
+        <div class="searchbox"><span>⌕</span><input id="search" aria-label="Pesquisar ativo" value="Sales Agent"><kbd>Enter</kbd></div>
         <button class="icon-btn" id="notesBtn" title="Notas do apresentador">N</button>
         <button class="icon-btn" id="fullscreenBtn" title="Tela cheia">⛶</button>
       </div>
     </header>
 
     <section class="question-row">
+      <button class="question q-agent" data-mode="agent"><div class="q-icon">◈</div><div><small>AGENT REVIEW</small><b>WHO CAN IT REACH?</b><span>Identidade, tools, dados e risco.</span></div></button>
       <button class="question q-can" data-mode="can"><div class="q-icon">↗</div><div><small>REACHABILITY</small><b>CAN IT?</b><span>O agente consegue alcançar este dado?</span></div></button>
       <button class="question q-did" data-mode="did"><div class="q-icon">◎</div><div><small>RUNTIME</small><b>DID IT?</b><span>Esse caminho realmente aconteceu?</span></div></button>
       <button class="question q-break" data-mode="breaks"><div class="q-icon">⚡</div><div><small>CHANGE IMPACT</small><b>WHAT BREAKS?</b><span>O que muda se este contrato quebrar?</span></div></button>
@@ -64,8 +65,8 @@
       <div class="graph-card">
         <div class="graph-toolbar">
           <div>
-            <span class="mini-label" id="scenarioLabel">ENTERPRISE GRAPH</span>
-            <strong id="caption">Dados, software, identidade e agentes no mesmo modelo</strong>
+            <span class="mini-label" id="scenarioLabel">AGENT RISK REVIEW</span>
+            <strong id="caption">Sales Agent · identity → tools → APIs → data</strong>
           </div>
           <div class="evidence-sources" aria-label="Fontes de evidência">
             <span>CONFIG</span><span>CODE</span><span>IAM</span><span>OTEL</span><span>LINEAGE</span>
@@ -90,47 +91,71 @@
           <button class="node column pii" data-id="cpf" style="left:74%;top:81%"><small>COLUMN · PII</small><b>customers.cpf</b><span>sensível · LGPD</span></button>
 
           <div class="stage-note" id="stageNote">
-            <span>FUSÃO DE EVIDÊNCIAS</span>
-            <b>Uma relação pode ser possível, autorizada, observada — ou conflitante.</b>
+            <span>AGENTIC AI READINESS</span>
+            <b>O agente tem 7 APIs autorizadas, 3 observadas e alcança 2 datasets sensíveis.</b>
+          </div>
+
+          <button class="simulate-btn" id="simulateRunBtn">
+            <span class="sim-dot"></span>
+            Simulate agent run
+          </button>
+        </div>
+
+        <div class="trace-strip" id="traceStrip">
+          <div class="trace-title"><span>LIVE TRACE</span><b id="traceStatus">ready</b></div>
+          <div class="trace-steps">
+            <span data-trace="sales-agent">Sales Agent</span><i>→</i>
+            <span data-trace="customer-mcp">MCP Tool</span><i>→</i>
+            <span data-trace="customer-api">API</span><i>→</i>
+            <span data-trace="customer-service">Service</span><i>→</i>
+            <span data-trace="customers-table">Table</span><i>→</i>
+            <span data-trace="cpf">PII</span>
           </div>
         </div>
 
         <div class="graph-bottom">
-          <div id="storyCallout" class="story-callout"><span class="callout-icon">◇</span><div><b>Ideia central</b><span>Cada edge preserva sua origem: configuração, código, autorização, lineage ou execução.</span></div></div>
+          <div id="storyCallout" class="story-callout"><span class="callout-icon">◇</span><div><b>Agent-first</b><span>O agente é o ponto de entrada; o Evidence Graph reconstrói o que ele pode e realmente consegue alcançar.</span></div></div>
           <div class="stepper"><button id="prevBtn">←</button><span id="stepLabel">01 / 05</span><button id="nextBtn">→</button></div>
         </div>
       </div>
 
       <aside class="details-card">
         <div class="detail-header">
-          <div><span class="mini-label" id="kicker">ATIVO SELECIONADO</span><h2 id="detailTitle">customers.cpf</h2></div>
-          <span class="status-badge" id="badge">PII</span>
+          <div><span class="mini-label" id="kicker">AGENT PROFILE</span><h2 id="detailTitle">Sales Agent</h2></div>
+          <span class="status-badge" id="badge">MEDIUM RISK</span>
         </div>
-        <p id="detailCopy">Identificador pessoal alcançável por um agente através de um caminho autorizado e observado.</p>
+        <p id="detailCopy">Agente de produção com identidade própria, tools via MCP e acesso autorizado a dados de clientes.</p>
 
         <div class="metrics" id="metrics"></div>
+
+        <div class="agent-stack" id="agentStack">
+          <div><span>MODEL</span><b>External LLM</b></div>
+          <div><span>TOOLS</span><b>3 tools</b></div>
+          <div><span>MCP</span><b>1 server</b></div>
+          <div><span>IDENTITY</span><b>sales-prod-role</b></div>
+        </div>
 
         <div class="section-head"><span>MATRIZ DE EVIDÊNCIAS</span><small id="evidenceScore">5 / 5 sinais</small></div>
         <div class="evidence-matrix" id="evidenceMatrix"></div>
 
         <div class="section-head"><span>POR QUE ISSO IMPORTA?</span></div>
-        <div class="insight" id="insight">Um relacionamento não é tratado como verdade absoluta: a interface mostra quais sinais sustentam a conclusão.</div>
+        <div class="insight" id="insight">Um agente moderno não é só um modelo: é uma identidade com ferramentas, permissões e caminhos de dados.</div>
 
         <div class="section-head"><span>PERGUNTA RESPONDIDA</span></div>
-        <div class="answer-box" id="answerBox"><span class="answer-label">OVERVIEW</span><strong>Onde este dado entra na arquitetura?</strong><p>Ele está ligado a serviço, API, MCP, identidade e agente no mesmo grafo.</p></div>
+        <div class="answer-box" id="answerBox"><span class="answer-label">AGENT REVIEW</span><strong>O que este agente consegue alcançar?</strong><p>7 APIs autorizadas, 3 observadas, 2 datasets sensíveis e 1 destino externo.</p></div>
       </aside>
     </section>
 
     <footer class="statusbar">
       <div><span class="pulse"></span><strong>Protótipo sintético</strong> · nenhum dado real de empresa é exibido</div>
-      <div><strong>8</strong> relações observadas · <strong>3</strong> configuradas · <strong>1</strong> conflito</div>
+      <div><strong>Agentic AI ready</strong> · identity + MCP + API + runtime + lineage</div>
     </footer>
   </main>
 </div>
 
 <div class="presenter-notes" id="presenterNotes">
-  <div><span class="mini-label">NOTA DO APRESENTADOR</span><b id="notesTitle">Comece pelo problema</b></div>
-  <p id="notesText">Cada ferramenta conhece uma parte da arquitetura. A pergunta é se correlacionar essas evidências melhora a análise.</p>
+  <div><span class="mini-label">NOTA DO APRESENTADOR</span><b id="notesTitle">Comece pelo agente</b></div>
+  <p id="notesText">Um agente moderno não é apenas um LLM: ele possui identidade, tools, MCPs, APIs e acesso a dados.</p>
   <button id="closeNotes">×</button>
 </div>
 
