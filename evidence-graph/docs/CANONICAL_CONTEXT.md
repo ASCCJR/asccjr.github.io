@@ -35,6 +35,29 @@ The broad idea of connecting data, services, APIs and agents in a graph is **not
 
 The hypothesis under investigation is narrower: whether **cross-source evidence fusion**, especially the distinction between possible, authorized and observed dependencies, can improve reachability and impact analysis.
 
+## Agent-first demo strategy
+
+The canonical core remains broader than agent governance, but the current demo is deliberately **agent-first**.
+
+Reason:
+
+- agentic AI is a current and easily understood use case;
+- agents expose the dependency problem clearly because they combine identity, tools, MCP servers, APIs, models and data access;
+- the same Evidence Graph primitives remain applicable to ordinary applications and services.
+
+The demo therefore starts with an **Agent Risk Review** and can show:
+
+- agent identity;
+- scopes / permissions;
+- MCP tools;
+- reachable APIs;
+- sensitive datasets;
+- observed runtime paths;
+- possible overprivilege;
+- external model destinations.
+
+This is a presentation strategy and a high-value use case, **not a restriction of the core**.
+
 ## Core vs opportunity variants
 
 The canonical project is independent of specific calls or competitions.
@@ -54,11 +77,15 @@ The synthetic MVP models:
 
 It demonstrates:
 
+- agent risk review;
 - authorized reachability;
 - observed runtime usage;
+- simulated agent execution trace;
 - change-impact simulation;
 - dormant dependencies;
 - hidden runtime dependencies.
+
+The demo data is fully synthetic.
 
 ## Planned stack
 
@@ -83,4 +110,6 @@ It demonstrates:
 
 ## Current positioning
 
-Today this is best described as **applied research + portfolio project**. Startup positioning remains a hypothesis to validate later.
+Today this is best described as **applied research + portfolio project**.
+
+Agentic AI is the strongest current demonstration domain, but startup positioning remains a hypothesis to validate later.
