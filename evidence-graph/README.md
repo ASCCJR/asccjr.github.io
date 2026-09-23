@@ -46,16 +46,24 @@ The working hypothesis is that this fusion can improve reachability and impact a
 
 ## Simulated agent run
 
-The demo can animate a synthetic production trace:
+The demo separates the **authorization check** from the **runtime trace**:
 
 ```text
+AUTHORIZATION
 Sales Agent
-  → MCP tool
+  → sales-prod-role
+  → customer.read
+  → get_customer is allowed
+
+RUNTIME
+get_customer
   → Customer API
   → Customer Service
   → customers
   → customers.cpf
 ```
+
+This distinction is deliberate: identity/policy evidence answers whether the path is allowed, while runtime telemetry answers what actually executed.
 
 The animation is intentionally synthetic. Its purpose is to communicate what real OpenTelemetry / gateway / database evidence could later populate.
 
@@ -65,7 +73,7 @@ https://asccjr.github.io/evidence-graph/
 
 ## Status
 
-`research / discovery / synthetic MVP v0.4`
+`research / discovery / synthetic MVP v0.5`
 
 All companies, assets, calls and telemetry shown in the interface are fictional.
 
