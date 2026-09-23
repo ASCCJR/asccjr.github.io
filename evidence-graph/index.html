@@ -43,7 +43,7 @@
   <main class="main">
     <header class="topbar">
       <div>
-        <div class="eyebrow">AGENTIC AI · RESEARCH PROTOTYPE · v0.4</div>
+        <div class="eyebrow">AGENTIC AI · RESEARCH PROTOTYPE · v0.5</div>
         <h1 id="title">Quando um agente entra em produção, sabemos realmente o que ele consegue alcançar?</h1>
         <p id="subtitle">Agentes modernos têm identidade, tools, MCPs, APIs, modelos e acesso a dados. O desafio é correlacionar essas relações com evidência.</p>
       </div>
@@ -105,6 +105,9 @@
           <div class="trace-title"><span>LIVE TRACE</span><b id="traceStatus">ready</b></div>
           <div class="trace-steps">
             <span data-trace="sales-agent">Sales Agent</span><i>→</i>
+            <span data-trace="sales-role" class="auth-trace">Identity check</span><i>→</i>
+            <span class="phase-chip auth-chip">AUTHORIZED</span><i class="phase-divider">|</i>
+            <span class="phase-chip runtime-chip">RUNTIME</span>
             <span data-trace="customer-mcp">MCP Tool</span><i>→</i>
             <span data-trace="customer-api">API</span><i>→</i>
             <span data-trace="customer-service">Service</span><i>→</i>
