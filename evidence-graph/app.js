@@ -42,27 +42,51 @@ function setNotes(a){document.getElementById('notesTitle').textContent=a[0];docu
 
 function clearRun(){
 runTimers.forEach(clearTimeout);runTimers=[];
-nodes.forEach(n=>n.classList.remove('run-active'));
-[...svg.querySelectorAll('.edge')].forEach(e=>e.classList.remove('run-active'));
-document.querySelectorAll('[data-trace]').forEach(x=>x.classList.remove('active'));
+nodes.forEach(n=>n.classList.remove('run-active','auth-run','runtime-run'));
+[...svg.querySelectorAll('.edge')].forEach(e=>e.classList.remove('run-active','auth-run','runtime-run'));
+document.querySelectorAll('[data-trace]').forEach(x=>x.classList.remove('active','auth-active','runtime-active'));
 document.getElementById('traceStatus').textContent='ready';
 }
 function simulateRun(){
-clearRun();setMode('did');document.getElementById('traceStatus').textContent='running';
-const seq=['sales-agent','customer-mcp','customer-api','customer-service','customers-table','cpf'];
-seq.forEach((id,i)=>{
-runTimers.push(setTimeout(()=>{
-nodeMap[id]?.classList.add('run-active');
-document.querySelector(`[data-trace="${id}"]`)?.classList.add('active');
-if(i>0){
-const prev=seq[i-1];
-[...svg.querySelectorAll('.edge')].find(e=>e.dataset.from===prev&&e.dataset.to===id)?.classList.add('run-active');
-}
-if(i===seq.length-1){
-document.getElementById('traceStatus').textContent='complete · 428 ms';
-document.getElementById('stageNote').innerHTML='<span>TRACE COMPLETE</span><b>Sales Agent → get_customer → API → Service → customers → CPF · policy: allowed</b>';
-}
-},i*520));
+clearRun();
+setMode('did');
+document.getElementById('traceStatus').textContent='authorization check';
+document.getElementById('stageNote').innerHTML='<span>AUTHORIZATION CHECK</span><b>Validando identidade sales-prod-role e scope customer.read antes da execução.</b>';
+
+const authSeq=['sales-agent','sales-role','customer-mcp'];
+authSeq.forEach((id,i)=>{
+  runTimers.push(setTimeout(()=>{
+    nodeMap[id]?.classList.add('auth-run');
+    document.querySelector(`[data-trace="${id}"]`)?.classList.add('auth-active');
+    if(i>0){
+      const prev=authSeq[i-1];
+      [...svg.querySelectorAll('.edge')].find(e=>e.dataset.from===prev&&e.dataset.to===id)?.classList.add('auth-run');
+    }
+    if(id==='customer-mcp'){
+      document.getElementById('traceStatus').textContent='authorized · runtime starting';
+      document.getElementById('stageNote').innerHTML='<span>AUTHORIZED</span><b>sales-prod-role possui customer.read e pode usar get_customer. Agora começa o runtime trace.</b>';
+    }
+  },i*520));
+});
+
+const runtimeSeq=['customer-mcp','customer-api','customer-service','customers-table','cpf'];
+runtimeSeq.forEach((id,i)=>{
+  runTimers.push(setTimeout(()=>{
+    nodeMap[id]?.classList.add('runtime-run');
+    document.querySelector(`[data-trace="${id}"]`)?.classList.add('runtime-active');
+    if(i>0){
+      const prev=runtimeSeq[i-1];
+      [...svg.querySelectorAll('.edge')].find(e=>e.dataset.from===prev&&e.dataset.to===id)?.classList.add('runtime-run');
+    }
+    if(i===0){
+      document.getElementById('traceStatus').textContent='runtime trace';
+      document.getElementById('stageNote').innerHTML='<span>RUNTIME TRACE</span><b>Execução observada: MCP tool → API → Service → Table → PII.</b>';
+    }
+    if(i===runtimeSeq.length-1){
+      document.getElementById('traceStatus').textContent='complete · 428 ms';
+      document.getElementById('stageNote').innerHTML='<span>TRACE COMPLETE</span><b>Authorization ✓ · Sales Agent → get_customer → API → Service → customers → CPF · policy: allowed</b>';
+    }
+  },(authSeq.length*520)+350+(i*520)));
 });
 }
 function setMode(mode){
