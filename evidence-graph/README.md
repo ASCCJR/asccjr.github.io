@@ -108,6 +108,7 @@ Replace synthetic signals incrementally with real collectors:
 4. MCP configuration
 5. IAM / OAuth scopes
 6. Neo4j-backed traversal
+7. Databricks Unity Catalog / Unity Gateway as an optional evidence source
 
 Then compare:
 
@@ -116,3 +117,14 @@ Then compare:
 - metadata + runtime + authorization.
 
 Candidate evaluation metrics: precision, recall, false positives, false negatives, freshness and time-to-answer.
+
+
+## Strategic benchmark: Databricks
+
+Databricks Unity Catalog + Unity Gateway now cover major parts of data + AI governance, including agents, MCP services, models, external AI assets, lineage, runtime policies and tracing.
+
+This project should therefore **not** be framed as a Databricks replacement.
+
+A future Evidence Graph connector could ingest Databricks lineage, classifications, MCP/agent inventory, permissions and Gateway activity, then correlate them with external code, IAM and runtime telemetry.
+
+See `docs/DATABRICKS_STRATEGIC_NOTE.md`.
