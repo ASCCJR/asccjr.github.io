@@ -59,3 +59,30 @@ The v0.4 demo includes an animated synthetic trace.
 It must remain clearly labeled as synthetic.
 
 Its purpose is to communicate what later real collectors such as OpenTelemetry, gateway traces and database evidence could populate.
+
+
+---
+
+## D-005 — Treat Databricks as both benchmark and evidence source
+**Date:** 2026-09-25  
+**Status:** DECIDED
+
+Databricks Unity Catalog + Unity Gateway overlaps substantially with the project's original data + AI governance vision.
+
+The project will **not** position itself as a replacement for Databricks governance.
+
+Instead, Databricks should be treated as:
+
+1. a strategic benchmark for lineage, agent governance, MCP governance and runtime controls;
+2. a potential evidence source / connector for the broader Evidence Graph.
+
+Reason:
+
+- Unity Catalog already provides strong data/AI governance and lineage;
+- Unity Gateway governs runtime AI interactions and external AI assets;
+- Databricks can register external MCP services and route external agents/models through its control plane;
+- Databricks documentation still distinguishes service-definition lineage from runtime callers and the data they access through those services.
+
+Consequence:
+
+The differentiated hypothesis becomes more explicitly **cross-control-plane evidence fusion**, not "data + AI governance in one platform".
