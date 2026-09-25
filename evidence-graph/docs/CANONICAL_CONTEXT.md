@@ -1,6 +1,6 @@
 # Canonical Context — Evidence Graph / Dependency Intelligence
 
-**Updated:** 2026-09-22  
+**Updated:** 2026-09-25  
 **Stage:** applied research / discovery / pre-MVP
 
 ## Current thesis
@@ -57,6 +57,79 @@ The demo therefore starts with an **Agent Risk Review** and can show:
 - external model destinations.
 
 This is a presentation strategy and a high-value use case, **not a restriction of the core**.
+
+
+## Databricks strategic update — 2026-09-25
+
+Databricks must be treated as a **major strategic benchmark** for the project.
+
+At Data + AI Summit 2026, Databricks positioned **Unity Catalog + Unity Gateway** as a unified governance layer for data and AI in the agentic era.
+
+Relevant capabilities include:
+
+- governance for tables, files, models, agents, skills and MCP services;
+- lineage and discovery in Unity Catalog;
+- runtime controls in Unity Gateway;
+- agent and MCP tracing;
+- contextual policies that can allow, deny or require approval;
+- AI cost controls;
+- external lineage beyond Databricks;
+- registration/governance of external models and MCP services;
+- governance of external coding agents when their traffic is routed through Unity Gateway.
+
+This means the project must **not** assume that Databricks only governs assets created natively inside Databricks.
+
+However, an important documented limitation remains relevant to the Evidence Graph hypothesis:
+
+> Unity Catalog service lineage captures dependencies from a service's definition, but does not capture the workloads and agents that call a service at runtime or the data they access through it.
+
+This creates a useful distinction between:
+- catalog / service-definition lineage;
+- runtime activity;
+- identity / authorization;
+- external evidence from other platforms.
+
+### Strategic consequence
+
+The project should not position itself as an alternative to Unity Catalog or Unity Gateway.
+
+A stronger hypothesis is:
+
+> Use Databricks as one evidence source among several, then correlate its lineage/governance signals with GitHub/OpenAPI, OpenTelemetry, IAM, gateways and non-Databricks systems.
+
+In this architecture, Databricks can be both:
+- a competitor in overlapping governance capabilities;
+- a high-value connector and evidence source.
+
+### Candidate Databricks evidence plane
+
+Potential future connector inputs:
+
+- Unity Catalog assets and lineage;
+- classifications / tags;
+- model services and provider lineage;
+- MCP Services;
+- agent and tool inventory;
+- Unity Gateway activity;
+- permissions / service policies;
+- agent traces / MCP activity;
+- external lineage assets.
+
+### Positioning after this update
+
+Do not say:
+
+> "Databricks only works if everything lives inside Databricks."
+
+Prefer:
+
+> "Databricks can govern many external AI assets if they are registered or routed through its control plane. The Evidence Graph hypothesis is about correlating Databricks with evidence from other control planes and runtime systems."
+
+Primary sources:
+- https://www.databricks.com/blog/whats-new-unity-catalog-data-ai-summit-2026
+- https://www.databricks.com/blog/ai-governance-data-ai-summit-2026-whats-new-unity-ai-gateway
+- https://docs.databricks.com/aws/en/ai-gateway/ai-governance
+- https://docs.databricks.com/gcp/en/data-governance/unity-catalog/ai-gateway-service-lineage
 
 ## Core vs opportunity variants
 
