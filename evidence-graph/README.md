@@ -1,130 +1,52 @@
-# Evidence Graph / Dependency Intelligence
+# EvidentGraph
 
-Interactive **synthetic research prototype** for exploring whether fusing heterogeneous evidence can make dependency analysis more reliable in modern data, software and **agentic AI** environments.
+**Dependency Intelligence for Data, Software & AI**
 
-## Agent-first framing
+EvidentGraph is an applied-research / portfolio project investigating whether evidence fusion across metadata, code/contracts, authorization, lineage, and runtime telemetry can improve dependency, reachability, and change-impact analysis.
 
-An AI agent is modeled not as "just an LLM", but as an operational entity with:
+## Repository map
 
-- identity;
-- scopes / permissions;
-- tools;
-- MCP servers;
-- APIs;
-- services;
-- data reachability;
-- runtime traces;
-- external model destinations.
+### Canonical Core
+`core/`
 
-This makes agentic AI a concrete use case for the broader Evidence Graph research hypothesis.
+Start here:
+- `core/README.md`
+- `core/docs/00_START_HERE.md`
+- `core/docs/01_CANONICAL_CONTEXT.md`
 
-## Research hypothesis
+### Academic coursework
+`core/academic/project-discipline/`
 
-Instead of storing only:
+The Disciplina de Projetos will use **EvidentGraph Core** instead of creating a separate unrelated project.
 
-```text
-A --DEPENDS_ON--> B
-```
+### Claro / Campus Mobile 2026
+`opportunities/claro-campus-mobile-2026/`
 
-the project preserves *why* a relationship is believed to exist:
+This is an isolated mobile-specific adaptation for the Instituto Claro program.
 
-- declared configuration;
-- static/code evidence;
-- authorization and identity;
-- data lineage;
-- runtime telemetry.
-
-The working hypothesis is that this fusion can improve reachability and impact analysis while exposing disagreements between the architecture that is **declared**, **allowed** and **observed**.
-
-## Demo scenarios
-
-1. **Agent Review** — identity, tools, MCP, reachable APIs, sensitive data and possible overprivilege.
-2. **CAN IT?** — permission-aware reachability from an AI agent to sensitive data.
-3. **DID IT?** — runtime-observed path.
-4. **WHAT BREAKS?** — potential vs active blast radius for a simulated contract change.
-5. **Hidden dependency** — runtime behavior that conflicts with declared architecture.
-
-## Simulated agent run
-
-The demo separates the **authorization check** from the **runtime trace**:
-
-```text
-AUTHORIZATION
-Sales Agent
-  → sales-prod-role
-  → customer.read
-  → get_customer is allowed
-
-RUNTIME
-get_customer
-  → Customer API
-  → Customer Service
-  → customers
-  → customers.cpf
-```
-
-This distinction is deliberate: identity/policy evidence answers whether the path is allowed, while runtime telemetry answers what actually executed.
-
-The animation is intentionally synthetic. Its purpose is to communicate what real OpenTelemetry / gateway / database evidence could later populate.
-
-## Demo URL
+### Synthetic demo
+The existing HTML demo is intentionally preserved at:
 
 https://asccjr.github.io/evidence-graph/
 
-## Status
+The original professor presentation was canceled, but the demo remains useful for portfolio, future presentations, UX experiments, and opportunity applications.
 
-`research / discovery / synthetic MVP v0.5`
+## Core questions
 
-All companies, assets, calls and telemetry shown in the interface are fictional.
+- **CAN IT?** — can an agent/application/identity reach a resource?
+- **DID IT?** — was the path actually observed?
+- **WHAT BREAKS?** — what may be affected by a change?
 
-## Presentation controls
+## Project memory rule
 
-- `←` / `→`: navigate scenarios
-- `1`–`5`: jump directly to a scenario
-- `P`: presentation layout
-- `N`: presenter notes
-- `F`: browser fullscreen
-- **Simulate agent run**: animate the synthetic runtime path
+GitHub is the source of truth.
 
-## Project boundary
+Chat conversations are working sessions.
 
-The canonical core remains **Evidence Graph / Dependency Intelligence**.
+If context is lost or compacted, reload the canonical Markdown files rather than reconstructing the project from memory.
 
-Agentic AI is a high-value, current use case — not a restriction of the core.
+## Working name
 
-Opportunity-specific adaptations remain under:
+**EvidentGraph** is the current project name.
 
-```text
-opportunities/
-```
-
-## Next technical milestone
-
-Replace synthetic signals incrementally with real collectors:
-
-1. OpenAPI contracts
-2. OpenTelemetry traces
-3. PostgreSQL metadata/query evidence
-4. MCP configuration
-5. IAM / OAuth scopes
-6. Neo4j-backed traversal
-7. Databricks Unity Catalog / Unity Gateway as an optional evidence source
-
-Then compare:
-
-- metadata/config only;
-- metadata + runtime;
-- metadata + runtime + authorization.
-
-Candidate evaluation metrics: precision, recall, false positives, false negatives, freshness and time-to-answer.
-
-
-## Strategic benchmark: Databricks
-
-Databricks Unity Catalog + Unity Gateway now cover major parts of data + AI governance, including agents, MCP services, models, external AI assets, lineage, runtime policies and tracing.
-
-This project should therefore **not** be framed as a Databricks replacement.
-
-A future Evidence Graph connector could ingest Databricks lineage, classifications, MCP/agent inventory, permissions and Gateway activity, then correlate them with external code, IAM and runtime telemetry.
-
-See `docs/DATABRICKS_STRATEGIC_NOTE.md`.
+It is a working name and has not undergone trademark/domain clearance.
