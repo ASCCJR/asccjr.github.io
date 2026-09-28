@@ -30,3 +30,8 @@ The course itself must not silently redefine the project.
 3. Mark any new assumptions as hypotheses.
 4. After feedback from the professor/class, record what changed.
 5. Promote durable changes to the Core only when justified.
+
+
+## Equipe
+
+Os integrantes da equipe estão registrados em [TEAM.md](./TEAM.md).
