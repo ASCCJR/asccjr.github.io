@@ -2,6 +2,13 @@
 
 **Status:** em revisão pelo grupo.
 
+## Equipe
+
+- Alexsandro Barreto de Abreu
+- Antonio Sergio Castro de Carvalho Junior
+- Rafael Ziani de Carvalho
+- Sthefferson Bruno Costa Ferreira
+
 Arquivos:
 
 1. [Entrega 1 — Incubação](./ENTREGA_01_INCUBACAO.md)
