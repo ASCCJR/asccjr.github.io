@@ -1,7 +1,7 @@
 # Entrega 3 — Sprint de Inovação
 
 **Disciplina:** Empreendedorismo / Projetos  
-**Status:** rascunho — painel de pares ainda precisa de feedback real  
+**Status:** rascunho avançado — painel de pares preenchido com feedback real  
 **Projetos do grupo:** ParkAI e EvidentGraph
 
 ---
@@ -122,26 +122,41 @@ Pode-se começar com:
 
 ## Etapa 4 — Painel de pares
 
-**A preencher com feedback real do grupo/colegas.**
+Feedbacks recebidos de **Alexsandro Barreto de Abreu** e **Rafael Ziani de Carvalho**.
 
 ### Potencial
 > O que estamos subestimando?
 
-Resposta: ______________________________________________
+**Alexsandro:** talvez o principal valor não seja apenas aumentar receita, mas mostrar ao operador quanto ele perde hoje ao manter um preço fixo.
+
+**Rafael:** o projeto também pode gerar valor ao reduzir tempo procurando vagas, aliviar trânsito e reforçar um posicionamento de sustentabilidade.
 
 ### Risco
 > Que premissa deixa você em dúvida?
 
-Resposta: ______________________________________________
+**Alexsandro:** motoristas podem rejeitar aumentos de preço em horários de pico e abandonar a solução.
+
+**Rafael:** a adoção depende de operadores de estacionamento, que podem possuir sistemas legados fechados e resistir à integração com uma plataforma externa.
 
 ### Ação
 > Que estratégia faria isso avançar?
 
-Resposta: ______________________________________________
+**Alexsandro:** testar a reação das pessoas à precificação dinâmica antes de avançar com a solução.
+
+**Rafael:** realizar um piloto com uma única rede ou operador de estacionamento para validar a integração e observar o comportamento dos motoristas.
+
+### Síntese do painel
+
+Os feedbacks apontam dois riscos diferentes que precisam ser testados cedo:
+
+1. **adoção pelo operador** — integração com sistemas existentes;
+2. **aceitação pelo motorista** — reação ao preço variável, especialmente em horários de pico.
 
 ### Compromisso a testar
 
-________________________________________________________
+> **Buscar um piloto de escopo reduzido com uma única garagem ou rede, usando dados históricos e uma simulação simples de preços, e medir tanto a viabilidade de integração quanto a reação de motoristas à precificação dinâmica.**
+
+Não é necessário exigir exclusividade nessa primeira validação; o objetivo é reduzir as duas incertezas principais identificadas pelo painel.
 
 ---
 
@@ -260,26 +275,43 @@ Pergunta do teste:
 
 ## Etapa 4 — Painel de pares
 
-**A preencher com feedback real do grupo/colegas.**
+Feedbacks recebidos de **Alexsandro Barreto de Abreu** e **Rafael Ziani de Carvalho**.
 
 ### Potencial
 > O que estamos subestimando?
 
-Resposta: ______________________________________________
+**Alexsandro:** o projeto pode ter forte utilidade para áreas de segurança e dados, principalmente diante da preocupação crescente com agentes de IA acessando informações que não deveriam.
+
+**Rafael:** além de mitigar riscos de vazamento ao mapear agentes, APIs e dados sensíveis, a solução pode evoluir para apoiar outras necessidades de TI, como identificação de falhas e gargalos.
 
 ### Risco
 > Que premissa deixa você em dúvida?
 
-Resposta: ______________________________________________
+**Alexsandro:** uma empresa pode resistir a conectar muitos sistemas e fontes sensíveis ao mesmo grafo, devido a controles internos, burocracia e requisitos de acesso.
+
+**Rafael:** cruzar fontes heterogêneas sem perder sincronização pode ser tecnicamente complexo. Ele também apontou risco comercial por ser uma proposta pouco convencional.
 
 ### Ação
 > Que estratégia faria isso avançar?
 
-Resposta: ______________________________________________
+**Alexsandro:** começar em uma escala pequena, mapeando apenas um time, pipeline ou ambiente específico.
+
+**Rafael:** executar um teste conceitual com apenas um agente de IA ativo e uma base de dados central para construir a primeira árvore de dependências e analisar seu comportamento.
+
+### Síntese do painel
+
+Os dois feedbacks convergem para a mesma direção: **não tentar começar pela empresa inteira**.
+
+O primeiro teste deve reduzir simultaneamente:
+- a complexidade técnica de integrar muitas fontes;
+- a barreira organizacional de conceder acesso amplo;
+- o risco de construir uma plataforma grande antes de demonstrar valor.
 
 ### Compromisso a testar
 
-________________________________________________________
+> **Construir um PoC de escopo restrito com um único agente de IA, sua identidade/permissão, uma tool ou API e uma base de dados, demonstrando CAN IT?, DID IT? e o caminho de dependência sem exigir integração corporativa ampla.**
+
+O objetivo do teste será verificar se esse recorte mínimo já produz informação útil e explicável para uma equipe de TI, dados ou segurança.
 
 ---
 
@@ -290,17 +322,19 @@ ________________________________________________________
 - **Ideia evoluída:** Pricing-as-a-Service.
 - **Próximo teste:** buscar um gestor disposto a avaliar recomendações de preço sobre dados reais/históricos.
 - **Prova desejada:** compromisso com piloto, idealmente condicionado a métrica ou pagamento.
-- **Feedback de pares:** pendente.
+- **Feedback de pares:** recebido de Alexsandro Barreto de Abreu e Rafael Ziani de Carvalho. O compromisso escolhido é validar em um piloto pequeno com uma única garagem/rede, medindo integração e aceitação da precificação dinâmica.
 
 ## EvidentGraph
 
 - **Ideia evoluída:** Pre-Change Evidence Gate.
 - **Próximo teste:** simular ou executar uma análise de impacto dentro de um fluxo de mudança.
 - **Prova desejada:** uma equipe aceitar testar/integrar o mecanismo num ambiente controlado.
-- **Feedback de pares:** pendente.
+- **Feedback de pares:** recebido de Alexsandro Barreto de Abreu e Rafael Ziani de Carvalho. O compromisso escolhido é validar um PoC restrito a um agente, uma API/tool e uma base de dados.
 
 ---
 
 ## Observação
 
-As pontuações e escolhas acima são **provisórias** e servem como aplicação do método. Elas devem ser revisadas pelo grupo antes da entrega final.
+As pontuações das alternativas continuam sendo uma aplicação de trabalho do método e podem ser ajustadas pelo grupo antes da entrega final.
+
+O **Painel de Pares**, porém, agora contém feedback real recebido de integrantes da equipe e não deve ser tratado como conteúdo hipotético.
