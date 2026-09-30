@@ -1,7 +1,7 @@
 # Entrega 1 — Incubação
 
 **Disciplina:** Empreendedorismo / Projetos  
-**Status:** rascunho para revisão do grupo  
+**Status:** versão final para entrega  
 **Projetos do grupo:** ParkAI e EvidentGraph
 
 ---
