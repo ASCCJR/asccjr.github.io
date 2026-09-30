@@ -1,7 +1,7 @@
 # Entrega 2 — Analogia
 
 **Disciplina:** Empreendedorismo / Projetos  
-**Status:** rascunho para revisão do grupo  
+**Status:** versão final para entrega  
 **Projetos do grupo:** ParkAI e EvidentGraph
 
 ---
