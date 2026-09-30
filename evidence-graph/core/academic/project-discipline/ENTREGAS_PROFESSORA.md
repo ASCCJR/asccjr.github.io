@@ -9,6 +9,7 @@
 - Rafael Ziani de Carvalho
 - Sthefferson Bruno Costa Ferreira
 - Gabriel Farias Leandro
+- Fabricio Fogaça da Silva Lemos
 
 Arquivos:
 
