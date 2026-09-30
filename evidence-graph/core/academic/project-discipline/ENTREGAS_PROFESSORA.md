@@ -1,6 +1,6 @@
 # Entregas para a professora
 
-**Status:** em revisão pelo grupo.
+**Status:** versão final aprovada pelo grupo para entrega.
 
 ## Equipe
 
@@ -20,9 +20,10 @@ Arquivos:
 - **ParkAI** — proposta de precificação dinâmica para estacionamentos e experiência de reserva/consulta.
 - **EvidentGraph** — dependency intelligence com fusão de evidências de metadata, código/contratos, autorização, lineage e runtime.
 
-## Observações de revisão
+## Observações finais
 
 - O material inicial produzido pelo grupo foi preservado quando fazia sentido.
 - A Sprint foi reorganizada para seguir a estrutura ensinada na disciplina: **divergir → convergir → provar → ouvir**.
-- O painel de pares não foi inventado. Os campos permanecem pendentes até existir feedback real.
+- O painel de pares foi preenchido com feedback real de Alexsandro Barreto de Abreu e Rafael Ziani de Carvalho.
 - Números comerciais não validados do material do ParkAI não foram usados como fatos.
+- Os três arquivos abaixo são as versões definitivas da atividade para conversão manual em PDF.
