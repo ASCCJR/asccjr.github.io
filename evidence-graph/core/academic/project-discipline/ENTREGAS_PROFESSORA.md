@@ -8,6 +8,7 @@
 - Antonio Sergio Castro de Carvalho Junior
 - Rafael Ziani de Carvalho
 - Sthefferson Bruno Costa Ferreira
+- Gabriel Farias Leandro
 
 Arquivos:
 
