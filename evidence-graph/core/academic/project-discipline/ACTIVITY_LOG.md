@@ -34,3 +34,21 @@ Early ideas:
 3. Architecture black box / forensic recorder that reconstructs how a dependency or incident appeared.
 
 **Status:** brainstorming; not yet a Core product decision.
+
+
+---
+
+## Activity 002 — Finalização das entregas da disciplina
+**Date:** 2026-09-29
+
+As três entregas foram revisadas e aprovadas como versão final:
+
+1. `ENTREGA_01_INCUBACAO.md`
+2. `ENTREGA_02_ANALOGIA.md`
+3. `ENTREGA_03_SPRINT_INOVACAO.md`
+
+O Painel de Pares foi preenchido com feedback real de Alexsandro Barreto de Abreu e Rafael Ziani de Carvalho.
+
+**Status:** FINAL para entrega à professora.
+
+**Core impact:** as atividades geram hipóteses de produto e próximos testes, mas não alteram automaticamente o EvidentGraph Core.
