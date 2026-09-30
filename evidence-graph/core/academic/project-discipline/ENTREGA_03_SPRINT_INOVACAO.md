@@ -1,7 +1,7 @@
 # Entrega 3 — Sprint de Inovação
 
 **Disciplina:** Empreendedorismo / Projetos  
-**Status:** rascunho avançado — painel de pares preenchido com feedback real  
+**Status:** versão final para entrega  
 **Projetos do grupo:** ParkAI e EvidentGraph
 
 ---
@@ -77,7 +77,7 @@ Pontuação de trabalho: **1 = baixa / 5 = alta**.
 | WhatsApp/reserva leve | 4 | 3 | 5 | 5 | **4,20** |
 | Diagnóstico como serviço | 3 | 2 | 5 | 5 | **3,65** |
 
-### Ideia escolhida provisoriamente
+### Ideia escolhida
 
 **Pricing-as-a-Service**
 
@@ -220,7 +220,7 @@ Pontuação de trabalho: **1 = baixa / 5 = alta**.
 | Impact Triage | 4 | 3 | 4 | 4 | **3,75** |
 | Pre-Change Evidence Gate | 5 | 4 | 5 | 4 | **4,55** |
 
-### Ideia escolhida provisoriamente
+### Ideia escolhida
 
 **Pre-Change Evidence Gate**
 
@@ -333,8 +333,8 @@ O objetivo do teste será verificar se esse recorte mínimo já produz informaç
 
 ---
 
-## Observação
+## Observação final
 
-As pontuações das alternativas continuam sendo uma aplicação de trabalho do método e podem ser ajustadas pelo grupo antes da entrega final.
+As pontuações e escolhas apresentadas foram aprovadas para esta entrega.
 
-O **Painel de Pares**, porém, agora contém feedback real recebido de integrantes da equipe e não deve ser tratado como conteúdo hipotético.
+O **Painel de Pares** contém feedback real recebido de integrantes da equipe e não deve ser tratado como conteúdo hipotético.
