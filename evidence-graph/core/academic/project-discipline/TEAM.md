@@ -6,10 +6,11 @@
 - Antonio Sergio Castro de Carvalho Junior
 - Rafael Ziani de Carvalho
 - Sthefferson Bruno Costa Ferreira
+- Gabriel Farias Leandro
 
 ## Observação
 
-Esta lista registra os integrantes da equipe responsável pelas atividades e entregas da disciplina.
+Esta lista registra os integrantes da equipe responsável pelas atividades e entregas da disciplina. Gabriel Farias Leandro foi incluído posteriormente pela professora, por estar sem equipe.
 
 Os projetos atualmente trabalhados pelo grupo incluem:
 
