@@ -7,12 +7,7 @@
 
 ## 1. Origin
 
-The project began from an abandoned internal sketch mentioning:
-- lineage;
-- governance;
-- APIs;
-- AI agents;
-- data flows.
+The project originated from observing a recurring engineering problem in modern enterprise environments: dependency information is fragmented across data platforms, APIs, software services, authorization systems, observability tooling, and AI-agent infrastructure.
 
 The original interpretation was a broad enterprise graph connecting data, software, and AI.
 
