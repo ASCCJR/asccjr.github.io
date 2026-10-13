@@ -1,0 +1,15 @@
+{
+  "CHG-001": {
+    "agent-atendimento": ["POSSIBLE", "OBSERVED"],
+    "app-atendimento-portal": ["NO_INCOMPATIBILITY", "OBSERVED"],
+    "job-financeiro-conciliacao": ["INCONCLUSIVE", "UNKNOWN"],
+    "svc-comercial-pedidos": ["INCOMPATIBILITY", "OBSERVED"]
+  },
+  "CHG-002": {
+    "dash-operacoes-portal": ["INCOMPATIBILITY", "OBSERVED"],
+    "job-operacoes-reposicao": ["POSSIBLE", "OBSERVED"]
+  },
+  "CHG-003": {
+    "job-financeiro-cobranca": ["INCONCLUSIVE", "UNKNOWN"]
+  }
+}

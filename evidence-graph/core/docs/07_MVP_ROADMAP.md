@@ -1,7 +1,7 @@
 # MVP & Roadmap
 
-**Updated:** 2026-10-13  
-**Status:** development plan; only the existing conceptual demo is implemented  
+**Updated:** 2026-10-13, M1 checkpoint  
+**Status:** M0 documented; M1 synthetic data/reference implementation tested; replacement UI and real PoC pending  
 **Product specification:** [12_PRODUCT_UX_VISION.md](./12_PRODUCT_UX_VISION.md)
 
 ## Current artifact and boundary
@@ -17,28 +17,30 @@ This roadmap separates three tracks: business discovery, a more complete synthet
 - Test whether users can identify consequences, owners and missing information using the prototype.
 - Record adoption barriers and willingness to commit resources separately from willingness to pay.
 
-These activities no longer wait until after the technical experiment. The previous sequencing of customer discovery under “Only after the experiment” is superseded by D-011.
+These activities no longer wait until after the technical experiment. The previous sequencing of customer discovery under “Only after the experiment” is superseded by D-011. No interviews or usability sessions were conducted during M1.
 
 ## Track B — synthetic product experience
 
-### M0 — product/UX specification
+### M0 — product/UX specification — documented
 
-Record the task-first workflow, business hypotheses, evidence semantics, screens, synthetic environment and acceptance criteria in Markdown. This is the current documentation milestone; it does not change the public site.
+Record the task-first workflow, business hypotheses, evidence semantics, screens, synthetic environment and acceptance criteria in Markdown. The specification is preserved; it does not change the public site.
 
-### M1 — dataset and expected answers
+### M1 — dataset and expected answers — implemented for bounded scenarios
 
-Prepare a deterministic generator, stable IDs and evidence fixtures. Initial design target: 240 assets across six domains, with meaningful typed relations rather than random filler.
+A deterministic generator, stable IDs, evidence fixtures, integrity validation and a reference analyzer are implemented in `../demo-data/`. The generated environment contains **240 assets and 512 meaningful typed relations** across six domains. The count differs from the initial 600–900 illustrative relation range; no random filler was added.
 
-Document expected answers for:
+Independent expected answers cover:
 1. removal of a field in a customer API;
 2. change in forecast output used by a replenishment dashboard;
 3. proposed retirement of a legacy service with insufficient observation coverage.
 
-Validate entity references, environment separation, time windows, deduplicated counts and different directions for dependency versus lineage relations.
+**43 local tests passed.** They cover references, environment/version separation, time windows, deduplication, mutations, cycles, limits and uncertainty. See [15_M1_VALIDATION.md](./15_M1_VALIDATION.md) for reproducibility and limitations.
 
-### M2 — one complete workflow
+The analyzer performs bounded consumer review, not unrestricted change propagation, IAM evaluation or proof of field access. Generated JSON and Markdown are reproducible build outputs, not a newly published interface.
 
-Implement CHG-001: select change, analyze, filter consumers, inspect owners/evidence, record checks and export Markdown. Start with the answer and table; do not make the graph a prerequisite for understanding the result.
+### M2 — one complete workflow — next
+
+Implement CHG-001: select change, analyze, filter consumers, inspect owners/evidence, record checks and export Markdown. Start with the answer and table; do not make the graph a prerequisite for understanding the result. Reuse the independent scenario oracles to check any JavaScript port.
 
 ### M3 — contextual graph and additional scenarios
 
@@ -96,4 +98,4 @@ The forecast dashboard scenario does not turn EvidentGraph into a forecasting pr
 
 The Core has no mandatory mobile platform. Do not change the current demo URL, recreate the removed root landing page, import personal/professional material, or alter opportunity files as part of this roadmap update.
 
-At this revision only M0 is documented. M1–M5, real user sessions, collectors and commercial validation remain pending. See the UX acceptance checklist in `12_PRODUCT_UX_VISION.md` before declaring the next demo complete.
+M0 is documented and M1 has local synthetic-data/reference tests. M2–M5, real user sessions, collectors and commercial validation remain pending. See the UX acceptance checklist in `12_PRODUCT_UX_VISION.md` before declaring the next demo complete.
