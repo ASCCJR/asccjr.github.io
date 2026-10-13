@@ -28,7 +28,7 @@ If a schema, API, MCP tool, permission, model endpoint, or dependency changes, w
 
 ## Agentic AI as flagship use case
 
-Agentic AI is the most visually compelling current use case because an agent may combine:
+Agentic AI is an important demonstration domain because an agent may combine:
 - an identity;
 - scopes / permissions;
 - tools;
@@ -38,7 +38,7 @@ Agentic AI is the most visually compelling current use case because an agent may
 - databases / knowledge bases;
 - external destinations.
 
-Agentic AI is a flagship use case, not the full scope of the Core.
+Agentic AI is a flagship use case, not the full scope of the Core. The next interface starts from a user task, not necessarily from an agent profile.
 
 ## Long-term product possibilities
 
@@ -51,3 +51,13 @@ Possible delivery modes include:
 - natural-language interface over verified graph queries.
 
 These are product hypotheses, not yet validated business decisions.
+
+## Current product/UX specification — 2026-10-13
+
+See [12_PRODUCT_UX_VISION.md](./12_PRODUCT_UX_VISION.md).
+
+The first complete workflow is **change-impact review**: select an API change, understand possible consequences, inspect consumers and evidence, identify owners, record checks and export a report.
+
+Results and decision-relevant uncertainty precede graph exploration. A larger, coherent synthetic enterprise environment supports UX testing; it does not replace the small real-collector PoC. User, buyer, adoption process and commercial value remain discovery hypotheses.
+
+The initial experience includes non-agent operational consumers and an analytical chain involving a forecast model and dashboard. No mobile requirement is added to the Core, and no enforcement or production-readiness claim follows from this revision.

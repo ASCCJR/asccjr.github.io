@@ -2,7 +2,7 @@
 
 **Working name:** EvidentGraph  
 **Subtitle:** Dependency Intelligence for Data, Software & AI  
-**Updated:** 2026-09-27  
+**Updated:** 2026-10-13  
 **Stage:** applied research / discovery / pre-MVP
 
 ## 1. Origin
@@ -88,7 +88,7 @@ Agentic AI is the strongest current demonstration domain because agents combine:
 - data;
 - external destinations.
 
-The Core remains broader than agent governance.
+The Core remains broader than agent governance. For the next interface, the task-first revision in section 16 supersedes an agent-first opening; agents remain an important use case.
 
 ## 9. Competitive correction
 
@@ -119,7 +119,7 @@ The project should not assume everything must be built natively inside Databrick
 
 The stronger EvidentGraph hypothesis is to correlate Databricks evidence with other systems such as GitHub/OpenAPI, OpenTelemetry, IAM, gateways, and non-Databricks infrastructure.
 
-See `10_DATABRICKS_STRATEGIC_NOTE.md`.
+See `10_DATABRICKS_STRATEGIC_NOTE.md`. These historical competitive notes were not re-verified by the 2026-10-13 product/UX revision.
 
 ## 11. Current synthetic demo
 
@@ -205,6 +205,22 @@ When resuming:
 2. read this file;
 3. read `08_DECISION_LOG.md`;
 4. read `09_RESEARCH_LOG.md`;
-5. load task-specific documents.
+5. load task-specific documents, especially `12_PRODUCT_UX_VISION.md` for the next interface.
 
 Chat history is not the authoritative source of truth.
+
+## 16. Product and UX revision — 2026-10-13
+
+The proponent reported qualitative professor feedback: the demo is too small, visually presentation-oriented, and too focused on showing the mechanism instead of answering business questions. This is reported feedback, not customer validation.
+
+The next Core experience prioritizes a complete change-impact workflow:
+
+**Select change → understand consequences and uncertainty → identify owners → record checks → export analysis.**
+
+The graph becomes contextual exploration; evidence fusion remains the underlying research hypothesis. The Core continues to cover applications, services, pipelines, data, models and agents.
+
+The specification is [12_PRODUCT_UX_VISION.md](./12_PRODUCT_UX_VISION.md). Its proposed synthetic environment has 240 assets across six domains, meaningful dependencies and distinct impact/observation/coverage states. These are design targets, not an implemented dataset or a scalability result.
+
+The real PoC remains small. Business discovery and usability evaluation will run alongside technical development instead of waiting until the whole experiment ends. A field being present in a table does not prove it was returned to a caller; a dependency path does not by itself prove breakage or incident causation.
+
+Only documentation is changed in this revision. The public HTML/JS/CSS, Campus Mobile variant and academic submissions remain untouched. The dataset, replacement interface, user tests and real collectors are still pending.

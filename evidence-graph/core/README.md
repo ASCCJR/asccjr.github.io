@@ -35,6 +35,15 @@ When resuming the project in a new chat or after context compaction, read in thi
 
 Then load task-specific files such as architecture, competition, roadmap, or course activities.
 
+## Current product and UX work
+
+The next Core experience starts from **change-impact review**, not from a presentation of the graph mechanism.
+
+- [Product and UX specification — Portuguese](./docs/12_PRODUCT_UX_VISION.md)
+- [Updated development roadmap](./docs/07_MVP_ROADMAP.md)
+
+The specification covers a complete user task, business hypotheses, a larger synthetic environment, evidence semantics, visual direction and acceptance tests. It is not yet an implemented replacement. The existing public demo is preserved; real collectors remain a separate small PoC, and business discovery runs in parallel.
+
 ## Important separation
 
 - `core/` = canonical project

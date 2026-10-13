@@ -108,3 +108,31 @@ Keep it published as a reusable:
 - explanatory tool.
 
 Do not treat it as the canonical technical implementation.
+
+---
+
+## D-010 — Make the next Core experience task-first and decision-oriented
+**Date:** 2026-10-13  
+**Status:** DECIDED for product direction; implementation pending
+
+The proponent reported professor feedback that the public demo is too small and presentation-oriented, emphasizing the technical mechanism rather than a business task. This is qualitative reported feedback, not customer validation.
+
+The next experience prioritizes **change-impact review**: select a change, understand consequences and uncertainty, identify owners, record checks and export an analysis. The graph is contextual exploration; detailed evidence remains inspectable.
+
+This supersedes D-003 only as the opening/navigation strategy for the next demo. Agentic AI remains an important use case, and the Core still covers data, software, models and agents. D-009 remains valid: preserve the current demo until the replacement is reviewed.
+
+Specification: `12_PRODUCT_UX_VISION.md`. Dataset sizes, screen details and test thresholds are proposed design parameters, not validated results.
+
+---
+
+## D-011 — Separate enterprise-scale simulation, real PoC and business discovery
+**Date:** 2026-10-13  
+**Status:** DECIDED for sequencing; tests and implementation pending
+
+Use a larger coherent synthetic enterprise environment to test product UX, while keeping real collectors and evidence-fusion evaluation in a controlled small PoC. A larger synthetic graph does not demonstrate production scalability.
+
+Run discovery and usability in parallel with development. This supersedes the previous roadmap placement of customer discovery only after the technical experiment.
+
+Do not hide uncertainty, equate missing traces with absent dependencies, count structural relations as runtime calls, or claim that a dependency alone proves breakage.
+
+This documentation revision does not change public demo code, Campus Mobile, academic submissions, contributor names or personal material.
