@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="EvidentGraph: prévia sintética para revisão de impacto de mudanças.">
+<title>EvidentGraph · Revisão de mudanças</title>
+<link rel="stylesheet" href="styles.css">
+<script src="data.js" defer></script><script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Ir para o conteúdo</a>
+<aside class="sidebar">
+  <div class="brand"><span class="brand-mark" aria-hidden="true">E</span><div>EvidentGraph<small>DEPENDENCY INTELLIGENCE</small></div></div>
+  <div class="workspace-label">ESPAÇO DE TRABALHO</div><div class="company">Empresa Demo<small>Comércio e distribuição</small></div>
+  <nav aria-label="Navegação principal">
+    <button data-view="analysis" class="nav active" aria-current="page"><span aria-hidden="true">↳</span> Análises de mudança</button>
+    <button data-view="inventory" class="nav"><span aria-hidden="true">▦</span> Inventário</button>
+  </nav>
+  <div class="side-foot"><span class="pill">PRÉVIA M2</span><p>Dados sintéticos.<br>Nenhuma integração real.</p><button id="aboutBtn" class="side-link">Sobre esta prévia ↗</button></div>
+</aside>
+<div class="shell">
+  <header class="topbar"><div>Empresa Demo <span class="slash">/</span> <span id="breadcrumb">Análises de mudança</span></div><span class="env">Ambiente simulado · prod-demo</span></header>
+  <main id="main" tabindex="-1">
+    <div id="loadStatus" role="status" class="notice">Carregando dados locais…</div>
+    <section id="analysisView" hidden>
+      <div class="page-head"><div><div class="eyebrow">REVISÃO TÉCNICA</div><h1>O que esta mudança pode afetar?</h1><p>Identifique consumidores, envolva os responsáveis e registre o que precisa ser verificado.</p></div></div>
+      <section class="change-card" aria-label="Mudança selecionada">
+        <div class="change-choose"><label for="changeSelect">Mudança preparada</label><select id="changeSelect"></select><button id="openAnalysis" class="primary">Abrir análise <span aria-hidden="true">→</span></button></div>
+        <dl id="changeMeta" class="change-meta"></dl>
+      </section>
+      <div id="notAnalyzed" class="empty" hidden>Uma nova mudança foi selecionada. Abra a análise para consultar seus consumidores.</div>
+      <section id="analysisResult" hidden>
+        <section class="conclusion" aria-labelledby="conclusionTitle"><div class="conclusion-mark" aria-hidden="true">!</div><div><h2 id="conclusionTitle"></h2><p id="conclusionText"></p><span class="small" id="scopeNote"></span></div></section>
+        <div class="section-heading"><div><h2>Consumidores e verificações</h2><p id="summaryLine"></p></div><button id="exportBtn" class="secondary">↓ Exportar análise .md</button></div>
+        <div id="metrics" class="metrics" aria-label="Filtrar por conclusão"></div>
+        <section class="table-card" aria-label="Resultados da análise">
+          <div class="toolbar"><div class="search-wrap"><label class="sr-only" for="search">Buscar consumidor, processo ou equipe</label><input id="search" type="search" placeholder="Buscar consumidor, processo ou equipe"></div><label class="filter-label">Responsável<select id="ownerFilter"><option value="">Todas as equipes</option></select></label><label class="filter-label">Observação<select id="activityFilter"><option value="">Todos os estados</option><option value="OBSERVED">Caminho observado</option><option value="NOT_OBSERVED">Não observado no período</option><option value="UNKNOWN">Cobertura insuficiente</option></select></label><button id="clearFilters" class="text-btn">Limpar</button></div>
+          <div class="table-scroll"><table><thead><tr><th><button id="sortName" class="sort" aria-label="Ordenar consumidores por nome">Consumidor <span id="sortMark" aria-hidden="true">↕</span></button></th><th>Conclusão / execução</th><th>Responsável</th><th>Verificação local</th><th><span class="sr-only">Detalhes</span></th></tr></thead><tbody id="consumerRows"></tbody></table></div>
+          <div id="emptyResults" class="empty" hidden>Nenhum consumidor corresponde aos filtros. Tente outra busca ou limpe os filtros.</div><div class="table-footer"><span id="resultCount" role="status"></span><span>Contagem de consumidores distintos</span></div>
+        </section>
+        <div class="bottom-note"><strong>Limite da resposta</strong><p>Um caminho de dependência não prova falha. Ausência de chamadas não prova ausência de uso. Autorização e acesso efetivo ao campo não são avaliados nesta versão.</p></div>
+      </section>
+    </section>
+    <section id="inventoryView" hidden>
+      <div class="page-head"><div><div class="eyebrow">CATÁLOGO SINTÉTICO</div><h1>Inventário</h1><p>Explore os ativos da empresa fictícia. As análises detalhadas estão limitadas aos três cenários preparados.</p></div><span id="inventoryTotal" class="total-tag"></span></div>
+      <section class="table-card"><div class="toolbar"><label class="sr-only" for="inventorySearch">Buscar ativo</label><input id="inventorySearch" type="search" placeholder="Buscar por nome ou identificador"><label class="filter-label">Tipo<select id="kindFilter"><option value="">Todos os tipos</option></select></label><label class="filter-label">Área<select id="domainFilter"><option value="">Todas as áreas</option></select></label></div>
+      <div class="table-scroll"><table><thead><tr><th>Ativo</th><th>Tipo</th><th>Área / responsável</th><th>Ambiente</th><th><span class="sr-only">Detalhes</span></th></tr></thead><tbody id="inventoryRows"></tbody></table></div><div class="table-footer"><span id="inventoryCount" role="status"></span><div class="pager"><button id="prevPage" class="secondary">Anterior</button><span id="pageNumber"></span><button id="nextPage" class="secondary">Próxima</button></div></div></section>
+    </section>
+    <footer class="footer"><span>EvidentGraph Core · prévia de experiência</span><span id="datasetLabel"></span></footer>
+  </main>
+</div>
+<dialog id="detailDialog" aria-labelledby="detailTitle"><div class="dialog-head"><div><span class="eyebrow" id="detailKind"></span><h2 id="detailTitle"></h2></div><button id="closeDetail" class="close-btn" aria-label="Fechar detalhes">×</button></div><div id="detailBody" class="dialog-body"></div></dialog>
+<dialog id="aboutDialog" aria-labelledby="aboutTitle"><div class="dialog-head"><h2 id="aboutTitle">Sobre esta prévia</h2><button id="closeAbout" class="close-btn" aria-label="Fechar sobre esta prévia">×</button></div><div class="dialog-body"><p>Esta versão demonstra a tarefa de revisão de mudanças com dados fictícios. O inventário contém 240 ativos; as evidências detalhadas são um recorte dos cenários CHG-001, CHG-002 e CHG-003.</p><p>Os resultados são calculados pelo analisador Python M1 durante a geração dos arquivos. O navegador consulta, filtra e exporta esses resultados; não reavalia contratos arbitrários nem consulta uma empresa real.</p><p>As verificações e notas são guardadas apenas neste navegador quando o armazenamento local está disponível. Elas não são enviadas aos responsáveis e não comprovam a resolução de um risco.</p><p>O novo mapa empresarial e a avaliação de autorização ainda não fazem parte desta prévia. A demonstração pública anterior não foi substituída.</p></div></dialog>
+<div id="toast" class="toast" role="status" hidden></div>
+</body></html>
