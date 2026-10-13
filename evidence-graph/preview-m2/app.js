@@ -16,16 +16,18 @@ const FAMILIES = {config:'Configuração',code:'Contrato / código',lineage:'Lin
 let data, assets, teams, processes, relations, evidences, result, view='analysis', impactFilter='', ascending=null, inventoryPage=0;
 let checks={}, persist=true, toastTimer;
 const date = s => s ? new Intl.DateTimeFormat('pt-BR',{timeZone:'UTC',dateStyle:'short',timeStyle:'short'}).format(new Date(s))+' UTC' : 'Não disponível';
-const team = id => teams[id]?.name || id;
+const team = id => (teams[id]?.name || id).replace('Equipe Demo ', 'Equipe ');
+const envLabel = value => value === 'prod-demo' ? 'Produção' : value === 'qa-demo' ? 'Homologação' : value;
+const emit = name => document.dispatchEvent(new CustomEvent('eg:'+name));
 const proc = ids => ids.map(id=>processes[id]?.name || id).join(' · ');
 const badge = row => `<span class="badge ${IMPACT[row.impact][1]}">${esc(IMPACT[row.impact][0])}</span>`;
 const key = id => `${result.change.id}:${id}`;
 const check = id => checks[key(id)] || {done:false,note:''};
 function notify(text){$('toast').textContent=text;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,3200);}
 function store(id, patch){checks[key(id)]={...check(id),...patch};try{localStorage.setItem('eg-m2:'+data.dataset_version,JSON.stringify(checks));}catch{persist=false;}updateSummary();}
-function updateSummary(){const count=result.consumers.filter(c=>check(c.consumer).done).length;$('summaryLine').textContent=`${result.consumers.length} consumidores no recorte · ${count} verificações anotadas ${persist?'neste navegador':'nesta sessão'}. Não comprovam resolução.`;}
+function updateSummary(){const count=result.consumers.filter(c=>check(c.consumer).done).length;$('summaryLine').textContent=`${result.consumers.length} consumidores no recorte · ${count} verificações anotadas ${persist?'neste navegador':'nesta sessão'}.`;}
 function meta(){const r=data.results.find(r=>r.change.id===$('changeSelect').value),c=r.change;
-  $('changeMeta').innerHTML=`<div><dt>Recurso</dt><dd><code>${esc(c.target)}</code></dd></div><div><dt>Alteração</dt><dd>${c.operation==='retire'?'Desativação proposta':`Remover <code>${esc(c.field)}</code>`}</dd></div><div><dt>Versões</dt><dd>${esc(c.before_version)} → ${esc(c.after_version)}</dd></div><div><dt>Janela sintética</dt><dd>${date(c.window_start).slice(0,10)} – ${date(c.window_end).slice(0,10)}</dd></div>`;
+  $('changeMeta').innerHTML=`<div><dt>Recurso</dt><dd><code>${esc(c.target)}</code></dd></div><div><dt>Alteração</dt><dd>${c.operation==='retire'?'Desativação proposta':`Remover <code>${esc(c.field)}</code>`}</dd></div><div><dt>Versões</dt><dd>${esc(c.before_version)} → ${esc(c.after_version)}</dd></div><div><dt>Período observado</dt><dd>${date(c.window_start).slice(0,10)} – ${date(c.window_end).slice(0,10)}</dd></div>`;
 }
 function clear(){impactFilter='';$('search').value='';$('ownerFilter').value='';$('activityFilter').value='';ascending=null;}
 function openAnalysis(){result=data.results.find(r=>r.change.id===$('changeSelect').value);clear();$('analysisResult').hidden=false;$('notAnalyzed').hidden=true;
@@ -39,7 +41,7 @@ function openAnalysis(){result=data.results.find(r=>r.change.id===$('changeSelec
   if(n('NO_INCOMPATIBILITY'))segments.push(`${n('NO_INCOMPATIBILITY')} ${n('NO_INCOMPATIBILITY')===1?'consumidor sem incompatibilidade identificada':'consumidores sem incompatibilidade identificada'} no contrato avaliado`);
   $('conclusionText').textContent=segments.length?segments.join('; ')+'. Consulte os responsáveis e as evidências antes de decidir.':'Nenhum consumidor conhecido neste recorte. Isso não comprova ausência de dependências.';
   $('scopeNote').textContent=result.scope_note+(result.truncated?' Busca interrompida pelo limite de exploração.':'');
-  updateSummary();renderConsumers();
+  updateSummary();renderConsumers();emit('analysis');
 }
 function visibleRows(){let rows=result.consumers.filter(r=>(!impactFilter||r.impact===impactFilter)&&(!$('ownerFilter').value||r.owner===$('ownerFilter').value)&&(!$('activityFilter').value||r.activity===$('activityFilter').value)&&norm([r.name,r.consumer,team(r.owner),proc(r.processes)].join(' ')).includes(norm($('search').value)));
   if(ascending!==null)rows.sort((a,b)=>(ascending?1:-1)*a.name.localeCompare(b.name,'pt-BR'));else rows.sort((a,b)=>['INCOMPATIBILITY','POSSIBLE','INCONCLUSIVE','NO_INCOMPATIBILITY'].indexOf(a.impact)-['INCOMPATIBILITY','POSSIBLE','INCONCLUSIVE','NO_INCOMPATIBILITY'].indexOf(b.impact));return rows;}
@@ -48,32 +50,32 @@ function renderConsumers(){const metrics=[['','Todos os consumidores'],['INCOMPA
   const rows=visibleRows();
   $('consumerRows').innerHTML=rows.map(r=>`<tr><td><h3>${esc(r.name)}</h3><p>${esc(proc(r.processes))}</p><span class="row-type">${esc(KINDS[assets[r.consumer]?.kind] || '')}</span></td><td>${badge(r)}<span class="activity ${r.activity==='UNKNOWN'?'unknown':''}">${r.activity==='OBSERVED'?'✓ ':r.activity==='UNKNOWN'?'? ':''}${ACTIVITY[r.activity]}</span></td><td>${esc(team(r.owner))}<p>${esc(r.next_step)}</p></td><td><label class="review-label"><input type="checkbox" data-check="${esc(r.consumer)}" ${check(r.consumer).done?'checked':''} aria-label="Anotar verificação de ${esc(r.name)}"><span>${check(r.consumer).done?'Anotada':'Pendente'}</span></label><span class="review-caption">${persist?'Só neste navegador':'Só nesta sessão'}</span></td><td><button class="row-open" data-detail="${esc(r.consumer)}" aria-label="Ver detalhes de ${esc(r.name)}">Detalhes →</button></td></tr>`).join('');
   $('emptyResults').hidden=rows.length>0;$('resultCount').textContent=`Exibindo ${rows.length} de ${result.consumers.length} consumidores`;$('exportBtn').disabled=rows.length===0;
-  $('sortMark').textContent=ascending===null?'↕':ascending?'↑':'↓';$('sortName').closest('th').setAttribute('aria-sort',ascending===null?'none':ascending?'ascending':'descending');
+  $('sortMark').textContent=ascending===null?'↕':ascending?'↑':'↓';$('sortName').closest('th').setAttribute('aria-sort',ascending===null?'none':ascending?'ascending':'descending');emit('filtered');
 }
 function pathMarkup(path){return `<div class="path">${path.map((id,i)=>{const r=relations[id];return `${i===0?`<span>${esc(assets[r.source]?.name||r.source)}</span>`:''}<em>↓ ${esc(r.kind)}</em><span class="${i===path.length-1?'path-target':''}">${esc(assets[r.target]?.name||r.target)}</span>`;}).join('')}</div>`;}
 function evidenceMarkup(ev){const details=JSON.stringify(ev,null,2);return `<details class="ev"><summary><strong>${esc(FAMILIES[ev.family]||ev.family)}</strong> · ${esc(ev.claim==='consumer_fields'?'Contrato de consumo':ev.claim==='observed_use'?'Uso observado':'Relação declarada')}<br><small>${esc(ev.id)}</small></summary><pre>${esc(details)}</pre></details>`;}
 function openDetails(id, fromInventory=false){const asset=assets[id];if(!asset)return;const row=fromInventory?null:result.consumers.find(r=>r.consumer===id);
   $('detailTitle').textContent=asset.name;$('detailKind').textContent=KINDS[asset.kind]||asset.kind;
-  let html=`<div class="detail-grid"><div><small>RESPONSÁVEL</small>${esc(team(asset.owner))}</div><div><small>PROCESSO</small>${esc(proc(asset.processes))}</div><div><small>AMBIENTE / VERSÃO</small>${esc(asset.environment)} · ${esc(asset.version)}</div><div><small>IDENTIFICADOR</small><span class="inventory-id">${esc(asset.id)}</span></div></div>`;
+  let html=`<div class="detail-grid"><div><small>RESPONSÁVEL</small>${esc(team(asset.owner))}</div><div><small>PROCESSO</small>${esc(proc(asset.processes))}</div><div><small>AMBIENTE / VERSÃO</small>${esc(envLabel(asset.environment))} · ${esc(asset.version)}</div><div><small>IDENTIFICADOR</small><span class="inventory-id">${esc(asset.id)}</span></div></div>`;
   if(row){const refs=row.evidence_ids.map(e=>evidences[e]);const events=refs.filter(e=>e.claim==='observed_use').map(e=>e.details.at).sort();const coverage=data.coverage.filter(c=>row.paths.flat().includes(c.relation));
     html+=`<h3>Conclusão no escopo avaliado</h3>${badge(row)}<p style="margin-top:9px">${esc(IMPACT[row.impact][2])}</p><p><strong>Próximo passo:</strong> ${esc(row.next_step)}</p><p><strong>Observação:</strong> ${ACTIVITY[row.activity]}<br><strong>Último evento listado:</strong> ${date(events.at(-1))}</p>`;
     html+=`<p class="local-note">Autorização: não avaliada. Acesso efetivo ao campo: não avaliado. A conclusão não é uma aprovação de publicação.</p>`;
     if(row.limitations.length)html+='<h3>Informação que ainda falta</h3><ul class="detail-list">'+row.limitations.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>';
     html+='<h3>Caminhos que sustentam a análise</h3>'+row.paths.map(pathMarkup).join('');
-    html+=`<h3>Evidências (${refs.length})</h3><p>Registros fictícios coletados no relógio da simulação. Abra cada registro para examinar origem, versão e conteúdo.</p>`+refs.map(evidenceMarkup).join('');
+    html+=`<h3>Evidências (${refs.length})</h3><p>Abra cada registro para examinar origem, versão e conteúdo.</p>`+refs.map(evidenceMarkup).join('');
     html+='<h3>Cobertura de execução</h3>'+(coverage.length?coverage.map(c=>`<details class="ev"><summary>${esc(c.relation)} · ${esc(c.status)}</summary><pre>${esc(JSON.stringify(c,null,2))}</pre></details>`).join(''):'<p>Não há registro de cobertura para o caminho deste recorte.</p>');
     html+=`<h3>Registro de verificação</h3><label class="review-label"><input type="checkbox" data-check="${esc(id)}" ${check(id).done?'checked':''}><span>${check(id).done?'Anotada':'Pendente'}</span></label><label for="reviewNote" class="small">Notas locais para a revisão</label><textarea id="reviewNote" data-note="${esc(id)}" maxlength="2000" placeholder="Ex.: verificar contrato com a equipe responsável…">${esc(check(id).note)}</textarea><p class="local-note">Anotar não resolve o impacto. Nada é enviado à equipe. Inclua estas notas na exportação para compartilhar manualmente.</p>`;
   }else{
     const matches=data.results.filter(r=>r.change.target===id||r.consumers.some(c=>c.consumer===id));
-    html+='<h3>Análises preparadas</h3>'+(matches.length?matches.map(r=>`<p><button class="secondary" data-goto="${esc(r.change.id)}">${esc(r.change.id)} · Abrir análise</button></p>`).join(''):'<p>Este ativo pertence ao inventário sintético, mas não tem uma análise preparada nesta prévia. Isso não significa ausência de dependências ou de risco.</p>');
-    html+='<p class="local-note">O mapa empresarial e a exploração geral das 512 relações ficam para o próximo marco. Aqui o inventário é navegável, mas não realiza novas análises de qualquer ativo.</p>';
+    html+='<h3>Análises disponíveis</h3>'+(matches.length?matches.map(r=>`<p><button class="secondary" data-goto="${esc(r.change.id)}">${esc(r.change.id)} · Abrir análise</button></p>`).join(''):'<p>Não há revisão de mudança disponível para este ativo. Explore o mapa para consultar suas dependências.</p>');
+    html+=`<p><button class="secondary" data-map="${esc(id)}">Explorar no grafo →</button></p>`;
   }
   $('detailBody').innerHTML=html;$('detailDialog').showModal();$('closeDetail').focus();
 }
-function setView(next){view=next;$('analysisView').hidden=next!=='analysis';$('inventoryView').hidden=next!=='inventory';$('breadcrumb').textContent=next==='analysis'?'Análises de mudança':'Inventário';document.querySelectorAll('[data-view]').forEach(b=>{b.classList.toggle('active',b.dataset.view===next);if(b.dataset.view===next)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});if(next==='inventory')renderInventory();}
+function setView(next){view=next;$('lineageView').hidden=next!=='lineage';$('analysisView').hidden=next!=='analysis';$('inventoryView').hidden=next!=='inventory';$('breadcrumb').textContent=next==='analysis'?'Análises de mudança':next==='lineage'?'Mapa de dependências':'Inventário';document.querySelectorAll('[data-view]').forEach(b=>{b.classList.toggle('active',b.dataset.view===next);if(b.dataset.view===next)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});if(next==='inventory')renderInventory();emit('view');}
 function inventoryRows(){return data.assets.filter(a=>(!$('kindFilter').value||a.kind===$('kindFilter').value)&&(!$('domainFilter').value||a.domain===$('domainFilter').value)&&norm([a.name,a.id,team(a.owner)].join(' ')).includes(norm($('inventorySearch').value))).sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));}
 function renderInventory(){const rows=inventoryRows(),pages=Math.max(1,Math.ceil(rows.length/15));inventoryPage=Math.max(0,Math.min(inventoryPage,pages-1));const visible=rows.slice(inventoryPage*15,(inventoryPage+1)*15);
-  $('inventoryRows').innerHTML=visible.map(a=>`<tr><td><h3>${esc(a.name)}</h3><span class="inventory-id">${esc(a.id)}</span></td><td>${esc(KINDS[a.kind]||a.kind)}</td><td>${esc(team(a.owner))}</td><td>${esc(a.environment)}</td><td><button class="row-open" data-asset="${esc(a.id)}" aria-label="Abrir ativo ${esc(a.name)}">Detalhes →</button></td></tr>`).join('')||'<tr><td colspan="5" class="empty">Nenhum ativo corresponde aos filtros.</td></tr>';
+  $('inventoryRows').innerHTML=visible.map(a=>`<tr><td><h3>${esc(a.name)}</h3><span class="inventory-id">${esc(a.id)}</span></td><td>${esc(KINDS[a.kind]||a.kind)}</td><td>${esc(team(a.owner))}</td><td>${esc(envLabel(a.environment))}</td><td><button class="row-open" data-asset="${esc(a.id)}" aria-label="Abrir ativo ${esc(a.name)}">Detalhes →</button></td></tr>`).join('')||'<tr><td colspan="5" class="empty">Nenhum ativo corresponde aos filtros.</td></tr>';
   $('inventoryCount').textContent=`${rows.length} de ${data.assets.length} ativos · ${visible.length} nesta página`;$('pageNumber').textContent=`${inventoryPage+1} / ${pages}`;$('prevPage').disabled=inventoryPage===0;$('nextPage').disabled=inventoryPage+1===pages;
 }
 const md = value => String(value??'').replace(/\|/g,'\\|').replace(/\r?\n/g,' ');
@@ -94,7 +96,7 @@ async function boot(){try{
   $('changeSelect').innerHTML=data.results.map(r=>`<option value="${r.change.id}">${r.change.id} · ${esc(SCENARIOS[r.change.id]||r.change.target)}</option>`).join('');
   $('kindFilter').innerHTML+=[...new Set(data.assets.map(a=>a.kind))].sort().map(k=>`<option value="${k}">${KINDS[k]||k}</option>`).join('');
   $('domainFilter').innerHTML+=data.domains.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join('');
-  $('inventoryTotal').textContent=data.assets.length+' ativos';$('datasetLabel').textContent=data.dataset_version+' · relógio sintético: '+date(data.clock);
+  $('inventoryTotal').textContent=data.assets.length+' ativos';$('datasetLabel').textContent='Referência: '+date(data.clock);
   $('loadStatus').hidden=true;setView('analysis');meta();openAnalysis();
   document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
   $('changeSelect').addEventListener('change',()=>{meta();$('analysisResult').hidden=true;$('notAnalyzed').hidden=false;});$('openAnalysis').addEventListener('click',openAnalysis);
@@ -107,6 +109,6 @@ async function boot(){try{
   $('detailBody').addEventListener('click',e=>{const b=e.target.closest('[data-goto]');if(b){$('detailDialog').close();$('changeSelect').value=b.dataset.goto;setView('analysis');meta();openAnalysis();$('openAnalysis').focus();}});
   $('closeDetail').addEventListener('click',()=>$('detailDialog').close());$('aboutBtn').addEventListener('click',()=>$('aboutDialog').showModal());$('closeAbout').addEventListener('click',()=>$('aboutDialog').close());
   $('inventorySearch').addEventListener('input',()=>{inventoryPage=0;renderInventory();});for(const id of ['kindFilter','domainFilter'])$(id).addEventListener('change',()=>{inventoryPage=0;renderInventory();});
-  $('inventoryRows').addEventListener('click',e=>{const b=e.target.closest('[data-asset]');if(b)openDetails(b.dataset.asset,true);});$('prevPage').addEventListener('click',()=>{inventoryPage--;renderInventory();});$('nextPage').addEventListener('click',()=>{inventoryPage++;renderInventory();});$('exportBtn').addEventListener('click',download);
+  $('inventoryRows').addEventListener('click',e=>{const b=e.target.closest('[data-asset]');if(b)openDetails(b.dataset.asset,true);});$('prevPage').addEventListener('click',()=>{inventoryPage--;renderInventory();});$('nextPage').addEventListener('click',()=>{inventoryPage++;renderInventory();});$('exportBtn').addEventListener('click',download);emit('ready');
 }catch(error){$('loadStatus').textContent='Não foi possível abrir a prévia: '+error.message;$('loadStatus').setAttribute('role','alert');}}
 boot();

@@ -1,27 +1,25 @@
-# EvidentGraph — Prévia M2
+# EvidentGraph — Grupo Aurora
 
-Interface estática para revisão de mudanças, separada da demonstração anterior. Esta entrega está em uma branch de revisão, sem merge nem publicação no GitHub Pages.
+Prévia com **grafo + lista de impacto + inventário**. Grupo Aurora é uma organização fictícia. Toda a base é sintética; a indicação foi concentrada em “Sobre o ambiente” para evitar repetição na interface.
 
-## Abrir a partir do repositório
+## Abrir
 
-Gere primeiro os dados locais:
+O ZIP entregue já inclui `data.js`. Extraia tudo e abra `index.html` nesta pasta em um navegador recente.
+
+Ao clonar a branch, gere os dados primeiro, a partir da raiz do repositório:
 
 ```sh
 python evidence-graph/core/demo-ui/build_preview.py
 ```
 
-Depois abra `index.html` nesta pasta, mantendo CSS, JavaScript e data.js juntos. Também pode servir a pasta por HTTP. O ZIP entregue na conversa já contém os dados gerados. Use navegador moderno com DecompressionStream.
+Não precisa de servidor ou credenciais. As saídas regeneráveis `data.js` e `manifest.json` permanecem ignoradas no Git.
 
-## Como experimentar
+## Explorar
 
-1. Abra CHG-001 e veja os quatro consumidores com conclusões diferentes.
-2. Filtre por impacto, equipe, atividade ou texto; limpe para restaurar.
-3. Abra Detalhes, examine caminhos e evidências e adicione uma nota local.
-4. Exporte a análise em Markdown: inclui apenas consumidores filtrados e suas notas.
-5. Use Inventário para pesquisar os 240 ativos; há análises preparadas apenas para três cenários.
+A abertura mostra o contexto da API de clientes. Clique em um ativo; use **Revisar impacto** ou **Lista** para consultar consumidores e ações. **Grafo** retorna ao mapa sem limpar filtros da análise. Em Escopo, escolha **Empresa inteira** para acessar o catálogo completo ou **Caminhos da análise** para o recorte da revisão. Há zoom, arraste, busca, filtro por área e expansão de conexões.
 
-Resultados pré-calculados pelo analisador M1, não por LLM nem por um backend de produção. O navegador filtra e apresenta esses resultados.
+## Validação e limites
 
-`data.js` contém JSON comprimido em gzip/base64 para distribuição local. Não é criptografia nem proteção de dados. O gerador e o modelo de origem estão versionados. Não há dados reais.
+Veja [17_M2_GRAPH_REVIEW.md](../core/docs/17_M2_GRAPH_REVIEW.md). O mapa usa as 512 relações; análises de impacto permanecem limitadas aos três cenários preparados pelo analisador M1. Não há avaliação de autorização ou integrações de produção.
 
-Ver [validação M2](../core/docs/16_M2_PREVIEW.md). A navegação de grafo empresarial e a avaliação de permissões são etapas posteriores.
+A branch segue em revisão no PR #1, sem substituir o site público.
