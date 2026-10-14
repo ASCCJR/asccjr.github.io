@@ -1,0 +1,10 @@
+{
+  "dataset_version": "enterprise-demo-0.1.0",
+  "clock": "2026-10-13T12:00:00Z",
+  "assets": 240,
+  "scenarios": 3,
+  "evidence_in_preview": 521,
+  "relations_in_preview": 512,
+  "bundle_sha256": "08181b8b47836d0adf630c5430c5d6d9745fa6703127409904ebd8a1b1172e2b",
+  "source_model_sha256": "88a8ab448fe1f38cefd5341bc922a8ac3645e495d358eafd959c02342d880ed9"
+}
