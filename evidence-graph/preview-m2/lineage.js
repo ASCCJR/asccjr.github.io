@@ -9,6 +9,7 @@
   const names={clientes:'Clientes',pedidos:'Pedidos',precos:'Preços',catalogo:'Catálogo',chamados:'Chamados',conhecimento:'Conhecimento',conversas:'Conversas',satisfacao:'Satisfação',reposicao:'Reposição',conciliacao:'Conciliação',pagamentos:'Pagamentos',faturas:'Faturas',previsao:'Previsão',estoque:'Estoque',expedicao:'Expedição',fornecedores:'Fornecedores',qualidade:'Qualidade',acessos:'Acessos',monitoramento:'Monitoramento',custos:'Custos',contratos:'Contratos'};
   const relNames={CALLS:'Chama',READS:'Lê',WRITES:'Grava',DERIVES_TO:'Origina',ROUTES_TO:'Encaminha para',CONTAINS:'Contém',USES_TOOL:'Usa ferramenta',HOSTS:'Hospeda',HAS_IDENTITY:'Tem identidade',USES_MODEL:'Usa modelo',TRAINED_ON:'Treinado com'};
   const symbols={application:'▣',agent:'✧',api:'↗',service:'⊞',pipeline:'⇢',table:'▤',column:'#',model:'◇',dashboard:'▥',mcp_server:'⌘',mcp_tool:'⚒',identity:'○'};
+  let custom=null;
   let root,selected,shown=[],links=[],positions={},expanded=new Set(),zoom=1,tx=0,ty=0,graphWidth=0,graphHeight=0,pan=null,ready=false,resizeObserver;
   const label=a=>{
     if(!a)return '';
@@ -25,7 +26,8 @@
   function neighbors(ids){const out=new Set(ids);for(const r of data.relations)if(ids.has(r.source)||ids.has(r.target)){out.add(r.source);out.add(r.target);}return out;}
   function visibleSet(){
     let ids;
-    if($('graphScope').value==='all')ids=new Set(data.assets.map(a=>a.id));
+    if(custom)ids=new Set(custom.ids);
+    else if($('graphScope').value==='all')ids=new Set(data.assets.map(a=>a.id));
     else if($('graphScope').value==='impact'){
       ids=new Set([result.change.target]);for(const row of visibleRows())for(const p of row.paths)for(const id of p){const r=relations[id];ids.add(r.source);ids.add(r.target);}
     }else{
@@ -62,7 +64,7 @@
   function edgeType(r){return r.kind==='DERIVES_TO'?'lineage':['CONTAINS','HAS_IDENTITY','HOSTS'].includes(r.kind)?'structure':'dependency';}
   function paint(){
     if(!ready||view!=='lineage')return;
-    const ids=visibleSet();shown=data.assets.filter(a=>ids.has(a.id));links=data.relations.filter(r=>ids.has(r.source)&&ids.has(r.target));layout();
+    const ids=visibleSet();shown=data.assets.filter(a=>ids.has(a.id));links=data.relations.filter(r=>ids.has(r.source)&&ids.has(r.target)&&(!custom||custom.edgeIds.includes(r.id)));layout();
     const svg=$('lineageSvg');svg.replaceChildren();
     const defs=svgEl('defs');for(const [id,color] of [['dependency','#a1b0bf'],['lineage','#4e917d'],['structure','#b4bec9'],['selected','#3869b0']]){const m=svgEl('marker',{id:'arr-'+id,viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:6,markerHeight:6,orient:'auto-start-reverse',markerUnits:'strokeWidth'});m.appendChild(svgEl('path',{d:'M1 1 L9 5 L1 9 z',fill:color}));defs.appendChild(m);}svg.appendChild(defs);
     const scene=svgEl('g',{id:'graphScene'});svg.appendChild(scene);
@@ -74,11 +76,11 @@
       if(row){g.appendChild(svgEl('circle',{cx:W-12,cy:16,r:4,class:'node-status '+IMPACT[row.impact][1]}));}
       g.appendChild(svgEl('title',{},`${label(a)}\n${a.id}\n${team(a.owner)}${row?'\n'+IMPACT[row.impact][0]:''}`));scene.appendChild(g);
     }
-    $('graphFocusName').textContent=$('graphScope').value==='all'?'Visão corporativa':$('graphScope').value==='impact'?'Caminhos da mudança':label(assets[root]);
+    $('graphFocusName').textContent=custom?label(assets[custom.root]):$('graphScope').value==='all'?'Visão corporativa':$('graphScope').value==='impact'?'Caminhos da mudança':label(assets[root]);
     $('graphVisibleCount').textContent=`${shown.length} ativos · ${links.length} relações neste recorte`;
     $('graphCatalogTotal').textContent=`${data.assets.length} ativos · ${data.relations.length} relações`;
     $('graphEmpty').hidden=shown.length>0;
-    fit();highlight();inspector();
+    fit();highlight();inspector();emit('graphpaint');
   }
   function transform(){const g=$('graphScene');if(g)g.setAttribute('transform',`translate(${tx},${ty}) scale(${zoom})`);$('graphZoomLabel').textContent=Math.round(zoom*100)+'%';}
   function fit(){const v=$('graphViewport');zoom=Math.max(.16,Math.min(1.15,(v.clientWidth-32)/graphWidth,(v.clientHeight-28)/graphHeight));tx=(v.clientWidth-graphWidth*zoom)/2;ty=Math.max(12,(v.clientHeight-graphHeight*zoom)/2);transform();}
@@ -100,23 +102,30 @@
     if(a.id===result.change.target)html+='<div class="inspector-consumers"><h3>Consumidores em análise</h3>'+visibleRows().map(r=>`<button data-select-node="${esc(r.consumer)}"><i class="state-dot ${IMPACT[r.impact][1]}"></i><span>${esc(r.name)}<small>${esc(IMPACT[r.impact][0])}</small></span><b>↗</b></button>`).join('')+'</div>';
     if(!positions[selected])html+='<p class="local-note">O ativo selecionado está fora deste recorte. Use “Focar este ativo” para localizá-lo.</p>';
     html+='<p class="inspector-hint">Clique em um nó para destacar suas conexões. Duplo clique para abrir sua vizinhança.</p>';
-    $('graphInspector').innerHTML=html;
+    $('graphInspector').innerHTML=html;emit('graphinspect');
   }
-  function select(id){if(!assets[id])return;selected=id;highlight();inspector();}
-  function focus(id){if(!assets[id])return;root=id;selected=id;expanded.clear();$('graphScope').value='context';$('graphDomain').value='';if(['column','identity'].includes(assets[id].kind))$('graphTechnical').checked=true;setView('lineage');paint();}
+  function select(id){if(!assets[id])return;selected=id;highlight();inspector();emit('graphselect');}
+  function focus(id){if(!assets[id])return;custom=null;root=id;selected=id;expanded.clear();$('graphScope').value='context';$('graphDomain').value='';if(['column','identity'].includes(assets[id].kind))$('graphTechnical').checked=true;setView('lineage');paint();}
   function openEdge(id){const r=relations[id];if(!r)return;$('detailTitle').textContent=relNames[r.kind]||r.kind;$('detailKind').textContent='RELAÇÃO';$('detailBody').innerHTML=`<div class="path"><span>${esc(label(assets[r.source]))}</span><em>↓ ${esc(r.kind)}</em><span>${esc(label(assets[r.target]))}</span></div><h3>Evidências de origem</h3>${r.evidence_ids.map(id=>evidences[id]).filter(Boolean).map(evidenceMarkup).join('')}<p class="local-note">A relação descreve o vínculo indicado, não comprova por si só uma execução, permissão ou falha.</p>`;$('detailDialog').showModal();$('closeDetail').focus();}
   function currentAnalysis(id){$('changeSelect').value=id;meta();openAnalysis();$('graphChange').value=id;}
+  // Explicit bridge: selection and filtered IDs are shared by the two representations.
+  window.EGGraph={
+    label,select,focus,
+    snapshot:()=>({root,selected,custom,ids:shown.map(a=>a.id),edgeIds:links.map(r=>r.id)}),
+    explore:(query)=>{custom=query;root=selected=query.root;expanded.clear();$('graphDomain').value='';$('graphScope').value='investigation';setView('lineage');paint();},
+    repaint:paint
+  };
   document.addEventListener('eg:ready',()=>{
     ready=true;root=selected=result.change.target;
     $('graphChange').innerHTML=$('changeSelect').innerHTML;
     $('graphDomain').innerHTML+=data.domains.map(d=>`<option value="${esc(d.id)}">${esc(domainNames[d.id]||d.name)}</option>`).join('');
     $('graphAssets').innerHTML=data.assets.map(a=>`<option value="${esc(a.id)}">${esc(label(a))}</option>`).join('');
     $('graphChange').addEventListener('change',()=>currentAnalysis($('graphChange').value));
-    $('graphScope').addEventListener('change',()=>{expanded.clear();if($('graphScope').value==='all')$('graphTechnical').checked=true;paint();});
+    $('graphScope').addEventListener('change',()=>{custom=null;expanded.clear();if($('graphScope').value==='all')$('graphTechnical').checked=true;paint();});
     for(const id of ['graphDomain','graphTechnical'])$(id).addEventListener('change',paint);
     $('graphReset').addEventListener('click',()=>focus(result.change.target));
     $('graphReview').addEventListener('click',()=>setView('analysis'));
-    $('graphToList').addEventListener('click',()=>{if($('graphScope').value==='all'){$('domainFilter').value=$('graphDomain').value;setView('inventory');}else setView('analysis');});
+    // Workspace tabs are managed by investigation.js; analysis remains a separate task.
     $('analysisToGraph').addEventListener('click',()=>setView('lineage'));
     $('graphZoomIn').addEventListener('click',()=>zoomAt(1.25));$('graphZoomOut').addEventListener('click',()=>zoomAt(.8));$('graphFit').addEventListener('click',fit);
     const find=()=>{const q=norm($('graphSearch').value);const a=assets[$('graphSearch').value]||data.assets.find(a=>norm(label(a))===q)||data.assets.find(a=>norm(label(a)+' '+a.id).includes(q));if(!q)return;if(a)focus(a.id);else notify('Nenhum ativo encontrado.');};
@@ -124,7 +133,7 @@
     $('lineageSvg').addEventListener('click',e=>{const n=e.target.closest('[data-node]'),r=e.target.closest('[data-edge]');if(n)select(n.dataset.node);else if(r)openEdge(r.dataset.edge);});
     $('lineageSvg').addEventListener('dblclick',e=>{const n=e.target.closest('[data-node]');if(n)focus(n.dataset.node);});
     $('lineageSvg').addEventListener('keydown',e=>{const n=e.target.closest('[data-node]');if(n&&['Enter',' '].includes(e.key)){e.preventDefault();select(n.dataset.node);}});
-    $('graphInspector').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.inspect)openDetails(b.dataset.inspect,!result.consumers.some(r=>r.consumer===b.dataset.inspect));if(b.dataset.expand){expanded.add(b.dataset.expand);paint();}if(b.dataset.center)focus(b.dataset.center);if(b.dataset.selectNode)select(b.dataset.selectNode);if(b.dataset.review){currentAnalysis(b.dataset.review);setView('analysis');}});
+    $('graphInspector').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.inspect)openDetails(b.dataset.inspect,!result.consumers.some(r=>r.consumer===b.dataset.inspect));if(b.dataset.expand){custom=null;$('graphScope').value='context';expanded.add(b.dataset.expand);paint();}if(b.dataset.center)focus(b.dataset.center);if(b.dataset.selectNode)select(b.dataset.selectNode);if(b.dataset.review){currentAnalysis(b.dataset.review);setView('analysis');}});
     $('detailBody').addEventListener('click',e=>{const b=e.target.closest('[data-map]');if(b){$('detailDialog').close();focus(b.dataset.map);}});
     const vp=$('graphViewport');vp.addEventListener('pointerdown',e=>{if(e.button!==0||e.target.closest('[data-node],[data-edge],button'))return;pan={x:e.clientX,y:e.clientY,tx,ty};vp.setPointerCapture(e.pointerId);vp.classList.add('panning');});vp.addEventListener('pointermove',e=>{if(!pan)return;tx=pan.tx+e.clientX-pan.x;ty=pan.ty+e.clientY-pan.y;transform();});const end=()=>{pan=null;vp.classList.remove('panning');};vp.addEventListener('pointerup',end);vp.addEventListener('pointercancel',end);
     vp.addEventListener('wheel',e=>{if(e.ctrlKey||e.metaKey){e.preventDefault();const b=vp.getBoundingClientRect();zoomAt(e.deltaY>0?.9:1.1,e.clientX-b.left,e.clientY-b.top);}}, {passive:false});
@@ -132,6 +141,6 @@
     setView('lineage');
   });
   document.addEventListener('eg:view',()=>{if(ready&&view==='lineage')paint();});
-  document.addEventListener('eg:analysis',()=>{if(!ready)return;root=selected=result.change.target;expanded.clear();$('graphChange').value=result.change.id;paint();});
+  document.addEventListener('eg:analysis',()=>{if(!ready)return;custom=null;root=selected=result.change.target;expanded.clear();$('graphChange').value=result.change.id;paint();});
   document.addEventListener('eg:filtered',()=>{if(ready)paint();});
 })();

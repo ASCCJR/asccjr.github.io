@@ -1,25 +1,27 @@
 # EvidentGraph — Grupo Aurora
 
-Prévia com **grafo + lista de impacto + inventário**. Grupo Aurora é uma organização fictícia. Toda a base é sintética; a indicação foi concentrada em “Sobre o ambiente” para evitar repetição na interface.
+Versão de avaliação com grafo, lista, investigação por ativo e análise de mudanças. O Grupo Aurora e seus dados são fictícios. Site de avaliação: `/evidence-graph/preview-m2/`; a versão anterior em `/evidence-graph/` permanece preservada.
 
 ## Abrir
 
-O ZIP entregue já inclui `data.js`. Extraia tudo e abra `index.html` nesta pasta em um navegador recente.
-
-Ao clonar a branch, gere os dados primeiro, a partir da raiz do repositório:
+Depois de gerados/versionados os dados, abrir `index.html` ou o endereço do GitHub Pages. Não há backend ou credenciais. Para regenerar:
 
 ```sh
-python evidence-graph/core/demo-ui/build_preview.py
+python3 evidence-graph/core/demo-ui/build_preview.py
 ```
 
-Não precisa de servidor ou credenciais. As saídas regeneráveis `data.js` e `manifest.json` permanecem ignoradas no Git.
+## Funcionalidades
 
-## Explorar
+Selecionar um ativo; investigar dependências, consumidores ou processos; variar alcance; alternar grafo/lista sem trocar o contexto; revisar um consumidor nos cenários existentes; registrar verificações e exportar Markdown.
 
-A abertura mostra o contexto da API de clientes. Clique em um ativo; use **Revisar impacto** ou **Lista** para consultar consumidores e ações. **Grafo** retorna ao mapa sem limpar filtros da análise. Em Escopo, escolha **Empresa inteira** para acessar o catálogo completo ou **Caminhos da análise** para o recorte da revisão. Há zoom, arraste, busca, filtro por área e expansão de conexões.
+`exploration.js` contém as regras de alcance tipado; `investigation.js` mantém contexto/seleção compartilhados e exporta o recorte. `lineage.js` desenha o mapa. `app.js` mantém análises pré-calculadas pelo Python M1, inventário e notas locais.
 
-## Validação e limites
+## Testes
 
-Veja [17_M2_GRAPH_REVIEW.md](../core/docs/17_M2_GRAPH_REVIEW.md). O mapa usa as 512 relações; análises de impacto permanecem limitadas aos três cenários preparados pelo analisador M1. Não há avaliação de autorização ou integrações de produção.
+```sh
+cd evidence-graph/core/demo-data && python3 -m unittest -q test_model
+cd ../demo-ui && node --test test_exploration.cjs
+python3 -m unittest -q test_navigation
+```
 
-A branch segue em revisão no PR #1, sem substituir o site público.
+O último comando requer Playwright e Chromium. Consulte `../core/docs/18_ASSET_INVESTIGATION.md` para escopo, evidência de teste e limitações. Os testes de UI nesta etapa usam DOM local, não validação de implantação.
