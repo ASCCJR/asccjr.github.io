@@ -136,3 +136,17 @@ Run discovery and usability in parallel with development. This supersedes the pr
 Do not hide uncertainty, equate missing traces with absent dependencies, count structural relations as runtime calls, or claim that a dependency alone proves breakage.
 
 This documentation revision does not change public demo code, Campus Mobile, academic submissions, contributor names or personal material.
+
+---
+
+## D-012 — Abandon Sites migration and resume the Core on GitHub Pages
+**Date:** 2026-10-15  
+**Status:** DECIDED by the proponent
+
+The user decided to discard the Sites experiment and keep GitHub Pages for the current interface. PR #2 was closed without merge; its branch is historical, not a prerequisite. Deleting the Sites project is the user's own action and was not performed here.
+
+Retain the accepted M3 graph-plus-list experience and Grupo Aurora identity. Continue with usability evaluation and a restricted runtime-evidence laboratory, not another visual rewrite or hosting migration. This confirms the graph-restoration correction recorded in `17_M2_GRAPH_REVIEW.md`; task-first does not mean graph removal.
+
+The L1 laboratory collects real loopback HTTP/SQLite execution via manual OpenTelemetry instrumentation while using fictitious business data. It is separate from the M1 synthetic schema and published UI. It does not demonstrate IAM, enterprise collectors, real customers or statistically validated superiority.
+
+See `21_RETOMADA_CORE_E_LABORATORIO.md` and `22_ROTEIRO_AVALIACAO_M3.md`. Preserve prior publications, Campus Mobile, academic files, team names and personal-material exclusions.
