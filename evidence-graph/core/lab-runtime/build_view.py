@@ -35,7 +35,11 @@ def build(run_path: Path, out: Path, preview: Path = PREVIEW) -> dict:
         raise ValueError('Unexpected Aurora baseline')
     lab_packed = base64.b64encode(gzip.compress(json.dumps(bundle, ensure_ascii=False,
                                  sort_keys=True, separators=(',', ':')).encode(), mtime=0)).decode()
-    texts['data.js'] = '// Two independent read-only datasets; selected before M3 boots.\nwindow.EG_PACKED = location.hash === "#aurora" ? '+json.dumps(aurora)+' : '+json.dumps(lab_packed)+';\n'
+    texts['data.js'] = ('// Two independent read-only datasets; selected before M3 boots.\n'
+                        'window.EG_SOURCE = new URLSearchParams(location.search).get("source") '
+                        '|| (location.hash === "#aurora" ? "aurora" : "lab");\n'
+                        'window.EG_PACKED = window.EG_SOURCE === "aurora" ? '
+                        + json.dumps(aurora) + ' : ' + json.dumps(lab_packed) + ';\n')
     texts['app.js'] = replace_once(texts['app.js'], "const SCENARIOS = {", "const SCENARIOS = {'LAB-001':'Remover cliente_id · coleta v1/v2',")
     texts['app.js'] = replace_once(texts['app.js'], "data.synthetic!==true||", "(data.synthetic!==true&&data.provenance?.kind!=='l1_capture')||")
     html = texts['index.html']

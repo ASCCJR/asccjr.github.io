@@ -49,7 +49,37 @@
   }
   document.addEventListener('eg:ready',()=>{
     const select=$('workspaceSource');select.value=isLab()?'lab':'aurora';
-    select.addEventListener('change',()=>{location.hash=select.value;location.reload();});
+    // Keep the data source separate from page anchors; retain legacy #aurora links.
+    const canonical = new URL(location.href);
+    canonical.searchParams.set('source', select.value);
+    if (['#lab', '#aurora'].includes(canonical.hash)) canonical.hash = '';
+    try { history.replaceState(null, '', canonical.href); } catch { /* Restricted file/about origins. */ }
+    const storageNotice = document.createElement('p');
+    storageNotice.id = 'storageNotice';
+    storageNotice.className = 'capture-notice';
+    storageNotice.setAttribute('role', 'status');
+    storageNotice.textContent = 'Armazenamento local indisponível: notas valem só nesta sessão. Exporte antes de recarregar ou trocar a fonte.';
+    $('captureNotice').after(storageNotice);
+    function showStorageState() {
+      storageNotice.hidden = persist;
+      document.querySelectorAll('.review-caption').forEach(el => {
+        el.textContent = persist ? 'Só neste navegador' : 'Só nesta sessão';
+      });
+    }
+    const previousStore = store;
+    store = function(id, patch) { previousStore(id, patch); showStorageState(); };
+    showStorageState();
+    select.addEventListener('change', () => {
+      const hasSessionNotes = !persist && Object.values(checks).some(x => x.note || x.done);
+      if (hasSessionNotes && !window.confirm('As notas não foram salvas neste navegador. Exporte a análise antes de sair. Trocar a fonte mesmo assim?')) {
+        select.value = isLab() ? 'lab' : 'aurora';
+        return;
+      }
+      const target = new URL(location.href);
+      target.searchParams.set('source', select.value);
+      target.hash = '';
+      location.assign(target.href);
+    });
     if(!isLab())return;
     const p=data.provenance;
     document.title='EvidentGraph · Aurora Lab';

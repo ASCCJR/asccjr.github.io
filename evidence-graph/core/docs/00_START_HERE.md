@@ -2,13 +2,21 @@
 
 This directory is the persistent memory of the canonical project.
 
+## Current checkpoint — L3 stabilization, 2026-10-16
+
+The proponent approved continuing from L2 and requested the next-stage plan. Read [24_CORE_NEXT_STEPS.md](./24_CORE_NEXT_STEPS.md) and [25_L3_BROWSER_VALIDATION.md](./25_L3_BROWSER_VALIDATION.md) first for the execution sequence and validation boundary.
+
+Source selection now uses a query parameter instead of sharing the fragment with page anchors. The isolated viewer warns about unavailable note persistence and can cancel a source switch before losing session notes. The M3 public sources, dataset and UI design are preserved. There is a new HTTP browser suite and read-only GitHub Actions workflow; consult the actual run before claiming CI success. The local round passed 66 lab/adapter/DOM tests, not every historical suite.
+
+Work remains on the PR #3 branch; this change does not merge, deploy or update Pages. Next: close HTTP validation and review, then reproducible capture updates, scoped authorization/tool execution and an independent evidence-fusion experiment. Discovery runs in parallel; no interviews or commercial validation have been fabricated.
+
 ## Source-of-truth hierarchy
 
 1. `01_CANONICAL_CONTEXT.md` — current truth of the research project.
 2. `08_DECISION_LOG.md` — append-only decisions and changes in direction.
 3. `09_RESEARCH_LOG.md` — research findings, hypotheses, and external evidence.
 4. [12_PRODUCT_UX_VISION.md](./12_PRODUCT_UX_VISION.md) — product/UX specification; graph-first opening was restored by the review below.
-5. [23_LAB_EVIDENCE_UI.md](./23_LAB_EVIDENCE_UI.md) — latest PR #3 checkpoint: L1 evidence adapted to an isolated copy of the M3 graph/list, separate from the synthetic Aurora catalog; no merge/deploy.
+5. [23_LAB_EVIDENCE_UI.md](./23_LAB_EVIDENCE_UI.md) — preceding PR #3 checkpoint: L1 evidence adapted to an isolated copy of the M3 graph/list, separate from the synthetic Aurora catalog; no merge/deploy.
 6. [21_RETOMADA_CORE_E_LABORATORIO.md](./21_RETOMADA_CORE_E_LABORATORIO.md) — preceding L1 checkpoint: abandon Sites migration, preserve Pages/M3 and run a small local evidence experiment.
 7. [18_ASSET_INVESTIGATION.md](./18_ASSET_INVESTIGATION.md) — published M3 implementation checkpoint: shared graph/list workspace and asset investigation. Earlier checkpoints: `15_M1_VALIDATION.md`, `16_M2_PREVIEW.md`, `17_M2_GRAPH_REVIEW.md`.
 8. Other files — detailed views of product, research, architecture, market, and roadmap.
@@ -34,7 +42,7 @@ Why this name:
 
 This is a **working project name**, not a trademark/domain clearance.
 
-## Current work — L2, captured evidence in the existing experience
+## Previous checkpoint — L2, captured evidence in the existing experience
 
 Read [23_LAB_EVIDENCE_UI.md](./23_LAB_EVIDENCE_UI.md). `lab-runtime/adapt_run.py` recalculates the L1 result and maps it to the M3 view contract. `build_view.py` builds a separate portable viewer without editing `preview-m2/`.
 
