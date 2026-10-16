@@ -2,63 +2,64 @@
 
 This directory is the persistent memory of the canonical project.
 
-## Current checkpoint — L5 local authorization, 2026-10-16
+## Current checkpoint — L6-A evidence evaluation, 2026-10-16
 
-Read [27_L5_LOCAL_AUTHORIZATION.md](./27_L5_LOCAL_AUTHORIZATION.md) for the latest implementation and validation boundary. This index now links the previous checkpoints instead of repeating their older pending-status paragraphs.
+Read [28_L6_EVIDENCE_EXPERIMENT.md](./28_L6_EVIDENCE_EXPERIMENT.md) and [evaluation/PROTOCOL.md](../evaluation/PROTOCOL.md). The work remains in PR #3, branch `feat/core-runtime-lab-20261015`; no merge or deploy.
 
-The work remains in PR #3, branch `feat/core-runtime-lab-20261015`. L5 adds an exact-tuple local policy, ephemeral verified identities, actual HTTP allow/deny/indeterminate handling, and a read-only viewer using the existing graph/list components. The `Aurora Acesso` capture has 10 assets and 9 relations; the 240-asset Grupo Aurora is kept separate and unchanged.
+L6-A implements a first controlled comparison of consumer declarations (C), prior runtime (R), and local authorization (A), alone and combined. The behavioral oracle executes functions on real HTTP v1/v2 responses without consulting the manifest used by the predictor. Oracle outcomes and subsequent probes are not prediction inputs. The policy reference server uses a separate direct access table, not the L5 evaluator under test.
 
-Policy decisions, attempted calls, completed calls, contract incompatibility and executed checks remain separate. A denied attempt is not a successful read. An allowed but unexecuted consumer remains unobserved. The API performs the local check; the browser only reads the evidence.
+This is structural/behavioral separation, not independent authorship, blind holdout or external validation. There are 12 consumer cases built from six functions, and six perturbed views of the same cases. Do not count them as independent samples or claim statistical significance.
 
-124 local Python tests passed: 28 L1, 24 L2 adapter, 24 L4 history and 48 L5. Browser HTTP navigation was blocked locally, not counted as success. Ten L5 HTTP browser tests were added to CI; consult the actual head/run before claiming success. Offline DOM inspection is not an HTTP or reload test.
+Base impact results: C gives 6 correct, 2 errors and 4 abstentions; CR/CRA give 7 correct, 2 errors and 3 abstentions. Positive precision falls from 80.0% to 71.4%; recovery of known positives rises from 4/8 to 5/8. A required-looking read inside try/except creates a false positive. A conflict turns a false negative into an abstention, not confirmed correctness. This is not unequivocal superiority of fusion.
 
-No merge or deploy is authorized by this checkpoint. No public HTML/CSS/JS, Pages configuration, previous datasets, contributor information, academic submission or opportunity variant was changed. Sites remains abandoned. The user explicitly directed completing the Core milestone first and improving the CTE-IA application afterwards.
+167 local tests passed: 124 previous lab/history/authorization regressions plus 43 evaluation tests. No new UI or hosted-browser result is claimed. The read-only evaluation workflow runs the same suites; consult the actual head/run before claiming CI success. Tests verify measurement and preservation of adverse results, not that predictions are all correct.
+
+Candidate heuristics in `core/evaluation/` are NOT promoted to the product analyzer. The M3/Pages UI, L1–L5 code, 240-asset Grupo Aurora dataset, contributor information, academic submissions and opportunity variants remain unchanged. Sites stays abandoned; the CTE-IA application is a later parallel task, not a blocker for Core work.
 
 ## Resume here
 
-1. Inspect PR #3 and CI for its actual status.
-2. Read `27_L5_LOCAL_AUTHORIZATION.md`; inspect `auth_policy.py`, `auth_lab.py`, `auth_adapter.py`, `build_auth_view.py` and the tests under `lab-runtime/`.
-3. Review the read-only viewer without replacing the M3 public site.
-4. Next research milestone: L6 independent reference cases and comparison of evidence sources. Do not claim novelty or precision improvements from implementation tests.
+1. Inspect PR #3 and its CI status.
+2. Read `28_L6_EVIDENCE_EXPERIMENT.md`, `evaluation/PROTOCOL.md` and `evaluation/README.md`.
+3. Preserve this baseline and its errors. Refine candidate reasoning in a new version: potential field dependency is not confirmed failure, and complete documentation can be wrong.
+4. Add independently reviewed challenge cases and semantic outcomes, plus pending user sessions. No automatic publication or new redesign.
 
-The L4 history command remains restricted to L1 captures; L5 uses a separate schema and builder. Do not silently mix them or mutate old captures. MCP, LLM agents, IAM providers, corporate connectors and production security are not implemented by this stage.
+The L4 history command stays limited to L1 captures. L5 uses a separate schema/builder. L6-A outputs measurements, not an additional application. No silent dataset mixing or modification of historical runs. MCP, LLM agents, production IAM and corporate connectors remain unimplemented.
 
 ## Source-of-truth hierarchy
 
-1. `01_CANONICAL_CONTEXT.md` — research thesis and project boundaries; consult implementation checkpoints for newer capabilities.
-2. `08_DECISION_LOG.md` — append-only decisions and changes in direction.
-3. `09_RESEARCH_LOG.md` — research findings, hypotheses and external evidence.
-4. `12_PRODUCT_UX_VISION.md` — product/UX specification; graph-first opening was restored in `17_M2_GRAPH_REVIEW.md`.
-5. `27_L5_LOCAL_AUTHORIZATION.md` — current implementation checkpoint.
-6. Other detailed research, architecture, product, roadmap and opportunity documents.
+1. `01_CANONICAL_CONTEXT.md` — research thesis/boundaries; current implementation status is in checkpoints.
+2. `08_DECISION_LOG.md` — append-only decisions.
+3. `09_RESEARCH_LOG.md` — research notes; L6-A results are in checkpoint 28.
+4. `12_PRODUCT_UX_VISION.md` — UX specification; graph-first opening restored in `17_M2_GRAPH_REVIEW.md`.
+5. `28_L6_EVIDENCE_EXPERIMENT.md` — current evaluation checkpoint and limits.
+6. Other detailed architecture, roadmap and opportunity documents.
 
 ## Checkpoint history
 
-- [M1: synthetic data and reference model](./15_M1_VALIDATION.md).
-- [M2: review workflow](./16_M2_PREVIEW.md) and [restoration of graph + list](./17_M2_GRAPH_REVIEW.md).
-- [M3: asset investigation](./18_ASSET_INVESTIGATION.md). Published evaluation path: `/evidence-graph/preview-m2/`; the older `/evidence-graph/` site is preserved.
-- [L1: actual local HTTP/SQLite/OTel](./21_RETOMADA_CORE_E_LABORATORIO.md).
-- [L2: capture-to-view adapter](./23_LAB_EVIDENCE_UI.md).
-- [L3: source switching, notes and HTTP tests](./25_L3_BROWSER_VALIDATION.md).
-- [L4: capture history and comparison](./26_L4_CAPTURE_HISTORY.md).
-- [Development roadmap](./24_CORE_NEXT_STEPS.md) and [user evaluation script](./22_ROTEIRO_AVALIACAO_M3.md).
+- [M1: data/reference model](./15_M1_VALIDATION.md).
+- [M2: review](./16_M2_PREVIEW.md) and [graph + list restoration](./17_M2_GRAPH_REVIEW.md).
+- [M3: asset investigation](./18_ASSET_INVESTIGATION.md). Published evaluation: `/evidence-graph/preview-m2/`; older `/evidence-graph/` preserved.
+- [L1: local HTTP/SQLite/OTel](./21_RETOMADA_CORE_E_LABORATORIO.md).
+- [L2: capture adapter](./23_LAB_EVIDENCE_UI.md).
+- [L3: source/notes/HTTP tests](./25_L3_BROWSER_VALIDATION.md).
+- [L4: capture history](./26_L4_CAPTURE_HISTORY.md).
+- [L5: endpoint-scoped local authorization](./27_L5_LOCAL_AUTHORIZATION.md).
+- [Roadmap](./24_CORE_NEXT_STEPS.md) and [user evaluation script](./22_ROTEIRO_AVALIACAO_M3.md).
 
-Historical test counts refer to their own revisions and conditions. They are not added together as distinct tests or treated as current production validation.
+Historical counts describe their revisions and conditions. Do not add overlapping suites or turn unit-test success into production/market validation.
 
 ## Rules
 
 - Separate fact, hypothesis, decision and idea.
-- Repetition does not turn hypotheses into facts.
-- No novelty claim merely because a feature is new to this project.
+- Repetition does not make a hypothesis true; no novelty claim solely because a feature is new here.
 - Preserve graph/lineage and operational analysis as complementary views.
-- Keep the Core independent from edital/course-specific constraints.
+- Keep the Core independent from edital/course requirements; adaptations belong in `opportunities/`.
 - GitHub is the project memory; chat is a working environment.
-- Adaptations belong in their own `opportunities/` directory.
-- No fabricated interviews, customer adoption, safety guarantees or commercial results.
-- Preserve public site, team documents and personal-material removals unless a task explicitly authorizes changing them.
+- No fabricated interviews, adoption, commercial outcomes or safety guarantees.
+- Preserve public site, team documents and personal-material removals unless expressly authorized.
 
 ## Working name
 
 **EvidentGraph — Dependency Intelligence for Data, Software & AI.**
 
-The name emphasizes evidence/provenance and the dependency model; it is not vendor-specific and does not restrict the Core to agents. This is a working name, not trademark/domain clearance.
+Working name, not trademark/domain clearance. Broad Core; agents are one use case.
