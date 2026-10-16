@@ -1,65 +1,61 @@
 # START HERE — EvidentGraph Core
 
-This directory is the persistent memory of the canonical project.
+Persistent memory of the canonical project. GitHub is the source of truth; chat is a working environment.
 
-## Current checkpoint — L6-A evidence evaluation, 2026-10-16
+## Current checkpoint — L6-B, 2026-10-16
 
-Read [28_L6_EVIDENCE_EXPERIMENT.md](./28_L6_EVIDENCE_EXPERIMENT.md) and [evaluation/PROTOCOL.md](../evaluation/PROTOCOL.md). The work remains in PR #3, branch `feat/core-runtime-lab-20261015`; no merge or deploy.
+Read [29_L6B_INFERENCE_AND_SEMANTICS.md](./29_L6B_INFERENCE_AND_SEMANTICS.md) and [refinement/PROTOCOL.md](../evaluation/refinement/PROTOCOL.md). Work is in PR #3, branch `feat/core-runtime-lab-20261015`; no automatic merge or deploy.
 
-L6-A implements a first controlled comparison of consumer declarations (C), prior runtime (R), and local authorization (A), alone and combined. The behavioral oracle executes functions on real HTTP v1/v2 responses without consulting the manifest used by the predictor. Oracle outcomes and subsequent probes are not prediction inputs. The policy reference server uses a separate direct access table, not the L5 evaluator under test.
+L6-B separates declared requirements, observed field access, potential impact, bounded exception inference, execution confirmation and semantic correctness. It adds source evidence S through a deliberately limited AST analyzer, under exact local response assumptions. Unsupported syntax and invalid scope/hash/validity produce UNKNOWN.
 
-This is structural/behavioral separation, not independent authorship, blind holdout or external validation. There are 12 consumer cases built from six functions, and six perturbed views of the same cases. Do not count them as independent samples or claim statistical significance.
+Old 12 cases: unchanged A_CRA = 7 correct, 2 FP, 3 unknown; B+S = 11 correct, 0 observed binary errors, 1 unknown. This is **extra information**, not superior fusion at equal information. S alone produces the same exception predictions. Without S, B abstains in all 12 cases; zero errors through abstention is not success.
 
-Base impact results: C gives 6 correct, 2 errors and 4 abstentions; CR/CRA give 7 correct, 2 errors and 3 abstentions. Positive precision falls from 80.0% to 71.4%; recovery of known positives rises from 4/8 to 5/8. A required-looking read inside try/except creates a false positive. A conflict turns a false negative into an abstention, not confirmed correctness. This is not unequivocal superiority of fusion.
+Eight new cases: 3 correct exception predictions, 5 unknown. Three tasks violate business expectations without exceptions. The evaluator discovers them; the predictor does not claim semantic correctness. Old cases were known; new cases are also same-author, not an external holdout. No statistical significance, independent validation or product promotion is claimed.
 
-167 local tests passed: 124 previous lab/history/authorization regressions plus 43 evaluation tests. No new UI or hosted-browser result is claimed. The read-only evaluation workflow runs the same suites; consult the actual head/run before claiming CI success. Tests verify measurement and preservation of adverse results, not that predictions are all correct.
-
-Candidate heuristics in `core/evaluation/` are NOT promoted to the product analyzer. The M3/Pages UI, L1–L5 code, 240-asset Grupo Aurora dataset, contributor information, academic submissions and opportunity variants remain unchanged. Sites stays abandoned; the CTE-IA application is a later parallel task, not a blocker for Core work.
+229 local tests passed: 124 previous lab regressions, 43 L6-A, 62 L6-B. The workflow includes all three groups; consult the actual commit/run for CI status. No new UI/Pages/browser claim. The five new Python blobs match the locally tested files.
 
 ## Resume here
 
-1. Inspect PR #3 and its CI status.
-2. Read `28_L6_EVIDENCE_EXPERIMENT.md`, `evaluation/PROTOCOL.md` and `evaluation/README.md`.
-3. Preserve this baseline and its errors. Refine candidate reasoning in a new version: potential field dependency is not confirmed failure, and complete documentation can be wrong.
-4. Add independently reviewed challenge cases and semantic outcomes, plus pending user sessions. No automatic publication or new redesign.
+1. Inspect PR #3 and CI status.
+2. Read checkpoint 29 and `evaluation/refinement/README.md`.
+3. Preserve L6-A and L6-B results, including abstentions and extra-information caveats.
+4. Next bounded milestone: independent case review and a truthful presentation of potential impact, inference and tested outcomes, without a redesign or treating unsupported code as safe.
 
-The L4 history command stays limited to L1 captures. L5 uses a separate schema/builder. L6-A outputs measurements, not an additional application. No silent dataset mixing or modification of historical runs. MCP, LLM agents, production IAM and corporate connectors remain unimplemented.
+Independent review and user sessions have not occurred. Do not fabricate their completion. The CTE-IA application stays separate until the functional Core milestone is consolidated.
 
 ## Source-of-truth hierarchy
 
-1. `01_CANONICAL_CONTEXT.md` — research thesis/boundaries; current implementation status is in checkpoints.
+1. `01_CANONICAL_CONTEXT.md` — research thesis/boundaries; implementation checkpoints provide newer status.
 2. `08_DECISION_LOG.md` — append-only decisions.
-3. `09_RESEARCH_LOG.md` — research notes; L6-A results are in checkpoint 28.
-4. `12_PRODUCT_UX_VISION.md` — UX specification; graph-first opening restored in `17_M2_GRAPH_REVIEW.md`.
-5. `28_L6_EVIDENCE_EXPERIMENT.md` — current evaluation checkpoint and limits.
-6. Other detailed architecture, roadmap and opportunity documents.
+3. `09_RESEARCH_LOG.md` — research notes; experimental results are in checkpoints 28 and 29.
+4. `12_PRODUCT_UX_VISION.md` — product/UX; graph-first was restored in checkpoint 17.
+5. `29_L6B_INFERENCE_AND_SEMANTICS.md` — current experiment and its limitations.
+6. Detailed architecture, roadmap and opportunity documents.
 
 ## Checkpoint history
 
 - [M1: data/reference model](./15_M1_VALIDATION.md).
-- [M2: review](./16_M2_PREVIEW.md) and [graph + list restoration](./17_M2_GRAPH_REVIEW.md).
-- [M3: asset investigation](./18_ASSET_INVESTIGATION.md). Published evaluation: `/evidence-graph/preview-m2/`; older `/evidence-graph/` preserved.
-- [L1: local HTTP/SQLite/OTel](./21_RETOMADA_CORE_E_LABORATORIO.md).
+- [M2: review](./16_M2_PREVIEW.md), [graph/list restoration](./17_M2_GRAPH_REVIEW.md).
+- [M3: asset investigation](./18_ASSET_INVESTIGATION.md). Evaluation at `/evidence-graph/preview-m2/`; older `/evidence-graph/` preserved.
+- [L1: real local HTTP/SQLite/OTel](./21_RETOMADA_CORE_E_LABORATORIO.md).
 - [L2: capture adapter](./23_LAB_EVIDENCE_UI.md).
-- [L3: source/notes/HTTP tests](./25_L3_BROWSER_VALIDATION.md).
-- [L4: capture history](./26_L4_CAPTURE_HISTORY.md).
-- [L5: endpoint-scoped local authorization](./27_L5_LOCAL_AUTHORIZATION.md).
-- [Roadmap](./24_CORE_NEXT_STEPS.md) and [user evaluation script](./22_ROTEIRO_AVALIACAO_M3.md).
-
-Historical counts describe their revisions and conditions. Do not add overlapping suites or turn unit-test success into production/market validation.
+- [L3: source, notes and HTTP tests](./25_L3_BROWSER_VALIDATION.md).
+- [L4: capture history](./26_L4_CAPTURE_HISTORY.md), limited to L1 schema.
+- [L5: local endpoint authorization](./27_L5_LOCAL_AUTHORIZATION.md), separate schema/viewer.
+- [L6-A: baseline source evaluation](./28_L6_EVIDENCE_EXPERIMENT.md), unchanged.
+- [Roadmap](./24_CORE_NEXT_STEPS.md), [user evaluation script](./22_ROTEIRO_AVALIACAO_M3.md).
 
 ## Rules
 
-- Separate fact, hypothesis, decision and idea.
-- Repetition does not make a hypothesis true; no novelty claim solely because a feature is new here.
+- Separate fact, hypothesis, decision and idea; repetition does not turn a hypothesis into fact.
+- No novelty claim merely because a feature is new here.
 - Preserve graph/lineage and operational analysis as complementary views.
-- Keep the Core independent from edital/course requirements; adaptations belong in `opportunities/`.
-- GitHub is the project memory; chat is a working environment.
+- Do not sum overlapping test runs or equate passing implementation tests with correct predictions, market validation or production security.
+- Keep Core independent from edital/course requirements. Adaptations belong in `opportunities/`.
 - No fabricated interviews, adoption, commercial outcomes or safety guarantees.
-- Preserve public site, team documents and personal-material removals unless expressly authorized.
+- Preserve public site, team records and personal-material removals unless expressly authorized.
+- Sites remains abandoned. MCP, LLM agents, corporate connectors and production IAM have not been implemented by these milestones.
 
 ## Working name
 
-**EvidentGraph — Dependency Intelligence for Data, Software & AI.**
-
-Working name, not trademark/domain clearance. Broad Core; agents are one use case.
+**EvidentGraph — Dependency Intelligence for Data, Software & AI.** Working name, not trademark/domain clearance. Agents are one use case in a broader Core.

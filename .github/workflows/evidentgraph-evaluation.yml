@@ -32,3 +32,6 @@ jobs:
       - name: Behavioral reference, source ablation and metrics
         working-directory: evidence-graph/core/evaluation
         run: python -m unittest -v test_experiment
+      - name: Bounded source inference and semantic reference
+        working-directory: evidence-graph/core/evaluation/refinement
+        run: python -m unittest -v test_refinement
