@@ -2,76 +2,63 @@
 
 This directory is the persistent memory of the canonical project.
 
-## Current checkpoint — L3 stabilization, 2026-10-16
+## Current checkpoint — L5 local authorization, 2026-10-16
 
-The proponent approved continuing from L2 and requested the next-stage plan. Read [24_CORE_NEXT_STEPS.md](./24_CORE_NEXT_STEPS.md) and [25_L3_BROWSER_VALIDATION.md](./25_L3_BROWSER_VALIDATION.md) first for the execution sequence and validation boundary.
+Read [27_L5_LOCAL_AUTHORIZATION.md](./27_L5_LOCAL_AUTHORIZATION.md) for the latest implementation and validation boundary. This index now links the previous checkpoints instead of repeating their older pending-status paragraphs.
 
-Source selection now uses a query parameter instead of sharing the fragment with page anchors. The isolated viewer warns about unavailable note persistence and can cancel a source switch before losing session notes. The M3 public sources, dataset and UI design are preserved. There is a new HTTP browser suite and read-only GitHub Actions workflow; consult the actual run before claiming CI success. The local round passed 66 lab/adapter/DOM tests, not every historical suite.
+The work remains in PR #3, branch `feat/core-runtime-lab-20261015`. L5 adds an exact-tuple local policy, ephemeral verified identities, actual HTTP allow/deny/indeterminate handling, and a read-only viewer using the existing graph/list components. The `Aurora Acesso` capture has 10 assets and 9 relations; the 240-asset Grupo Aurora is kept separate and unchanged.
 
-Work remains on the PR #3 branch; this change does not merge, deploy or update Pages. Next: close HTTP validation and review, then reproducible capture updates, scoped authorization/tool execution and an independent evidence-fusion experiment. Discovery runs in parallel; no interviews or commercial validation have been fabricated.
+Policy decisions, attempted calls, completed calls, contract incompatibility and executed checks remain separate. A denied attempt is not a successful read. An allowed but unexecuted consumer remains unobserved. The API performs the local check; the browser only reads the evidence.
+
+124 local Python tests passed: 28 L1, 24 L2 adapter, 24 L4 history and 48 L5. Browser HTTP navigation was blocked locally, not counted as success. Ten L5 HTTP browser tests were added to CI; consult the actual head/run before claiming success. Offline DOM inspection is not an HTTP or reload test.
+
+No merge or deploy is authorized by this checkpoint. No public HTML/CSS/JS, Pages configuration, previous datasets, contributor information, academic submission or opportunity variant was changed. Sites remains abandoned. The user explicitly directed completing the Core milestone first and improving the CTE-IA application afterwards.
+
+## Resume here
+
+1. Inspect PR #3 and CI for its actual status.
+2. Read `27_L5_LOCAL_AUTHORIZATION.md`; inspect `auth_policy.py`, `auth_lab.py`, `auth_adapter.py`, `build_auth_view.py` and the tests under `lab-runtime/`.
+3. Review the read-only viewer without replacing the M3 public site.
+4. Next research milestone: L6 independent reference cases and comparison of evidence sources. Do not claim novelty or precision improvements from implementation tests.
+
+The L4 history command remains restricted to L1 captures; L5 uses a separate schema and builder. Do not silently mix them or mutate old captures. MCP, LLM agents, IAM providers, corporate connectors and production security are not implemented by this stage.
 
 ## Source-of-truth hierarchy
 
-1. `01_CANONICAL_CONTEXT.md` — current truth of the research project.
+1. `01_CANONICAL_CONTEXT.md` — research thesis and project boundaries; consult implementation checkpoints for newer capabilities.
 2. `08_DECISION_LOG.md` — append-only decisions and changes in direction.
-3. `09_RESEARCH_LOG.md` — research findings, hypotheses, and external evidence.
-4. [12_PRODUCT_UX_VISION.md](./12_PRODUCT_UX_VISION.md) — product/UX specification; graph-first opening was restored by the review below.
-5. [23_LAB_EVIDENCE_UI.md](./23_LAB_EVIDENCE_UI.md) — preceding PR #3 checkpoint: L1 evidence adapted to an isolated copy of the M3 graph/list, separate from the synthetic Aurora catalog; no merge/deploy.
-6. [21_RETOMADA_CORE_E_LABORATORIO.md](./21_RETOMADA_CORE_E_LABORATORIO.md) — preceding L1 checkpoint: abandon Sites migration, preserve Pages/M3 and run a small local evidence experiment.
-7. [18_ASSET_INVESTIGATION.md](./18_ASSET_INVESTIGATION.md) — published M3 implementation checkpoint: shared graph/list workspace and asset investigation. Earlier checkpoints: `15_M1_VALIDATION.md`, `16_M2_PREVIEW.md`, `17_M2_GRAPH_REVIEW.md`.
-8. Other files — detailed views of product, research, architecture, market, and roadmap.
+3. `09_RESEARCH_LOG.md` — research findings, hypotheses and external evidence.
+4. `12_PRODUCT_UX_VISION.md` — product/UX specification; graph-first opening was restored in `17_M2_GRAPH_REVIEW.md`.
+5. `27_L5_LOCAL_AUTHORIZATION.md` — current implementation checkpoint.
+6. Other detailed research, architecture, product, roadmap and opportunity documents.
+
+## Checkpoint history
+
+- [M1: synthetic data and reference model](./15_M1_VALIDATION.md).
+- [M2: review workflow](./16_M2_PREVIEW.md) and [restoration of graph + list](./17_M2_GRAPH_REVIEW.md).
+- [M3: asset investigation](./18_ASSET_INVESTIGATION.md). Published evaluation path: `/evidence-graph/preview-m2/`; the older `/evidence-graph/` site is preserved.
+- [L1: actual local HTTP/SQLite/OTel](./21_RETOMADA_CORE_E_LABORATORIO.md).
+- [L2: capture-to-view adapter](./23_LAB_EVIDENCE_UI.md).
+- [L3: source switching, notes and HTTP tests](./25_L3_BROWSER_VALIDATION.md).
+- [L4: capture history and comparison](./26_L4_CAPTURE_HISTORY.md).
+- [Development roadmap](./24_CORE_NEXT_STEPS.md) and [user evaluation script](./22_ROTEIRO_AVALIACAO_M3.md).
+
+Historical test counts refer to their own revisions and conditions. They are not added together as distinct tests or treated as current production validation.
 
 ## Rules
 
-- Separate **fact**, **hypothesis**, **decision**, and **idea**.
-- Do not turn repeated hypotheses into facts.
-- Do not claim novelty merely because a feature is new to this project.
+- Separate fact, hypothesis, decision and idea.
+- Repetition does not turn hypotheses into facts.
+- No novelty claim merely because a feature is new to this project.
+- Preserve graph/lineage and operational analysis as complementary views.
 - Keep the Core independent from edital/course-specific constraints.
-- GitHub is the project memory. Chat conversations are working sessions.
-- If an opportunity requires an adaptation, create or update its own folder under `opportunities/`.
+- GitHub is the project memory; chat is a working environment.
+- Adaptations belong in their own `opportunities/` directory.
+- No fabricated interviews, customer adoption, safety guarantees or commercial results.
+- Preserve public site, team documents and personal-material removals unless a task explicitly authorizes changing them.
 
-## Current project name
+## Working name
 
-**EvidentGraph**
+**EvidentGraph — Dependency Intelligence for Data, Software & AI.**
 
-Why this name:
-- “Evident” emphasizes evidence, explainability, and provenance.
-- “Graph” reflects the dependency/path model.
-- It is broad enough for data, software, APIs, agents, identity, and runtime.
-- It does not lock the project to a single vendor or to agentic AI only.
-
-This is a **working project name**, not a trademark/domain clearance.
-
-## Previous checkpoint — L2, captured evidence in the existing experience
-
-Read [23_LAB_EVIDENCE_UI.md](./23_LAB_EVIDENCE_UI.md). `lab-runtime/adapt_run.py` recalculates the L1 result and maps it to the M3 view contract. `build_view.py` builds a separate portable viewer without editing `preview-m2/`.
-
-Aurora Lab contains 5 assets and 4 relations for the reference capture. The synthetic Grupo Aurora retains 240 assets and 512 relations. Selection loads one dataset, not a combined graph. Regression after the change is displayed separately from contract incompatibility and prior usage. This is captured local execution, not live corporate telemetry.
-
-122 tests passed locally in this round: 28 L1, 43 M1, 13 traversal, 24 adapter and 14 browser DOM checks. Browser HTTP navigation was blocked; actual URL switching/reload and cross-reload note persistence remain unverified. No CI, hosted, user or market result is claimed.
-
-The work remains in PR #3. Next: review this bridge in a normal browser, verify switching and notes, then consider isolated publication. Do not redesign, merge automatically, replace the public site or expand to corporate connectors before this review.
-
-## Previous checkpoint — 2026-10-15, Core resumed
-
-Sites migration was abandoned by the proponent. PR #2 is closed without merge; its branch is historical only. GitHub Pages remains the current presentation host. Preserve the M3 graph plus list and Grupo Aurora identity.
-
-The isolated [runtime laboratory](../lab-runtime/README.md) now runs a FastAPI API, test consumers and SQLite through actual loopback HTTP, with manually instrumented OpenTelemetry spans. Business data remains fictitious. Twenty-eight lab tests, 43 M1 tests and 13 traversal tests passed locally in this round. No new hosted-browser or CI success is claimed.
-
-This does not integrate laboratory evidence into the public graph or extend the M1 analyzer to real corporate sources. The lab uses a separate schema, declared consumer requirements and a deliberately small GET/200 field-removal scenario.
-
-Read [21_RETOMADA_CORE_E_LABORATORIO.md](./21_RETOMADA_CORE_E_LABORATORIO.md) for evidence and limits, and [22_ROTEIRO_AVALIACAO_M3.md](./22_ROTEIRO_AVALIACAO_M3.md) for the pending hosted check and user sessions.
-
-At that checkpoint the next step was to define the adapter. L2 above now implements it for a local review copy, not the published site. Campus Mobile, academic submissions, contributors and personal material are unchanged.
-
-## Previous checkpoint — 2026-10-14, M3 evaluation
-
-M1 has 240 synthetic assets, 512 relations, a bounded reference impact analyzer and 43 model tests. M2 introduced review, inventory and evidence; the proponent then requested restoring the graph. The accepted direction is **graph plus operational analysis**, with a fictional Grupo Aurora and no repeated demo labels.
-
-M3 adds three questions per asset, depth-limited typed traversal, explicit process associations, shared graph/list filters and selection, return from review to the selected asset, and context export. Source: `preview-m2/`. The original public files at `evidence-graph/index.html`, `app.js`, `styles.css` are not replaced.
-
-The user authorized a separate evaluation address at `/evidence-graph/preview-m2/`. Verify the actual merge and deployment in PR #1; do not confuse local tests or this note with a successful deployment. Generated `data.js` and `manifest.json` must be present before merge; the restricted PR build workflow supplies them.
-
-Read [18_ASSET_INVESTIGATION.md](./18_ASSET_INVESTIGATION.md) for the test record and limitations. Twenty UI tests ran using direct DOM loading because browser HTTP navigation was blocked. This does not validate hosted localStorage persistence. The 13 pure traversal tests do not turn catalog exploration into impact or authorization analysis.
-
-At that checkpoint the next steps were hosted evaluation and a small real-collector PoC. See the latest checkpoint above for progress; hosted user evaluation and enterprise integrations remain pending.
+The name emphasizes evidence/provenance and the dependency model; it is not vendor-specific and does not restrict the Core to agents. This is a working name, not trademark/domain clearance.
