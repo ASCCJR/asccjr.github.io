@@ -1,0 +1,10 @@
+{
+  "n01": {"description": "Pedido deve preservar identificador no roteamento", "v1": ["route:L6-001"], "v2": ["route:L6-001"]},
+  "n02": {"description": "Consulta anônima é alternativa aceita após remoção", "v1": ["route:L6-001"], "v2": ["route:ANONIMO"]},
+  "n03": {"description": "Contagem de caracteres deve preservar identificador", "v1": [6], "v2": [6]},
+  "n04": {"description": "Identificador continua necessário para entrega", "v1": ["L6-001"], "v2": ["L6-001"]},
+  "n05": {"description": "Normalizador aceita anonimato como fallback", "v1": ["L6-001"], "v2": ["ANONIMO"]},
+  "n06": {"description": "Consulta completa deve retornar identificador", "v1": ["ativo", "L6-001"], "v2": ["ativo", "L6-001"]},
+  "n07": {"description": "Roteamento deve manter sufixo de identificação", "v1": ["001"], "v2": ["001"]},
+  "n08": {"description": "Situação deve permanecer ATIVO", "v1": ["ATIVO"], "v2": ["ATIVO"]}
+}
