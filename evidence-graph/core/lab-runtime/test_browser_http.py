@@ -87,7 +87,7 @@ class BrowserHTTPTests(unittest.TestCase):
         self.ready(source)
 
     def review(self):
-        if self.page.locator('#graphView').is_visible():
+        if self.page.locator('#lineageView').is_visible():
             self.page.click('#graphReview')
         expect(self.page.locator('#analysisResult')).to_be_visible()
 
