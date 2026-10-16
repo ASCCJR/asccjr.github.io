@@ -12,7 +12,7 @@ from pathlib import Path
 import tempfile
 import threading
 import unittest
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, urlsplit
 
 from playwright.sync_api import sync_playwright, expect
 import lab
@@ -83,8 +83,12 @@ class BrowserHTTPTests(unittest.TestCase):
 
     def switch(self, source):
         self.page.select_option('#workspaceSource', source)
-        self.page.wait_for_url('**/*source=' + source)
-        self.ready(source)
+        try:
+            self.page.wait_for_url(lambda url: parse_qs(urlsplit(url).query).get('source') == [source])
+            self.ready(source)
+        except Exception as error:
+            state = self.page.evaluate("({url: location.href, selected: document.getElementById('workspaceSource').value, persist, source: window.EG_SOURCE})")
+            self.fail(f'Source navigation failed: {state}; {error}')
 
     def review(self):
         if self.page.locator('#lineageView').is_visible():
@@ -130,11 +134,11 @@ class BrowserHTTPTests(unittest.TestCase):
     def test_03_note_and_check_survive_reload_without_erasing_failure(self):
         self.open()
         self.note('Revisar contrato com Comercial.')
-        self.page.check('[data-check="l1-pedidos"]')
+        self.page.check('#consumerRows [data-check="l1-pedidos"]')
         self.page.reload(wait_until='load')
         self.ready()
         self.assertEqual('Revisar contrato com Comercial.', self.stored_note())
-        expect(self.page.locator('[data-check="l1-pedidos"]')).to_be_checked()
+        expect(self.page.locator('#consumerRows [data-check="l1-pedidos"]')).to_be_checked()
         self.assertIn('Falhou no teste executado', self.page.locator('#consumerRows').inner_text())
 
     def test_04_notes_isolated_between_sources(self):
