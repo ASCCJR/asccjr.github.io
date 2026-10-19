@@ -21,7 +21,6 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
-      EG_TEST_EVIDENCE_DIR: ${{ runner.temp }}/evidentgraph-review
       EG_PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       DEBUG: pw:browser
     steps:
@@ -36,7 +35,10 @@ jobs:
           python -m pip install -r evidence-graph/core/lab-runtime/requirements.txt -r evidence-graph/core/lab-runtime/requirements-browser.txt
           python -m playwright install --with-deps chromium
       - name: Record actual checkout and fixed test environment
+        env:
+          EG_TEST_EVIDENCE_DIR: ${{ runner.temp }}/evidentgraph-review
         run: |
+          printf 'EG_TEST_EVIDENCE_DIR=%s\n' "$EG_TEST_EVIDENCE_DIR" >> "$GITHUB_ENV"
           mkdir -p "$EG_TEST_EVIDENCE_DIR"
           python - <<'PY' | tee "$EG_TEST_EVIDENCE_DIR/environment.log"
           import json, os, platform, subprocess, sys
