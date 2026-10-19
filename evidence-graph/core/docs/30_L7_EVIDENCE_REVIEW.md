@@ -47,6 +47,16 @@ As previsões permanecem condicionais e de autoria controlada; não houve avalia
 
 Ver `review-ui/README.md`. Usar os requisitos fixados de Python/Playwright e uma plataforma suportada pelo navegador correspondente, com sandbox funcional. Não existe novo serviço em nuvem, importação de dados empresariais ou autenticação de produção.
 
+### Validação preparada no GitHub Actions — 2026-10-19
+
+O diagnóstico local foi confirmado contra a distribuição oficial `playwright-core@1.57.0`: os bytes de `hostPlatform.js`, `registry/index.js` e `browsers.json` instalados conferem com ela. O detector retorna `ubuntu26.04-x64` e o registro tem zero URLs para esse Chromium; a exceção ocorre antes do aviso de fallback e da tentativa de download. Não foi uma falha de rede, biblioteca de sistema, política ou inicialização. As falhas posteriores de launch decorrem da ausência do executável. Não houve nova tentativa local de instalação, atualização de versão ou override da plataforma.
+
+Os jobs de navegador de revisão e laboratório usam explicitamente Ubuntu 24.04, Python 3.12, Playwright 1.57.0 e seu Chromium, com dependências instaladas apenas no runner efêmero. O sandbox permanece exigido. Os logs registram o HEAD do PR, o SHA realmente obtido por checkout e seus pais, incluindo quando o GitHub testa um merge temporário. O cenário corrigido de extensão atrasada é repetido três vezes; repetições não ampliam a contagem de testes distintos.
+
+O workflow de revisão seleciona apenas logs dos testes fictícios e screenshots para artefatos com retenção de sete dias; não publica o viewer, capturas completas ou dados pessoais. O workflow de laboratório conserva apenas seus logs selecionados. A configuração usa permissões de leitura e não altera Pages. Resultados precisam ser conferidos no run correspondente ao código final; esta seção descreve o mecanismo, sem certificar uma execução. Sucesso no runner não resolve a indisponibilidade do navegador no WSL local.
+
+Referências da versão diagnosticada: [detecção de plataforma v1.57.0](https://github.com/microsoft/playwright/blob/v1.57.0/packages/playwright-core/src/server/utils/hostPlatform.ts) e [seleção de download v1.57.0](https://github.com/microsoft/playwright/blob/v1.57.0/packages/playwright-core/src/server/registry/index.ts).
+
 Depois desta revisão, fechar o marco funcional com uma avaliação de tarefa por outra pessoa e uma decisão explícita sobre publicação isolada. Não ampliar novamente o parser por uma sequência indefinida de casos internos. A candidatura pode ser trabalhada após esse marco, conforme a orientação do proponente.
 
 ## Referências técnicas

@@ -10,13 +10,20 @@ on:
       - '.github/workflows/evidentgraph-review.yml'
 permissions:
   contents: read
+defaults:
+  run:
+    shell: bash
 concurrency:
   group: evidence-review-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
   review:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
+    env:
+      EG_TEST_EVIDENCE_DIR: ${{ runner.temp }}/evidentgraph-review
+      EG_PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      DEBUG: pw:browser
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,9 +35,59 @@ jobs:
         run: |
           python -m pip install -r evidence-graph/core/lab-runtime/requirements.txt -r evidence-graph/core/lab-runtime/requirements-browser.txt
           python -m playwright install --with-deps chromium
+      - name: Record actual checkout and fixed test environment
+        run: |
+          mkdir -p "$EG_TEST_EVIDENCE_DIR"
+          python - <<'PY' | tee "$EG_TEST_EVIDENCE_DIR/environment.log"
+          import json, os, platform, subprocess, sys
+          from importlib.metadata import distribution, version
+          from pathlib import Path
+          actual = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          parents = subprocess.check_output(['git', 'show', '-s', '--format=%P', 'HEAD'], text=True).split()
+          head = os.environ['EG_PR_HEAD_SHA']
+          assert not head or head in [actual, *parents], 'Checkout does not contain the PR head'
+          assert actual == os.environ['GITHUB_SHA'], 'Unexpected checkout revision'
+          assert version('playwright') == '1.57.0'
+          package = Path(distribution('playwright').locate_file('playwright/driver/package'))
+          chromium = next(x for x in json.loads((package/'browsers.json').read_text())['browsers'] if x['name'] == 'chromium')
+          print(json.dumps({'pr_head_sha': head, 'checkout_sha': actual, 'parents': parents, 'github_sha': os.environ['GITHUB_SHA'], 'python': sys.version, 'platform': platform.platform(), 'os_release': Path('/etc/os-release').read_text(), 'playwright': version('playwright'), 'expected_chromium': chromium, 'chromium_sandbox': True, 'packages': subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'], text=True).splitlines()}, indent=2))
+          PY
       - name: Evidence separation and generated view
         working-directory: evidence-graph/core/review-ui
-        run: python -m unittest -v test_review
+        run: python -m unittest -v test_review 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/review-unit.log"
       - name: HTTP review, source navigation and delayed listener regression
         working-directory: evidence-graph/core/review-ui
-        run: python -m unittest -v test_review_http
+        run: python -m unittest -v test_review_http 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/review-http.log"
+      - name: Repeat corrected delayed-extension scenario three times
+        working-directory: evidence-graph/core/review-ui
+        run: |
+          for round in 1 2 3; do
+            python -m unittest -v test_review_http.ReviewHTTPTests.test_02_delayed_extension_is_safe_after_fix 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/delayed-$round.log"
+          done
+      - name: Keep selected fictitious test evidence for seven days
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidentgraph-l7-review-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/evidentgraph-review/environment.log
+            ${{ runner.temp }}/evidentgraph-review/review-unit.log
+            ${{ runner.temp }}/evidentgraph-review/review-http.log
+            ${{ runner.temp }}/evidentgraph-review/delayed-1.log
+            ${{ runner.temp }}/evidentgraph-review/delayed-2.log
+            ${{ runner.temp }}/evidentgraph-review/delayed-3.log
+            ${{ runner.temp }}/evidentgraph-review/browser-observations.log
+            ${{ runner.temp }}/evidentgraph-review/screenshots/review-graph.png
+            ${{ runner.temp }}/evidentgraph-review/screenshots/review-list.png
+            ${{ runner.temp }}/evidentgraph-review/screenshots/c06-levels.png
+            ${{ runner.temp }}/evidentgraph-review/screenshots/c10-unknown-tested.png
+            ${{ runner.temp }}/evidentgraph-review/screenshots/n01-business.png
+            ${{ runner.temp }}/evidentgraph-review/screenshots/n02-business.png
+            ${{ runner.temp }}/evidentgraph-review/screenshots/notes-source.png
+            ${{ runner.temp }}/evidentgraph-review/screenshots/filtered-export.png
+            ${{ runner.temp }}/evidentgraph-review/screenshots/aurora-complete.png
+            ${{ runner.temp }}/evidentgraph-review/screenshots/source-history.png
+            ${{ runner.temp }}/evidentgraph-review/screenshots/notes-capture-b.png
+            ${{ runner.temp }}/evidentgraph-review/screenshots/notes-capture-a.png

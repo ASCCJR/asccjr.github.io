@@ -26,6 +26,8 @@ class ScriptGate:
 class Handler(SimpleHTTPRequestHandler):
     def log_message(self,*args):pass
     def do_GET(self):
+        if urlsplit(self.path).path=='/favicon.ico':
+            self.send_response(204);self.end_headers();return
         gate=getattr(self.server,'script_gate',None)
         if gate is not None and urlsplit(self.path).path.endswith('/auth_view.js'):
             gate.requested.set()
@@ -51,15 +53,30 @@ class ReviewHTTPTests(unittest.TestCase):
         opts={'headless':True,'chromium_sandbox':True}
         if os.getenv('EG_BROWSER_PATH'):opts['executable_path']=os.environ['EG_BROWSER_PATH']
         cls.browser=cls.pw.chromium.launch(**opts);cls.addClassCleanup(cls.browser.close)
+        print('EG_BROWSER_LAUNCH '+json.dumps({'version':cls.browser.version,'executable':cls.pw.chromium.executable_path,'options':opts}),flush=True)
     @classmethod
     def stop(cls):cls.server.shutdown();cls.server.server_close();cls.thread.join(5)
     def setUp(self):
         self.ctx=self.browser.new_context(viewport={'width':1366,'height':900},accept_downloads=True);self.addCleanup(self.ctx.close)
         self.p=self.ctx.new_page();self.p.set_default_timeout(8000);self.errors=[]
         self.p.on('pageerror',lambda e:self.errors.append(str(e)))
+        self.console_errors=[]
+        self.p.on('console',lambda message:self.console_errors.append({'text':message.text,'location':message.location}) if message.type=='error' else None)
         # Observe the real event; do not replace the HTML, bootstrap or network.
         self.p.add_init_script("window.__eg_ready_count=0;document.addEventListener('eg:ready',()=>window.__eg_ready_count++);")
-    def tearDown(self):self.assertEqual([],self.errors)
+    def tearDown(self):
+        self.observation('browser-errors',page_errors=self.errors,console_errors=self.console_errors)
+        self.assertEqual([],self.errors);self.assertEqual([],self.console_errors)
+    def observation(self,phase,**state):
+        line=json.dumps({'test':self.id(),'phase':phase,**state},ensure_ascii=False)
+        print('EG_BROWSER_OBSERVATION '+line,flush=True)
+        if directory:=os.getenv('EG_TEST_EVIDENCE_DIR'):
+            root=Path(directory);root.mkdir(parents=True,exist_ok=True)
+            with (root/'browser-observations.log').open('a',encoding='utf-8') as log:log.write(line+'\n')
+    def screenshot(self,name):
+        if directory:=os.getenv('EG_TEST_EVIDENCE_DIR'):
+            out=Path(directory)/'screenshots';out.mkdir(parents=True,exist_ok=True)
+            self.p.screenshot(path=str(out/(name+'.png')),full_page=True)
     def ready(self):
         self.p.wait_for_function('window.EG_WORKSPACE_READY===true')
         expect(self.p.locator('#workspaceSource')).to_be_enabled()
@@ -82,6 +99,7 @@ class ReviewHTTPTests(unittest.TestCase):
         self.p.wait_for_function("window.__eg_ready_count===1 && typeof data!=='undefined' && data && !!document.querySelector('[data-node]')")
         self.assertTrue(gate.requested.wait(8),'Extension request did not reach the HTTP gate')
         self.assertFalse(gate.release.is_set())
+        self.observation('legacy-before-extension-release',extension_response_held=True,ready_count=self.p.evaluate('window.__eg_ready_count'),graph_nodes=self.p.locator('[data-node]').count())
         # Core readiness happened while the extension response was withheld.
         gate.release.set();self.p.wait_for_load_state('load')
         self.assertEqual('l5_capture',self.p.evaluate('data.provenance.kind'))
@@ -92,6 +110,7 @@ class ReviewHTTPTests(unittest.TestCase):
         self.p.evaluate('() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))')
         self.assertEqual(['access'],parse_qs(urlsplit(self.p.url).query)['source'])
         self.assertEqual('l5_capture',self.p.evaluate('data.provenance.kind'))
+        self.observation('legacy-missed-listener',url_source=parse_qs(urlsplit(self.p.url).query)['source'],selected=self.p.locator('#workspaceSource').input_value(),loaded_kind=self.p.evaluate('data.provenance.kind'))
     def test_02_delayed_extension_is_safe_after_fix(self):
         gate=self.gate_extension()
         self.p.goto(self.url+'/auth/index.html?source=access',wait_until='commit')
@@ -100,6 +119,7 @@ class ReviewHTTPTests(unittest.TestCase):
         self.assertFalse(gate.release.is_set())
         expect(self.p.locator('#workspaceSource')).to_be_disabled()
         self.assertEqual(0,self.p.evaluate('window.__eg_ready_count'))
+        self.observation('fixed-before-extension-release',extension_response_held=True,core_start_defined=True,ready_count=0,selector_disabled=self.p.locator('#workspaceSource').is_disabled())
         gate.release.set()
         self.ready();self.assertIn('Aurora Acesso',self.p.locator('.company').inner_text())
         self.assertEqual('l5_capture',self.p.evaluate('data.provenance.kind'))
@@ -109,28 +129,33 @@ class ReviewHTTPTests(unittest.TestCase):
             self.assertEqual(240 if s=='aurora' else 10,self.p.evaluate('data.assets.length'))
             self.assertEqual(s,self.p.locator('#workspaceSource').input_value())
             self.assertEqual(1,self.p.evaluate('window.__eg_ready_count'))
+            self.observation('fixed-source-navigation',source=s,assets=self.p.evaluate('data.assets.length'),ready_count=self.p.evaluate('window.__eg_ready_count'))
     def test_03_graph_list_same_ids(self):
         self.open();ids=self.p.locator('[data-node]').evaluate_all('(xs)=>xs.map(x=>x.dataset.node).sort()')
         self.assertEqual(13,len(ids));self.p.click('#graphToList')
         self.assertEqual(ids,self.p.locator('[data-explore-row]').evaluate_all('(xs)=>xs.map(x=>x.dataset.exploreRow).sort()'))
+        self.screenshot('review-list');self.p.click('#graphAsGraph');self.screenshot('review-graph')
     def test_04_caught_field_not_shown_as_failure(self):
         self.open();self.review();self.p.click('[data-detail="l7-c06"]')
         t=self.p.locator('#detailBody').inner_text();self.assertIn('Leitura do campo observada',t)
         self.assertIn('Sem exceção prevista no recorte',t);self.assertNotIn('truth-original.json',t)
+        self.screenshot('c06-levels')
     def test_05_unsupported_inference_stays_unknown_after_reveal(self):
         self.open();self.p.check('#showRecordedTests');self.review();self.p.click('[data-detail="l7-c10"]')
         t=self.p.locator('#detailBody').inner_text();self.assertIn('Inferência inconclusiva',t);self.assertIn('Exceção observada no teste',t)
+        self.screenshot('c10-unknown-tested')
     def test_06_same_code_business_difference(self):
         self.open('validation');self.p.check('#showRecordedTests');self.review()
         for key,expected in [('n01','Requisito violado no teste'),('n02','Requisito atendido no teste')]:
             self.p.click('[data-detail="l7-'+key+'"]');t=self.p.locator('#detailBody').inner_text()
-            self.assertIn('Sem exceção prevista no recorte',t);self.assertIn(expected,t);self.p.click('#closeDetail')
+            self.assertIn('Sem exceção prevista no recorte',t);self.assertIn(expected,t);self.screenshot(key+'-business');self.p.click('#closeDetail')
     def test_07_notes_reload_and_source_isolation(self):
         self.open();self.review();self.p.click('[data-detail="l7-c06"]');self.p.fill('#reviewNote','NOTA_C06');self.p.click('#closeDetail')
         self.p.reload();self.ready();self.review();self.p.click('[data-detail="l7-c06"]')
         self.assertEqual('NOTA_C06',self.p.locator('#reviewNote').input_value());self.p.click('#closeDetail')
         self.switch('validation');self.review();self.p.click('[data-detail="l7-n01"]');self.assertEqual('',self.p.locator('#reviewNote').input_value())
         self.p.click('#closeDetail');self.switch('review');self.review();self.p.click('[data-detail="l7-c06"]');self.assertEqual('NOTA_C06',self.p.locator('#reviewNote').input_value())
+        self.screenshot('notes-source')
     def test_08_export_only_requested_evidence(self):
         self.open('validation');self.review();self.p.fill('#search','Pedido identificado')
         with self.p.expect_download() as d:self.p.click('#exportBtn')
@@ -138,14 +163,18 @@ class ReviewHTTPTests(unittest.TestCase):
         self.p.check('#showRecordedTests')
         with self.p.expect_download() as d:self.p.click('#exportBtn')
         after=Path(d.value.path()).read_text();self.assertIn('Requisito violado no teste',after);self.assertIn('truth-semantic.json',after)
+        self.observation('filtered-export',without_tests=before,with_tests=after)
+        self.screenshot('filtered-export')
     def test_09_full_aurora_remains_available(self):
         self.open();self.switch('aurora');self.p.select_option('#graphScope','all');self.p.check('#graphTechnical')
         self.assertEqual(240,self.p.locator('[data-node]').count());self.assertEqual(512,self.p.locator('[data-edge]').count())
+        self.screenshot('aurora-complete')
         self.switch('review');self.assertEqual(13,self.p.locator('[data-node]').count())
     def test_10_standalone_and_history(self):
         self.open(file='EvidentGraph_L7.html');self.switch('validation');self.p.go_back();self.ready()
         self.assertEqual('review',self.p.locator('#workspaceSource').input_value())
         self.p.go_forward();self.ready();self.assertEqual('validation',self.p.locator('#workspaceSource').input_value())
+        self.screenshot('source-history')
     def test_11_no_horizontal_document_overflow(self):
         self.open();self.assertLessEqual(self.p.evaluate('document.documentElement.scrollWidth'),1366)
     def test_12_manual_mark_never_changes_outcome(self):
@@ -176,7 +205,9 @@ class ReviewHTTPTests(unittest.TestCase):
         self.assertNotEqual(first,self.p.evaluate('data.dataset_version'))
         self.review();self.p.click('[data-detail="l7-c06"]')
         self.assertEqual('',self.p.locator('#reviewNote').input_value())
+        self.screenshot('notes-capture-b')
         self.open();self.review();self.p.click('[data-detail="l7-c06"]')
         self.assertEqual('SOMENTE_CAPTURA_A',self.p.locator('#reviewNote').input_value())
+        self.screenshot('notes-capture-a')
 
 if __name__=='__main__':unittest.main()

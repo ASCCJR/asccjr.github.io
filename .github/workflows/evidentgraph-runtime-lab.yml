@@ -9,15 +9,24 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+defaults:
+  run:
+    shell: bash
 concurrency:
   group: runtime-lab-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 12
+    env:
+      EG_TEST_EVIDENCE_DIR: ${{ runner.temp }}/evidentgraph-runtime
+      EG_PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      DEBUG: pw:browser
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -25,12 +34,39 @@ jobs:
         run: |
           python -m pip install -r evidence-graph/core/lab-runtime/requirements.txt -r evidence-graph/core/lab-runtime/requirements-browser.txt
           python -m playwright install --with-deps chromium
+      - name: Record actual checkout and fixed test environment
+        run: |
+          mkdir -p "$EG_TEST_EVIDENCE_DIR"
+          python - <<'PY' | tee "$EG_TEST_EVIDENCE_DIR/environment.log"
+          import json, os, platform, subprocess, sys
+          from importlib.metadata import version
+          from pathlib import Path
+          actual = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          parents = subprocess.check_output(['git', 'show', '-s', '--format=%P', 'HEAD'], text=True).split()
+          head = os.environ['EG_PR_HEAD_SHA']
+          assert not head or head in [actual, *parents], 'Checkout does not contain the PR head'
+          assert actual == os.environ['GITHUB_SHA'], 'Unexpected checkout revision'
+          assert version('playwright') == '1.57.0'
+          print(json.dumps({'pr_head_sha': head, 'checkout_sha': actual, 'parents': parents, 'github_sha': os.environ['GITHUB_SHA'], 'python': sys.version, 'platform': platform.platform(), 'os_release': Path('/etc/os-release').read_text(), 'playwright': version('playwright'), 'chromium_sandbox': True, 'packages': subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'], text=True).splitlines()}, indent=2))
+          PY
       - name: Reference lab, adapter, history and local authorization tests
         working-directory: evidence-graph/core/lab-runtime
-        run: python -m unittest -v test_lab test_adapter test_capture_history test_auth
+        run: python -m unittest -v test_lab test_adapter test_capture_history test_auth 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/runtime-unit.log"
       - name: Real browser HTTP navigation, source selection, reload and notes
         working-directory: evidence-graph/core/lab-runtime
-        run: python -m unittest -v test_browser_http
+        run: python -m unittest -v test_browser_http 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/runtime-http.log"
       - name: Authorization evidence in the existing graph and review UI
         working-directory: evidence-graph/core/lab-runtime
-        run: python -m unittest -v test_auth_browser
+        run: python -m unittest -v test_auth_browser 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/auth-http.log"
+      - name: Keep selected runtime test logs for seven days
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidentgraph-l7-runtime-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/evidentgraph-runtime/environment.log
+            ${{ runner.temp }}/evidentgraph-runtime/runtime-unit.log
+            ${{ runner.temp }}/evidentgraph-runtime/runtime-http.log
+            ${{ runner.temp }}/evidentgraph-runtime/auth-http.log
