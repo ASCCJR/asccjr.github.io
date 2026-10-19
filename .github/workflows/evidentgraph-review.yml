@@ -1,0 +1,36 @@
+name: EvidentGraph review workspace
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'evidence-graph/core/review-ui/**'
+      - 'evidence-graph/core/lab-runtime/**'
+      - 'evidence-graph/core/evaluation/**'
+      - 'evidence-graph/preview-m2/**'
+      - '.github/workflows/evidentgraph-review.yml'
+permissions:
+  contents: read
+concurrency:
+  group: evidence-review-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install laboratory and browser dependencies
+        run: |
+          python -m pip install -r evidence-graph/core/lab-runtime/requirements.txt -r evidence-graph/core/lab-runtime/requirements-browser.txt
+          python -m playwright install --with-deps chromium
+      - name: Evidence separation and generated view
+        working-directory: evidence-graph/core/review-ui
+        run: python -m unittest -v test_review
+      - name: HTTP review, source navigation and delayed listener regression
+        working-directory: evidence-graph/core/review-ui
+        run: python -m unittest -v test_review_http

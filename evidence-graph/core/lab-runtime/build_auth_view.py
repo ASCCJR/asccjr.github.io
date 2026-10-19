@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import re
 from auth_adapter import adapt
+from view_lifecycle import prepare as prepare_lifecycle
 from build_view import FILES, PREVIEW, HERE, replace_once
 from capture_history import permitted_output
 
@@ -34,6 +35,8 @@ def build(run_path: Path, out: Path) -> dict:
     texts['auth_view.css']='.workspace-picker{display:block;padding:0 18px 20px;font-size:12px;color:#b8c6d8}.workspace-picker select{width:100%;margin-top:8px;padding:9px 4px;border-radius:5px}.capture-notice{padding:10px 14px;border:1px solid #c6d5e3;border-radius:6px;background:#f4f8fb;font-size:12px;margin-bottom:18px;color:#33465a}.auth-inspect{background:#f5f8fb;border:1px solid #dce3ec;padding:10px 12px;margin:12px 0;border-radius:5px;font-size:12px}.auth-inspect small{font-size:10px;color:#52657b}.auth-inspect p{margin:8px 0;line-height:1.5}.auth-panel{border-top:1px solid #dce3ec;margin-top:16px;padding-top:14px}.auth-panel p{line-height:1.6;margin:10px 0}.auth-panel code{overflow-wrap:anywhere;font-size:11px}.auth-mini{margin-top:10px}.auth-mini small{display:block;margin:8px 0 4px;color:#65758a;font-size:10px}.auth-panel .detail-grid{display:block}.dialog-body .auth-panel .detail-grid{display:grid;grid-template-columns:1fr 1fr}\n'
     texts['investigation.js']=replace_once(texts['investigation.js'],"'**Grupo Aurora: organização e dados fictícios.**'", "(data.provenance?'**Aurora Acesso: dados fictícios; execução local capturada; escopo de autorização limitado.**':'**Grupo Aurora: organização e dados fictícios.**')")
     texts['investigation.js']=replace_once(texts['investigation.js'],'`Dataset: ${data.dataset_version}. Relógio: ${data.clock}.`','`Dataset: ${data.dataset_version}. Referência: ${data.clock}. SHA-256: ${data.provenance?.source_sha256||"sintético"}.`')
+    prepare_lifecycle(texts)
+    html=texts['index.html']
     out=permitted_output(out);out.mkdir(parents=True,exist_ok=False)
     for name,text in texts.items():
         if name!='manifest.json':(out/name).write_text(text,encoding='utf-8')

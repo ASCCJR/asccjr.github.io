@@ -41,7 +41,7 @@ class BrowserHTTPTests(unittest.TestCase):
         cls.origin = f'http://127.0.0.1:{cls.server.server_port}'
         cls.pw = sync_playwright().start()
         cls.addClassCleanup(cls.pw.stop)
-        options = {'headless': True}
+        options = {'headless': True, 'chromium_sandbox': True}
         if os.environ.get('EG_BROWSER_PATH'):
             options['executable_path'] = os.environ['EG_BROWSER_PATH']
         cls.browser = cls.pw.chromium.launch(**options)

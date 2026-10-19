@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 import re
 from adapt_run import adapt
+from view_lifecycle import prepare as prepare_lifecycle
 
 HERE = Path(__file__).resolve().parent
 PREVIEW = HERE.parents[1] / 'preview-m2'
@@ -54,6 +55,7 @@ def build(run_path: Path, out: Path, preview: Path = PREVIEW) -> dict:
     texts['investigation.js'] = replace_once(texts['investigation.js'], "'**Grupo Aurora: organização e dados fictícios.**'", "(data.provenance?'**Aurora Lab: dados fictícios; telemetria de execução local capturada. Não é produção.**':'**Grupo Aurora: organização e dados fictícios.**')")
     texts['investigation.js'] = replace_once(texts['investigation.js'], '`Dataset: ${data.dataset_version}. Relógio: ${data.clock}.`', '`Dataset: ${data.dataset_version}. Referência temporal: ${data.clock}. Fonte SHA-256: ${data.provenance?.source_sha256||"cenário sintético versionado"}.`')
     texts['investigation.js'] = replace_once(texts['investigation.js'], 'A análise de impacto específica permanece limitada aos três cenários preparados.', 'A análise de impacto é limitada aos casos disponíveis no conjunto de evidências selecionado.')
+    prepare_lifecycle(texts)
     out.mkdir(parents=True, exist_ok=False)  # Never overwrite a capture or public directory.
     for name, text in texts.items():
         if name != 'manifest.json':
