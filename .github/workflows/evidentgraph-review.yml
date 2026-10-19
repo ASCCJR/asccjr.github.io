@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   review:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
     env:
       EG_PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
@@ -55,18 +55,28 @@ jobs:
           chromium = next(x for x in json.loads((package/'browsers.json').read_text())['browsers'] if x['name'] == 'chromium')
           print(json.dumps({'pr_head_sha': head, 'checkout_sha': actual, 'parents': parents, 'github_sha': os.environ['GITHUB_SHA'], 'python': sys.version, 'platform': platform.platform(), 'os_release': Path('/etc/os-release').read_text(), 'playwright': version('playwright'), 'expected_chromium': chromium, 'chromium_sandbox': True, 'packages': subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'], text=True).splitlines()}, indent=2))
           PY
-      - name: Evidence separation and generated view
-        working-directory: evidence-graph/core/review-ui
-        run: python -m unittest -v test_review 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/review-unit.log"
-      - name: HTTP review, source navigation and delayed listener regression
-        working-directory: evidence-graph/core/review-ui
-        run: python -m unittest -v test_review_http 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/review-http.log"
-      - name: Repeat corrected delayed-extension scenario three times
+      - name: Check sandboxed browser and real loopback HTTP capability
+        run: python evidence-graph/core/lab-runtime/check_browser_environment.py 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/browser-capability.log"
+      - name: Review Python, HTTP and three delayed-extension repetitions
         working-directory: evidence-graph/core/review-ui
         run: |
+          status=0
+          run_suite() {
+            local log_name="$1"
+            shift
+            set +e
+            python -m unittest -v "$@" 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/$log_name.log"
+            local codes=("${PIPESTATUS[@]}")
+            set -e
+            printf 'suite=%s python_exit=%s tee_exit=%s\n' "$log_name" "${codes[0]}" "${codes[1]}" | tee -a "$EG_TEST_EVIDENCE_DIR/suite-status.log"
+            if (( codes[0] != 0 || codes[1] != 0 )); then status=1; fi
+          }
+          run_suite review-unit test_review
+          run_suite review-http test_review_http
           for round in 1 2 3; do
-            python -m unittest -v test_review_http.ReviewHTTPTests.test_02_delayed_extension_is_safe_after_fix 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/delayed-$round.log"
+            run_suite "delayed-$round" test_review_http.ReviewHTTPTests.test_02_delayed_extension_is_safe_after_fix
           done
+          exit "$status"
       - name: Keep selected fictitious test evidence for seven days
         if: always()
         uses: actions/upload-artifact@v4
@@ -76,6 +86,8 @@ jobs:
           if-no-files-found: warn
           path: |
             ${{ runner.temp }}/evidentgraph-review/environment.log
+            ${{ runner.temp }}/evidentgraph-review/browser-capability.log
+            ${{ runner.temp }}/evidentgraph-review/suite-status.log
             ${{ runner.temp }}/evidentgraph-review/review-unit.log
             ${{ runner.temp }}/evidentgraph-review/review-http.log
             ${{ runner.temp }}/evidentgraph-review/delayed-1.log

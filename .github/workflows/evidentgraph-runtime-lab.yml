@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   validate:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 12
     env:
       EG_PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
@@ -52,15 +52,26 @@ jobs:
           assert version('playwright') == '1.57.0'
           print(json.dumps({'pr_head_sha': head, 'checkout_sha': actual, 'parents': parents, 'github_sha': os.environ['GITHUB_SHA'], 'python': sys.version, 'platform': platform.platform(), 'os_release': Path('/etc/os-release').read_text(), 'playwright': version('playwright'), 'chromium_sandbox': True, 'packages': subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'], text=True).splitlines()}, indent=2))
           PY
-      - name: Reference lab, adapter, history and local authorization tests
+      - name: Check sandboxed browser and real loopback HTTP capability
+        run: python evidence-graph/core/lab-runtime/check_browser_environment.py 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/browser-capability.log"
+      - name: Laboratory Python and both HTTP suites, preserving all exit codes
         working-directory: evidence-graph/core/lab-runtime
-        run: python -m unittest -v test_lab test_adapter test_capture_history test_auth 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/runtime-unit.log"
-      - name: Real browser HTTP navigation, source selection, reload and notes
-        working-directory: evidence-graph/core/lab-runtime
-        run: python -m unittest -v test_browser_http 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/runtime-http.log"
-      - name: Authorization evidence in the existing graph and review UI
-        working-directory: evidence-graph/core/lab-runtime
-        run: python -m unittest -v test_auth_browser 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/auth-http.log"
+        run: |
+          status=0
+          run_suite() {
+            local log_name="$1"
+            shift
+            set +e
+            python -m unittest -v "$@" 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/$log_name.log"
+            local codes=("${PIPESTATUS[@]}")
+            set -e
+            printf 'suite=%s python_exit=%s tee_exit=%s\n' "$log_name" "${codes[0]}" "${codes[1]}" | tee -a "$EG_TEST_EVIDENCE_DIR/suite-status.log"
+            if (( codes[0] != 0 || codes[1] != 0 )); then status=1; fi
+          }
+          run_suite runtime-unit test_lab test_adapter test_capture_history test_auth
+          run_suite runtime-http test_browser_http
+          run_suite auth-http test_auth_browser
+          exit "$status"
       - name: Keep selected runtime test logs for seven days
         if: always()
         uses: actions/upload-artifact@v4
@@ -70,6 +81,8 @@ jobs:
           if-no-files-found: warn
           path: |
             ${{ runner.temp }}/evidentgraph-runtime/environment.log
+            ${{ runner.temp }}/evidentgraph-runtime/browser-capability.log
+            ${{ runner.temp }}/evidentgraph-runtime/suite-status.log
             ${{ runner.temp }}/evidentgraph-runtime/runtime-unit.log
             ${{ runner.temp }}/evidentgraph-runtime/runtime-http.log
             ${{ runner.temp }}/evidentgraph-runtime/auth-http.log
