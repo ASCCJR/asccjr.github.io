@@ -1,5 +1,56 @@
 # L7 — níveis de evidência na experiência existente
 
+## Estado atual — Checkpoint 3 concluído, 2026-10-19
+
+**L7 pronta para revisão de merge; publicação não autorizada.** PR [#3](https://github.com/ASCCJR/asccjr.github.io/pull/3) permanece rascunho, na branch `feat/core-runtime-lab-20261015`. As seções históricas abaixo descrevem seus respectivos momentos, inclusive bloqueios e falhas; o resultado atual é o desta seção.
+
+### Código e ambiente efetivamente testados
+
+HEAD de código/workflows: `1a1324c56694474dcf76a16466c0c22693d808a9`. Checkout real dos três runs: `3f07940e795ec69561e69a57116b5b241dde16e0`, merge temporário com pais `fcb5592ce35887520ab8ab6e1d10a5d18586bb28` (`main`) e o HEAD acima. Os objetos foram comparados: as árvores de arquivos são idênticas. As asserções de identidade foram mantidas nos dois jobs de navegador.
+
+Somente os dois jobs de navegador passaram de Ubuntu 24.04 para Ubuntu 22.04. Runner confirmado: Ubuntu 22.04.5 LTS, Python 3.12.15, Playwright 1.57.0, Chromium 143.0.7499.4, revisão 1200, usuário UID 1001. O lançamento headless usa o headless shell correspondente instalado pelo Playwright, sem override de executável e com `chromium_sandbox=True`. As linhas reais de lançamento não contêm `--no-sandbox`; nenhuma política de AppArmor, seccomp ou sysctl foi desabilitada. Requisitos declarados não mudaram.
+
+Antes das suítes, ambos os jobs iniciaram o navegador, receberam HTTP 200 em `127.0.0.1`, clicaram em um botão JavaScript (contador 0 → 1), não registraram erro de página e encerraram navegador/contexto/servidor. A verificação registra versões/opções e tem contagem funcional zero; não constitui auditoria completa de segurança. Se ela falhar, as suítes não rodam e só há diagnóstico de leitura. Após sua aprovação, cada job conserva os códigos Python/tee, tenta todas as suas suítes e termina em falha se alguma falhar, sem `continue-on-error`.
+
+### Resultados confirmados
+
+| Run / job | Python | HTTP e repetições | Resultado |
+| --- | --- | --- | --- |
+| [39335649585](https://github.com/ASCCJR/asccjr.github.io/actions/runs/39335649585) / 118344371296 | 124 laboratório + 43 L6-A + 62 L6-B | — | Aprovado |
+| [39335649610](https://github.com/ASCCJR/asccjr.github.io/actions/runs/39335649610) / 118344371534 | 124 laboratório, repetidos | 12 `test_browser_http` + 10 `test_auth_browser` | Aprovado |
+| [39335649617](https://github.com/ASCCJR/asccjr.github.io/actions/runs/39335649617) / 118344371616 | 20 L7 | 14 `test_review_http` + três repetições adicionais de `test_02` | Aprovado |
+
+São **249 testes Python e 36 casos HTTP distintos**, sem falhas, erros ou skips nesses runs. Os 124 repetidos não ampliam o total Python; as três repetições não criam novos casos HTTP. Os mesmos 249 casos Python também passaram localmente antes do commit, com hashes dos arquivos preservados; isso não aumenta a contagem. As falhas anteriores não foram apagadas nem substituídas por uma simples reexecução.
+
+O controle antigo reteve a resposta HTTP de `auth_view.js` até observar `eg:ready` uma vez e seis nós de grafo. Após liberar a extensão, selecionar `aurora` deixou URL em `access` e dados em `l5_capture`: o ouvinte tardio havia perdido o evento. Na versão corrigida, com a resposta ainda retida, `EGStart` estava definido, o seletor desabilitado e a contagem de prontidão em zero. A liberação iniciou corretamente; quatro trocas Aurora/Acesso conservaram 240/10 ativos e um único evento por documento. Isso passou na suíte e nas três repetições adicionais. A fixture reproduz e detecta esse defeito de inicialização; não comprova que ele causou o timeout histórico de L6-B.
+
+### Inspeção visual e funcional
+
+As **12 PNG reais do run 39335649617 foram abertas e examinadas**, além da leitura dos logs e dos dois relatórios exportados. Asserções HTTP confirmaram troca das três fontes, grafo/lista com os mesmos IDs, voltar/avançar/recarregar, notas isoladas por fonte e entre duas capturas L7, separação de níveis, exportação filtrada e Aurora completo. As 17 observações de encerramento L7 (14 casos e três repetições) têm `page_errors=[]` e `console_errors=[]`; as duas suítes anteriores também passaram suas asserções de erro de página e ausência de pedidos HTTP externos.
+
+| Imagens | Avaliação da inspeção |
+| --- | --- |
+| `review-graph.png`, `review-list.png` | Mesma fonte/foco, contagem 13/12 e painel de contexto; controles, lista e grafo mantêm o visual existente. Rótulos longos do grafo ficam abreviados; lista/painel mostram o contexto. |
+| `c06-levels.png`, `c10-unknown-tested.png` | Três níveis separados; c06 mostra leitura observada sem prever exceção; c10 conserva inferência inconclusiva mesmo exibindo exceção no teste histórico. |
+| `n01-business.png`, `n02-business.png` | Ambos concluem sem exceção; n01 exibe requisito violado e n02 atendido, com requisito e referência de teste em seção própria. |
+| `filtered-export.png` | Busca por Pedido identificado deixa 1 de 8 consumidores; os conteúdos Markdown com/sem histórico foram lidos no log e preservam essa seleção. |
+| `aurora-complete.png`, `source-history.png` | Aurora exibe 240 ativos/512 relações; Validação após avançar exibe 9/8. O ajuste do grafo inteiro fica em 16% e não permite ler todos os rótulos nessa visão; zoom/lista continuam disponíveis. |
+| `notes-source.png`, `notes-capture-a.png`, `notes-capture-b.png` | Layout do painel consistente. Limite dessas capturas: o campo de nota fica abaixo da parte visível do painel com rolagem; as PNG não demonstram o texto da nota. Persistência/isolamento foram confirmados pelas asserções reais de leitura do campo nos casos 07 e 14. |
+
+A inspeção não encontrou regressão visual impeditiva no recorte de 1366 px; não é avaliação externa de usabilidade, responsividade completa ou prova de ausência de defeitos. Screenshots de página inteira mostram painéis fixos apenas na região correspondente ao viewport, não todo o conteúdo de rolagem interna.
+
+### Histórico preservado e limites de continuidade
+
+- WSL local Ubuntu 26.04 continua incompatível com a instalação fixada: o registro oficial não fornece o download para `ubuntu26.04-x64`. Nenhuma alteração local de plataforma, Docker, navegador alternativo ou proteção foi feita.
+- Runs iniciais `39333069823`/`39333071063`: contexto `runner.temp` em posição inválida; corrigido para o passo. Runs `39333339596`/`39333339724`: leitura de pais vazia em checkout raso; corrigida pela leitura do objeto bruto, mantendo as asserções.
+- Ubuntu 24.04, HEAD `ef143550c486529adadb7e41ee07c80c079ea701`: revisão [39333611202](https://github.com/ASCCJR/asccjr.github.io/actions/runs/39333611202) e laboratório [39333611188](https://github.com/ASCCJR/asccjr.github.io/actions/runs/39333611188) falharam com `No usable sandbox!` antes de executar casos HTTP. Autorização e repetições foram impedidas pelo passo anterior; zero screenshots. O erro é confirmado, mas a política específica do host não foi isolada. Avaliação `39333611182` passou as 229 regressões Python.
+- Nesta continuação em Ubuntu 22.04, não houve falha funcional nem alteração dos oráculos, heurísticas ou do código do produto. O diff é dos dois workflows e do verificador preliminar, seguido apenas por documentação de continuidade.
+- Artefatos selecionados: 27 arquivos (15 logs + 12 PNG), sem viewer ou capturas completas; retenção GitHub de sete dias. Revisão de padrões de credenciais sem achados, sem alegar auditoria exaustiva. Evidências locais necessárias: `EvidentGraph-L7-evidencias-20261019/etapa3-ubuntu22/`, fora do clone. Artefatos remotos são temporários.
+- Alterações posteriores ao HEAD testado limitam-se a `00_START_HERE.md`, este checkpoint e `review-ui/README.md`; nenhuma mudança posterior em código/workflows. `main` continua `fcb5592ce35887520ab8ab6e1d10a5d18586bb28`; Pages usa `main` `/`, com último build em 2026-10-14. Experimentos L6-A/B, resultados/capturas anteriores, dados Aurora e arquivos publicados não mudaram.
+- Pendentes: revisão humana do PR, avaliação independente de tarefas/casos e decisão expressa do responsável sobre merge/publicação. O bloqueio local do navegador permanece. Este fechamento não autoriza trabalho de produto adicional.
+
+## Registro da integração anterior ao fechamento
+
 **Data original:** 2026-10-17. **Base:** `09a1d42cce8506d0e7a801fd191914c4fdbfd142`.
 **Integração local:** 2026-10-19; alterações ainda não enviadas ao PR #3, sem commit/push/merge/deploy. Sites e candidatura CTE-IA não fazem parte desta etapa.
 
@@ -47,7 +98,7 @@ As previsões permanecem condicionais e de autoria controlada; não houve avalia
 
 Ver `review-ui/README.md`. Usar os requisitos fixados de Python/Playwright e uma plataforma suportada pelo navegador correspondente, com sandbox funcional. Não existe novo serviço em nuvem, importação de dados empresariais ou autenticação de produção.
 
-### Validação preparada no GitHub Actions — 2026-10-19
+### Registro da primeira configuração no GitHub Actions (Ubuntu 24.04) — 2026-10-19
 
 O diagnóstico local foi confirmado contra a distribuição oficial `playwright-core@1.57.0`: os bytes de `hostPlatform.js`, `registry/index.js` e `browsers.json` instalados conferem com ela. O detector retorna `ubuntu26.04-x64` e o registro tem zero URLs para esse Chromium; a exceção ocorre antes do aviso de fallback e da tentativa de download. Não foi uma falha de rede, biblioteca de sistema, política ou inicialização. As falhas posteriores de launch decorrem da ausência do executável. Não houve nova tentativa local de instalação, atualização de versão ou override da plataforma.
 
