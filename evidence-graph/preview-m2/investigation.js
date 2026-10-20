@@ -12,6 +12,15 @@
     if(s.custom.mode==='process')return 'Processo compartilhado';
     const n=s.custom.distance[id];return n===1?'Direto':n?`Indireto · ${n} níveis`:'No contexto';
   }
+  function relationshipLabel(id,s){
+    if(id===s.root)return 'Ativo em foco';
+    const verbs={CALLS:'chama',READS:'lê',WRITES:'grava em',DERIVES_TO:'origina',ROUTES_TO:'encaminha para',CONTAINS:'contém',USES_TOOL:'usa a ferramenta',HOSTS:'hospeda',HAS_IDENTITY:'tem identidade',USES_MODEL:'usa o modelo',TRAINED_ON:'é treinado com'};
+    const edge=s.edgeIds.map(key=>relations[key]).find(r=>r&&((r.source===s.root&&r.target===id)||(r.target===s.root&&r.source===id)));
+    if(edge)return `${EGGraph.label(assets[edge.source])} ${verbs[edge.kind]||edge.kind} ${EGGraph.label(assets[edge.target])}`;
+    if(s.custom?.mode==='upstream')return `Recurso a montante do foco · ${distanceLabel(id,s)}`;
+    if(s.custom?.mode==='downstream')return `Consumidor a jusante do foco · ${distanceLabel(id,s)}`;
+    return s.custom?.mode==='process'?'Processo compartilhado; não comprova dependência':'Sem vínculo direto com o foco neste recorte';
+  }
   function addActions(){
     if(!ready)return;const {selected,custom}=EGGraph.snapshot(),a=assets[selected];if(!a)return;
     const meta=$('graphInspector').querySelector('.inspector-meta');
@@ -29,7 +38,7 @@
     const s=EGGraph.snapshot(),q=s.custom,a=assets[s.root];
     $('investigationTitle').textContent=q?`${captions[q.mode]} ${EGGraph.label(a)}`:`Explorando: ${$('graphFocusName').textContent}`;
     const hidden=q?q.ids.length-s.ids.length:0;
-    $('investigationNote').textContent=q?(q.mode==='process'?'Ativos associados aos processos do foco. Associação não comprova dependência.':`Vínculos do catálogo, não uma previsão de falha. ${q.maxDepth===1?'Somente relações diretas.':`Até ${q.maxDepth} níveis.`}${q.hasMore?' Há conexões além deste alcance.':''}`)+(hidden>0?` ${hidden} ativos ocultos pelos filtros.`:''):'Selecione um ativo e use as três perguntas à direita. Grafo e lista exibem o mesmo recorte.';
+    $('investigationNote').textContent=q?(q.mode==='process'?'Ativos associados aos processos do foco. Associação não comprova dependência.':`Vínculos do catálogo, não uma previsão de falha. ${q.maxDepth===1?'Somente relações diretas.':`Até ${q.maxDepth} níveis.`}${q.hasMore?' Há conexões além deste alcance.':''}`)+(hidden>0?` ${hidden} ativos ocultos pelos filtros.`:''):'Selecione um ativo para destacar suas conexões. A lista de conexões mostra o mesmo recorte; Lista da análise retorna aos consumidores da mudança.';
     $('depthControl').hidden=!q||q.mode==='process';
     $('workspaceEnvironment').textContent=$('graphScope').value==='all'?'Múltiplos ambientes':envLabel(a?.environment||'prod-demo');
     $('graphAsGraph').classList.toggle('selected',!list);$('graphAsGraph').setAttribute('aria-pressed',String(!list));
@@ -40,7 +49,7 @@
   }
   function renderList(s){
     const ids=[...s.ids].sort((a,b)=>a===s.root?-1:b===s.root?1:(s.custom?.distance[a]??0)-(s.custom?.distance[b]??0)||EGGraph.label(assets[a]).localeCompare(EGGraph.label(assets[b]),'pt-BR'));
-    $('exploreRows').innerHTML=ids.map(id=>{const a=assets[id];return `<tr data-explore-row="${esc(id)}" class="${id===s.selected?'active-row':''}"><td><button class="text-btn asset-select" data-select-asset="${esc(id)}">${esc(EGGraph.label(a))}</button><small>${esc(KINDS[a.kind])} · ${esc(envLabel(a.environment))}</small></td><td>${esc(distanceLabel(id,s))}</td><td>${esc(team(a.owner))}<small>${esc(processNames(a).join(' · ')||'Processo não mapeado')}</small></td><td><button class="row-open" data-explore-detail="${esc(id)}">Detalhes</button></td></tr>`;}).join('')||'<tr><td colspan="4" class="empty">Nenhum ativo corresponde aos filtros.</td></tr>';
+    $('exploreRows').innerHTML=ids.map(id=>{const a=assets[id];return `<tr data-explore-row="${esc(id)}" class="${id===s.selected?'active-row':''}"><td><button class="text-btn asset-select" data-select-asset="${esc(id)}">${esc(EGGraph.label(a))}</button><small>${esc(KINDS[a.kind])} · ${esc(envLabel(a.environment))}</small></td><td>${esc(relationshipLabel(id,s))}</td><td>${esc(team(a.owner))}<small>${esc(processNames(a).join(' · ')||'Processo não mapeado')}</small></td><td><button class="row-open" data-explore-detail="${esc(id)}">Detalhes</button></td></tr>`;}).join('')||'<tr><td colspan="4" class="empty">Nenhum ativo corresponde aos filtros.</td></tr>';
     $('exploreCount').textContent=`${ids.length} ativos · ${s.edgeIds.length} relações — mesmo recorte do grafo`;
     $('exportContext').disabled=!ids.length;
   }
@@ -67,9 +76,11 @@
       const b=document.createElement('button');b.className='row-open in-graph';b.dataset.returnGraph=id;b.textContent='Ver no grafo';button.after(b);
     });
   }
-  document.addEventListener('eg:ready',()=>{
+  function initializeInvestigation(){
+    if(ready)return;
     ready=true;
     $('graphAsGraph').addEventListener('click',()=>showRepresentation(false));$('graphToList').addEventListener('click',()=>showRepresentation(true));
+    $('graphAsGraph').disabled=false;$('graphToList').disabled=false;
     $('investigationDepth').addEventListener('change',()=>{const q=EGGraph.snapshot().custom;if(q)EGGraph.explore(EGExplore.query(data,q.root,q.mode,Number($('investigationDepth').value)));});
     $('exportContext').addEventListener('click',exportContext);
     $('graphInspector').addEventListener('click',e=>{const b=e.target.closest('button');if(b?.dataset.investigate)ask(b.dataset.investigate);if(b?.dataset.reviewSelected)reviewSelected(b.dataset.reviewSelected);});
@@ -77,10 +88,12 @@
     $('consumerRows').addEventListener('click',e=>{const b=e.target.closest('[data-return-graph]');if(b){setView('lineage');EGGraph.select(b.dataset.returnGraph);showRepresentation(false);if(!EGGraph.snapshot().ids.includes(b.dataset.returnGraph))EGGraph.focus(b.dataset.returnGraph);}});
     document.querySelector('#aboutDialog .dialog-body').insertAdjacentHTML('beforeend','<p>Os vínculos usados na exploração são os do catálogo sintético; registros antigos e atuais não são reconciliados por essa navegação. “De que depende?” segue recursos usados e origens dos dados. “Quem depende dele?” percorre o sentido inverso. Estrutura e identidade não autorizam acesso. Notas são locais e podem ser apagadas pelo navegador.</p>');
     addActions();refresh();decorateResults();
-  });
+  }
+  document.addEventListener('eg:ready',initializeInvestigation);
   document.addEventListener('eg:graphinspect',addActions);
   document.addEventListener('eg:graphpaint',refresh);
   document.addEventListener('eg:graphselect',()=>{if(ready)markSelected();});
   document.addEventListener('eg:filtered',decorateResults);
-  window.EGInvestigation={report:contextReport};
+  window.EGInvestigation={report:contextReport,showGraph:()=>showRepresentation(false)};
+  if(window.EG_READY)initializeInvestigation();
 })();

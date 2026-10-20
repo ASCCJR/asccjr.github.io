@@ -88,6 +88,7 @@
   function highlight(){
     const row=result.consumers.find(r=>r.consumer===selected),edgeIds=new Set(row?row.paths.flat():[]),nodeIds=new Set([selected]);
     if(!row)for(const r of links)if(r.source===selected||r.target===selected)edgeIds.add(r.id);
+    $('lineageSvg').classList.toggle('has-highlight',edgeIds.size>0);
     for(const id of edgeIds){const r=relations[id];if(r){nodeIds.add(r.source);nodeIds.add(r.target);}}
     $('lineageSvg').querySelectorAll('[data-node]').forEach(n=>{n.classList.toggle('selected',n.dataset.node===selected);n.classList.toggle('path-node',nodeIds.has(n.dataset.node));});
     $('lineageSvg').querySelectorAll('[data-edge]').forEach(g=>{const active=edgeIds.has(g.dataset.edge);g.classList.toggle('edge-selected',active);const r=relations[g.dataset.edge];g.firstElementChild.setAttribute('marker-end',`url(#arr-${active?'selected':edgeType(r)})`);});
@@ -95,7 +96,7 @@
   function inspector(){
     const a=assets[selected];if(!a)return;const row=result.consumers.find(r=>r.consumer===a.id),matches=data.results.filter(r=>r.change.target===a.id),total=data.relations.filter(r=>r.source===a.id||r.target===a.id).length;
     let html=`<div class="inspector-overline">ATIVO SELECIONADO</div><div class="inspector-title"><span>${symbols[a.kind]||'◇'}</span><h2>${esc(label(a))}</h2></div><p class="inspector-type">${esc(KINDS[a.kind])} · ${esc(domainNames[a.domain])}</p><dl class="inspector-meta"><dt>Responsável</dt><dd>${esc(team(a.owner))}</dd><dt>Processo</dt><dd>${esc(proc(a.processes))}</dd><dt>Ambiente</dt><dd>${esc(envLabel(a.environment))} · v${esc(a.version)}</dd></dl>`;
-    if(row)html+=`<div class="inspector-impact"><span class="inspector-overline">NESTA MUDANÇA</span>${badge(row)}<p>${esc(IMPACT[row.impact][2])}</p><strong>Próximo passo</strong><p>${esc(row.next_step)}</p></div>`;
+    if(row)html+=`<div class="inspector-impact"><span class="inspector-overline">NESTA MUDANÇA</span>${badge(row)}<p>${esc(consumerReason(row))}</p><strong>Próximo passo</strong><p>${esc(row.next_step)}</p></div>`;
     else if(a.id===result.change.target)html+=`<div class="inspector-impact"><span class="inspector-overline">${esc(result.change.id)}</span><strong>${esc(SCENARIOS[result.change.id])}</strong><p>${result.consumers.length} consumidores na revisão. Selecione um para destacar seu caminho.</p></div>`;
     html+=`<div class="inspector-actions"><button class="secondary" data-inspect="${esc(a.id)}">Ver detalhes e evidências</button><button class="text-btn" data-expand="${esc(a.id)}">Expandir conexões (${total})</button><button class="text-btn" data-center="${esc(a.id)}">Focar este ativo</button></div>`;
     if(matches.length)html+=`<button class="primary inspector-main-action" data-review="${esc(matches[0].change.id)}">Revisar impacto →</button>`;
@@ -115,7 +116,8 @@
     explore:(query)=>{custom=query;root=selected=query.root;expanded.clear();$('graphDomain').value='';$('graphScope').value='investigation';setView('lineage');paint();},
     repaint:paint
   };
-  document.addEventListener('eg:ready',()=>{
+  function initializeGraph(){
+    if(ready)return;
     ready=true;root=selected=result.change.target;
     $('graphChange').innerHTML=$('changeSelect').innerHTML;
     $('graphDomain').innerHTML+=data.domains.map(d=>`<option value="${esc(d.id)}">${esc(domainNames[d.id]||d.name)}</option>`).join('');
@@ -126,7 +128,9 @@
     $('graphReset').addEventListener('click',()=>focus(result.change.target));
     $('graphReview').addEventListener('click',()=>setView('analysis'));
     // Workspace tabs are managed by investigation.js; analysis remains a separate task.
-    $('analysisToGraph').addEventListener('click',()=>setView('lineage'));
+    $('analysisToGraph').addEventListener('click',()=>{custom=null;root=selected=result.change.target;expanded.clear();$('graphScope').value='impact';$('graphDomain').value='';setView('lineage');window.EGInvestigation?.showGraph();});
+    $('analysisToGraph').disabled=$('analysisResult').hidden;
+    $('graphReview').disabled=false;
     $('graphZoomIn').addEventListener('click',()=>zoomAt(1.25));$('graphZoomOut').addEventListener('click',()=>zoomAt(.8));$('graphFit').addEventListener('click',fit);
     const find=()=>{const q=norm($('graphSearch').value);const a=assets[$('graphSearch').value]||data.assets.find(a=>norm(label(a))===q)||data.assets.find(a=>norm(label(a)+' '+a.id).includes(q));if(!q)return;if(a)focus(a.id);else notify('Nenhum ativo encontrado.');};
     $('graphFind').addEventListener('click',find);$('graphSearch').addEventListener('keydown',e=>{if(e.key==='Enter')find();});
@@ -139,8 +143,11 @@
     vp.addEventListener('wheel',e=>{if(e.ctrlKey||e.metaKey){e.preventDefault();const b=vp.getBoundingClientRect();zoomAt(e.deltaY>0?.9:1.1,e.clientX-b.left,e.clientY-b.top);}}, {passive:false});
     resizeObserver=new ResizeObserver(()=>{if(view==='lineage')fit();});resizeObserver.observe(vp);
     setView('lineage');
-  });
+  }
+  document.addEventListener('eg:ready',initializeGraph);
   document.addEventListener('eg:view',()=>{if(ready&&view==='lineage')paint();});
   document.addEventListener('eg:analysis',()=>{if(!ready)return;custom=null;root=selected=result.change.target;expanded.clear();$('graphChange').value=result.change.id;paint();});
   document.addEventListener('eg:filtered',()=>{if(ready)paint();});
+  // Register dependent listeners before catching up with an earlier eg:ready.
+  if(window.EG_READY)initializeGraph();
 })();

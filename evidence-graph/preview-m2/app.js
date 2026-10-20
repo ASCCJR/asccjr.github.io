@@ -15,6 +15,7 @@ const SCENARIOS = {'CHG-001':'Remover campo da API de clientes','CHG-002':'Alter
 const FAMILIES = {config:'Configuração',code:'Contrato / código',lineage:'Lineage',runtime:'Execução',authorization:'Autorização'};
 let data, assets, teams, processes, relations, evidences, result, view='analysis', impactFilter='', ascending=null, inventoryPage=0;
 let checks={}, persist=true, toastTimer;
+window.EG_READY=false;
 const date = s => s ? new Intl.DateTimeFormat('pt-BR',{timeZone:'UTC',dateStyle:'short',timeStyle:'short'}).format(new Date(s))+' UTC' : 'Não disponível';
 const team = id => (teams[id]?.name || id).replace('Equipe Demo ', 'Equipe ');
 const envLabel = value => value === 'prod-demo' ? 'Produção' : value === 'qa-demo' ? 'Homologação' : value;
@@ -27,7 +28,24 @@ function notify(text){$('toast').textContent=text;$('toast').hidden=false;clearT
 function store(id, patch){checks[key(id)]={...check(id),...patch};try{localStorage.setItem('eg-m2:'+data.dataset_version,JSON.stringify(checks));}catch{persist=false;}updateSummary();}
 function updateSummary(){const count=result.consumers.filter(c=>check(c.consumer).done).length;$('summaryLine').textContent=`${result.consumers.length} consumidores no recorte · ${count} verificações anotadas ${persist?'neste navegador':'nesta sessão'}.`;}
 function meta(){const r=data.results.find(r=>r.change.id===$('changeSelect').value),c=r.change;
+  const target=assets[c.target]?.name||c.target;
+  $('changeDescription').textContent=c.operation==='retire'?`Proposta: desativar ${target}.`:`Proposta: remover o campo ${c.field} de ${target}.`;
   $('changeMeta').innerHTML=`<div><dt>Recurso</dt><dd><code>${esc(c.target)}</code></dd></div><div><dt>Alteração</dt><dd>${c.operation==='retire'?'Desativação proposta':`Remover <code>${esc(c.field)}</code>`}</dd></div><div><dt>Versões</dt><dd>${esc(c.before_version)} → ${esc(c.after_version)}</dd></div><div><dt>Período observado</dt><dd>${date(c.window_start).slice(0,10)} – ${date(c.window_end).slice(0,10)}</dd></div>`;
+}
+function analysisStatus(pending=false){
+  $('analysisState').textContent=pending?'Nova mudança selecionada. Abra a análise para ver seus consumidores.':`${data.provenance?'Análise desta fonte':'Análise de exemplo'} já aberta · ${result.change.id}. Consulte os consumidores abaixo.`;
+  $('analysisState').classList.toggle('pending',pending);
+  $('openAnalysis').innerHTML=pending?'Abrir análise <span aria-hidden="true">→</span>':'Análise aberta <span aria-hidden="true">✓</span>';
+  $('analysisToGraph').disabled=pending||!window.EGGraph;
+}
+function consumerReason(row){
+  const c=result.change,field=c.field;
+  const contracts=(row.evidence_ids||[]).map(id=>evidences[id]).filter(e=>e?.claim==='consumer_fields'&&e.subject===row.consumer&&e.target===c.target&&Array.isArray(e.details?.required_fields));
+  if(row.impact==='INCOMPATIBILITY'&&c.operation==='remove_field'&&contracts.some(e=>e.details.required_fields.includes(field)))return `O contrato de ${row.name} exige ${field}, mas a mudança proposta remove esse campo de ${assets[c.target]?.name||c.target}.`;
+  if(row.impact==='NO_INCOMPATIBILITY'&&field&&contracts.some(e=>e.details.exhaustive&&!e.details.required_fields.includes(field)))return `O contrato avaliado de ${row.name} não exige ${field}. Isso não garante ausência de outros impactos.`;
+  if(row.impact==='POSSIBLE')return `Há uso observado deste caminho. Ainda falta confirmar como ${row.name} depende ${field?'do campo '+field:'do recurso alterado'}.`;
+  if(row.impact==='INCONCLUSIVE')return 'As evidências disponíveis não bastam para concluir como a mudança afeta este consumidor.';
+  return IMPACT[row.impact][2];
 }
 function clear(){impactFilter='';$('search').value='';$('ownerFilter').value='';$('activityFilter').value='';ascending=null;}
 function openAnalysis(){result=data.results.find(r=>r.change.id===$('changeSelect').value);clear();$('analysisResult').hidden=false;$('notAnalyzed').hidden=true;
@@ -41,14 +59,16 @@ function openAnalysis(){result=data.results.find(r=>r.change.id===$('changeSelec
   if(n('NO_INCOMPATIBILITY'))segments.push(`${n('NO_INCOMPATIBILITY')} ${n('NO_INCOMPATIBILITY')===1?'consumidor sem incompatibilidade identificada':'consumidores sem incompatibilidade identificada'} no contrato avaliado`);
   $('conclusionText').textContent=segments.length?segments.join('; ')+'. Consulte os responsáveis e as evidências antes de decidir.':'Nenhum consumidor conhecido neste recorte. Isso não comprova ausência de dependências.';
   $('scopeNote').textContent=result.scope_note+(result.truncated?' Busca interrompida pelo limite de exploração.':'');
-  updateSummary();renderConsumers();emit('analysis');
+  analysisStatus();updateSummary();renderConsumers();emit('analysis');
 }
 function visibleRows(){let rows=result.consumers.filter(r=>(!impactFilter||r.impact===impactFilter)&&(!$('ownerFilter').value||r.owner===$('ownerFilter').value)&&(!$('activityFilter').value||r.activity===$('activityFilter').value)&&norm([r.name,r.consumer,team(r.owner),proc(r.processes)].join(' ')).includes(norm($('search').value)));
   if(ascending!==null)rows.sort((a,b)=>(ascending?1:-1)*a.name.localeCompare(b.name,'pt-BR'));else rows.sort((a,b)=>['INCOMPATIBILITY','POSSIBLE','INCONCLUSIVE','NO_INCOMPATIBILITY'].indexOf(a.impact)-['INCOMPATIBILITY','POSSIBLE','INCONCLUSIVE','NO_INCOMPATIBILITY'].indexOf(b.impact));return rows;}
 function renderConsumers(){const metrics=[['','Todos os consumidores'],['INCOMPATIBILITY','Incompatibilidade'],['POSSIBLE','Impacto possível'],['INCONCLUSIVE','Inconclusivo'],['NO_INCOMPATIBILITY','Não identificada']];
+  const extraFilters=[$('ownerFilter').value,$('activityFilter').value].filter(Boolean).length;
+  $('filterSummary').textContent=extraFilters?`Mais filtros (${extraFilters} em uso)`:'Mais filtros';
   $('metrics').innerHTML=metrics.map(([id,label])=>`<button class="metric ${id?IMPACT[id][1]:''}" data-impact="${id}" aria-pressed="${id===impactFilter}" title="Filtrar conclusão no recorte completo"><strong>${id?result.consumers.filter(r=>r.impact===id).length:result.consumers.length}</strong><span>${label}</span><i class="metric-dot" aria-hidden="true"></i></button>`).join('');
   const rows=visibleRows();
-  $('consumerRows').innerHTML=rows.map(r=>`<tr><td><h3>${esc(r.name)}</h3><p>${esc(proc(r.processes))}</p><span class="row-type">${esc(KINDS[assets[r.consumer]?.kind] || '')}</span></td><td>${badge(r)}<span class="activity ${r.activity==='UNKNOWN'?'unknown':''}">${r.activity==='OBSERVED'?'✓ ':r.activity==='UNKNOWN'?'? ':''}${ACTIVITY[r.activity]}</span></td><td>${esc(team(r.owner))}<p>${esc(r.next_step)}</p></td><td><label class="review-label"><input type="checkbox" data-check="${esc(r.consumer)}" ${check(r.consumer).done?'checked':''} aria-label="Anotar verificação de ${esc(r.name)}"><span>${check(r.consumer).done?'Anotada':'Pendente'}</span></label><span class="review-caption">${persist?'Só neste navegador':'Só nesta sessão'}</span></td><td><button class="row-open" data-detail="${esc(r.consumer)}" aria-label="Ver detalhes de ${esc(r.name)}">Detalhes →</button></td></tr>`).join('');
+  $('consumerRows').innerHTML=rows.map(r=>`<tr><td><h3>${esc(r.name)}</h3><p class="consumer-reason">${esc(consumerReason(r))}</p><span class="row-type">${esc(proc(r.processes))}</span></td><td>${badge(r)}<span class="activity ${r.activity==='UNKNOWN'?'unknown':''}">${r.activity==='OBSERVED'?'✓ ':r.activity==='UNKNOWN'?'? ':''}${ACTIVITY[r.activity]}</span></td><td>${esc(team(r.owner))}<p>${esc(r.next_step)}</p></td><td><label class="review-label"><input type="checkbox" data-check="${esc(r.consumer)}" ${check(r.consumer).done?'checked':''} aria-label="Anotar verificação de ${esc(r.name)}"><span>${check(r.consumer).done?'Anotada':'Pendente'}</span></label></td><td><button class="row-open" data-detail="${esc(r.consumer)}" aria-label="Ver detalhes de ${esc(r.name)}">Detalhes →</button></td></tr>`).join('');
   $('emptyResults').hidden=rows.length>0;$('resultCount').textContent=`Exibindo ${rows.length} de ${result.consumers.length} consumidores`;$('exportBtn').disabled=rows.length===0;
   $('sortMark').textContent=ascending===null?'↕':ascending?'↑':'↓';$('sortName').closest('th').setAttribute('aria-sort',ascending===null?'none':ascending?'ascending':'descending');emit('filtered');
 }
@@ -58,7 +78,8 @@ function openDetails(id, fromInventory=false){const asset=assets[id];if(!asset)r
   $('detailTitle').textContent=asset.name;$('detailKind').textContent=KINDS[asset.kind]||asset.kind;
   let html=`<div class="detail-grid"><div><small>RESPONSÁVEL</small>${esc(team(asset.owner))}</div><div><small>PROCESSO</small>${esc(proc(asset.processes))}</div><div><small>AMBIENTE / VERSÃO</small>${esc(envLabel(asset.environment))} · ${esc(asset.version)}</div><div><small>IDENTIFICADOR</small><span class="inventory-id">${esc(asset.id)}</span></div></div>`;
   if(row){const refs=row.evidence_ids.map(e=>evidences[e]);const events=refs.filter(e=>e.claim==='observed_use').map(e=>e.details.at).sort();const coverage=data.coverage.filter(c=>row.paths.flat().includes(c.relation));
-    html+=`<h3>Conclusão no escopo avaliado</h3>${badge(row)}<p style="margin-top:9px">${esc(IMPACT[row.impact][2])}</p><p><strong>Próximo passo:</strong> ${esc(row.next_step)}</p><p><strong>Observação:</strong> ${ACTIVITY[row.activity]}<br><strong>Último evento listado:</strong> ${date(events.at(-1))}</p>`;
+    html+=`<section class="consumer-explanation" aria-label="Entenda este caso"><h3>Por que este consumidor aparece?</h3><p>${esc(consumerReason(row))}</p><p><strong>Quem precisa revisar:</strong> ${esc(team(asset.owner))}.</p><p><strong>Próximo passo:</strong> ${esc(row.next_step)}.</p></section>`;
+    html+=`<h3>Conclusão no escopo avaliado</h3>${badge(row)}<p style="margin-top:9px">${esc(IMPACT[row.impact][2])}</p><p><strong>Observação:</strong> ${ACTIVITY[row.activity]}<br><strong>Último evento listado:</strong> ${date(events.at(-1))}</p>`;
     html+=`<p class="local-note">Autorização: não avaliada. Acesso efetivo ao campo: não avaliado. A conclusão não é uma aprovação de publicação.</p>`;
     if(row.limitations.length)html+='<h3>Informação que ainda falta</h3><ul class="detail-list">'+row.limitations.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>';
     html+='<h3>Caminhos que sustentam a análise</h3>'+row.paths.map(pathMarkup).join('');
@@ -99,7 +120,9 @@ async function boot(){try{
   $('inventoryTotal').textContent=data.assets.length+' ativos';$('datasetLabel').textContent='Referência: '+date(data.clock);
   $('loadStatus').hidden=true;setView('analysis');meta();openAnalysis();
   document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));
-  $('changeSelect').addEventListener('change',()=>{meta();$('analysisResult').hidden=true;$('notAnalyzed').hidden=false;});$('openAnalysis').addEventListener('click',openAnalysis);
+  $('changeSelect').addEventListener('change',()=>{meta();$('analysisResult').hidden=true;$('notAnalyzed').hidden=false;analysisStatus(true);});
+  $('openAnalysis').addEventListener('click',()=>{const already=result?.change.id===$('changeSelect').value&&!$('analysisResult').hidden;if(!already)openAnalysis();notify(already?'Esta análise já está aberta. Os consumidores estão na lista abaixo.':'Análise aberta. Consulte os consumidores e o motivo de cada conclusão.');});
+  $('openAnalysis').disabled=false;
   $('search').addEventListener('input',renderConsumers);$('ownerFilter').addEventListener('change',renderConsumers);$('activityFilter').addEventListener('change',renderConsumers);
   $('clearFilters').addEventListener('click',()=>{clear();renderConsumers();});$('sortName').addEventListener('click',()=>{ascending=ascending===null?true:!ascending;renderConsumers();});
   $('metrics').addEventListener('click',e=>{const b=e.target.closest('[data-impact]');if(b){impactFilter=b.dataset.impact;renderConsumers();document.querySelector(`[data-impact="${impactFilter}"]`).focus();}});
@@ -109,6 +132,6 @@ async function boot(){try{
   $('detailBody').addEventListener('click',e=>{const b=e.target.closest('[data-goto]');if(b){$('detailDialog').close();$('changeSelect').value=b.dataset.goto;setView('analysis');meta();openAnalysis();$('openAnalysis').focus();}});
   $('closeDetail').addEventListener('click',()=>$('detailDialog').close());$('aboutBtn').addEventListener('click',()=>$('aboutDialog').showModal());$('closeAbout').addEventListener('click',()=>$('aboutDialog').close());
   $('inventorySearch').addEventListener('input',()=>{inventoryPage=0;renderInventory();});for(const id of ['kindFilter','domainFilter'])$(id).addEventListener('change',()=>{inventoryPage=0;renderInventory();});
-  $('inventoryRows').addEventListener('click',e=>{const b=e.target.closest('[data-asset]');if(b)openDetails(b.dataset.asset,true);});$('prevPage').addEventListener('click',()=>{inventoryPage--;renderInventory();});$('nextPage').addEventListener('click',()=>{inventoryPage++;renderInventory();});$('exportBtn').addEventListener('click',download);emit('ready');
+  $('inventoryRows').addEventListener('click',e=>{const b=e.target.closest('[data-asset]');if(b)openDetails(b.dataset.asset,true);});$('prevPage').addEventListener('click',()=>{inventoryPage--;renderInventory();});$('nextPage').addEventListener('click',()=>{inventoryPage++;renderInventory();});$('exportBtn').addEventListener('click',download);window.EG_READY=true;emit('ready');
 }catch(error){$('loadStatus').textContent='Não foi possível abrir a prévia: '+error.message;$('loadStatus').setAttribute('role','alert');}}
 boot();
