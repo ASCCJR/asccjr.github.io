@@ -61,3 +61,11 @@ The first complete workflow is **change-impact review**: select an API change, u
 Results and decision-relevant uncertainty precede graph exploration. A larger, coherent synthetic enterprise environment supports UX testing; it does not replace the small real-collector PoC. User, buyer, adoption process and commercial value remain discovery hypotheses.
 
 The initial experience includes non-agent operational consumers and an analytical chain involving a forecast model and dashboard. No mobile requirement is added to the Core, and no enforcement or production-readiness claim follows from this revision.
+
+## Reconciled product direction — 2026-10-20
+
+The later graph-restoration decision and implemented M3/L7 supersede any reading of the 2026-10-13 proposal as removal of the graph. Graph/lineage and the operational change-review table work together: inspect dependencies and context, identify consumers/owners, preserve uncertainty, record checks and export a scoped analysis. Keep the accepted visual experience and the complete synthetic Aurora separate from small execution captures; no new redesign follows from this transfer.
+
+The initial audience remains a hypothesis: the technical owner of an API/application/pipeline change, collaborating with consumer owners. Engineering/Platform leadership is a possible buyer and Security/source owners possible integration approvers. Begin with one team/flow and explicitly permitted evidence. Time saved, incidents avoided, willingness to pay and ROI have not been measured. A fixed-scope diagnostic/pilot and recurring use are commercial hypotheses, not established revenue.
+
+An academic “Pre-Change Evidence Gate” is one possible way to deliver the value within a PR/change workflow; a production blocking integration has not been implemented, and the Core is not restricted to a plugin. The next proposal work is in [CTE-IA](../../opportunities/cte-ia-2026/README.md), under D-014, without adding decorative AI to fit a call.

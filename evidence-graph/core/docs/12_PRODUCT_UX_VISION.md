@@ -5,6 +5,10 @@
 **Status:** direção de produto registrada; implementação e validação pendentes  
 **Escopo:** EvidentGraph Core. Não modifica a variante Campus Mobile nem substitui a demo pública nesta etapa.
 
+**Reconciliação em 20/10/2026:** este texto preserva a proposta de 13/10 e suas metas então não implementadas. A restauração posterior do grafo e a implementação M3/L7 prevalecem: grafo/lineage, lista e análise operacional juntos; Grupo Aurora 240 ativos/512 relações, separado dos laboratórios. Consultar checkpoints 17, 18 e 30 e o índice atual, sem reconstruir telas a partir das especificações antigas.
+
+Preferências preservadas do proponente: estética empresarial sóbria, sem brilhos/slogans excessivos nem repetição de “demo” em toda tela; origem fictícia/laboratorial clara em “Sobre o ambiente”, relatórios e onde afeta a interpretação. Textos e entregas em Markdown; PDF/HTML textual somente quando solicitado. Roteiros de apresentação curtos, com ações visíveis quando pedidas. O feedback reportado do professor e dos colegas não equivale a avaliação independente com usuários ou compradores.
+
 > O usuário não entra no EvidentGraph para admirar um grafo. Entra para entender uma consequência e decidir o que fazer.
 
 ## 1. Decisão em uma página

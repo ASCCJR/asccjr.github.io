@@ -4,6 +4,8 @@
 **Estado:** roteiro de desenvolvimento; somente a estabilização L3 abaixo foi iniciada.  
 **Escopo:** Core; manter GitHub Pages, grafo + lista e identidade Grupo Aurora. Não altera Campus Mobile.
 
+**Leitura histórica, reconciliada em 20/10/2026:** o estado e a sequência abaixo foram escritos após L2. L3–L7 avançaram nos limites dos checkpoints posteriores; não reiniciar essas etapas a partir deste roteiro. O estado atual está em [00_START_HERE.md](./00_START_HERE.md) e [30_L7_EVIDENCE_REVIEW.md](./30_L7_EVIDENCE_REVIEW.md). A próxima frente estratégica é a [proposta CTE-IA](../../opportunities/cte-ia-2026/README.md), sem L8, novo parser ou deploy como pré-requisito. Pesquisa, produto e edital continuam neste mesmo ambiente, preservando a separação entre o Core e cada oportunidade.
+
 ## Onde estamos
 
 A M3 apresenta o inventário sintético maior. O laboratório L1 executa HTTP/SQLite e captura spans; a ponte L2 permite visualizar a captura na mesma experiência, em um conjunto separado. A análise continua delimitada a contratos e clientes de teste conhecidos.

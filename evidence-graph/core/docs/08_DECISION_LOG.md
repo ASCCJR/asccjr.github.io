@@ -150,3 +150,29 @@ Retain the accepted M3 graph-plus-list experience and Grupo Aurora identity. Con
 The L1 laboratory collects real loopback HTTP/SQLite execution via manual OpenTelemetry instrumentation while using fictitious business data. It is separate from the M1 synthetic schema and published UI. It does not demonstrate IAM, enterprise collectors, real customers or statistically validated superiority.
 
 See `21_RETOMADA_CORE_E_LABORATORIO.md` and `22_ROTEIRO_AVALIACAO_M3.md`. Preserve prior publications, Campus Mobile, academic files, team names and personal-material exclusions.
+
+---
+
+## D-013 — Transfer all project continuity to this environment
+**Date:** 2026-10-20
+**Status:** DECIDED by the proponent; integral package received and reconciled
+
+Implementation, maintenance, research, architecture, product, UX, business, documentation, presentations, academic activities and opportunities continue here. This supersedes instructions to reserve strategy for another chat or return outputs to the previous assistant. No approval in the source chat is needed. Consolidated documents and source copies sustain continuity; this is not a verbatim export of every message.
+
+D-002 remains valid for public technical/project memory. Private memory, original call PDF, contacts and confidential drafts are preserved outside public Git; the repository-local `evidentgraph.privateContext` pointer locates the private receipt/index without committing its value. Public team names already recorded remain; removed personal/professional material must not be recovered or reintroduced.
+
+The source package is additive historical/context material. It does not replace the directly verified L7 state or authorize reapplying patches, rebuilding the environment or restarting Checkpoints 1–3. Earlier statements that L7 was only local/unsent are superseded, with their records retained. The scoped instructions are in `evidence-graph/AGENTS.md`.
+
+Normal documentation commits/pushes on the existing authorized feature branch are allowed after diff/trigger review. Merge, deploy, push to main, publication/release, destructive actions, privileged installations, spending, third-party contact, submissions and declarations require the user's specific approval here. Source-chat deletion is the user's action and is not automated.
+
+---
+
+## D-014 — Resume CTE-IA proposal after the completed L7 cycle
+**Date:** 2026-10-20
+**Status:** DECIDED for continuity; proposal and implementation choices remain open
+
+The technical cycle requested before the application is closed by the validated L7. Preparing the CTE-IA proposal does not require merging, deploying, opening L8, expanding the parser or redesigning the interface. Keep it in `opportunities/cte-ia-2026/`, distinct from Campus Mobile and academic deliveries.
+
+Discuss the business problem, initial audience, differentiation, team, measurable targets, Annex I gaps and an honest role for AI. Deterministic rules, the bounded AST analyzer, mapping an agent and using Codex during development do not establish AI as a central product component. NLP/generative extraction and reconciliation of references in documents is a hypothesis, not an approved architecture or delivered feature. Compare against conventional rules/IDs/parsers before claiming an advantage.
+
+The supplied call v1 is a dated source. Confirm official amendments, dates, eligibility and live form limits before relying on them for submission. Team roles, availability, rights/permissions and application commitments remain unconfirmed; do not invent them. Independent user/research validation remains pending. This decision does not authorize an application or new product implementation.

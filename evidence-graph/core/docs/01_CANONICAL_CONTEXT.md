@@ -5,6 +5,8 @@
 **Updated:** 2026-10-13  
 **Stage:** applied research / discovery / pre-MVP
 
+**Continuity update, 2026-10-20:** the original dated sections below preserve earlier reasoning, including proposed architecture and work then pending. M1–M3 and L1–L7 now exist in their documented scopes; see [00_START_HERE.md](./00_START_HERE.md) and [30_L7_EVIDENCE_REVIEW.md](./30_L7_EVIDENCE_REVIEW.md). Graph/list and operational analysis remain complementary, as corrected by D-012. All research, business, UX, academic and opportunity work continues in this environment under D-013/D-014; no return to the source chat is required. Public documentation is complemented by private source copies, not by publishing private memory.
+
 ## 1. Origin
 
 The project originated from observing a recurring engineering problem in modern enterprise environments: dependency information is fragmented across data platforms, APIs, software services, authorization systems, observability tooling, and AI-agent infrastructure.

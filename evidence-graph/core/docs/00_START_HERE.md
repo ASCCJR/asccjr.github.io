@@ -1,6 +1,14 @@
 # START HERE — EvidentGraph Core
 
-Persistent memory of the canonical project. GitHub is the source of truth; chat is a working environment.
+Persistent public memory of the canonical project. Public documents and separately preserved private sources sustain continuity; chat history is not required.
+
+## Integral continuity — received 2026-10-20
+
+All EvidentGraph work continues in this environment: research, architecture, implementation, product, UX, business, documentation, presentations, academic activities and opportunities. The integral transfer memory and CTE-IA context were read and reconciled with the existing repository. The original ZIP, its verified manifest, original call PDF and historical captures are preserved privately, together with the existing final L7 evidence. This preserves consolidated project context, not every message of the old chat.
+
+Read [the scoped instructions](../../AGENTS.md), decisions D-013/D-014 in [08_DECISION_LOG.md](./08_DECISION_LOG.md), and the [CTE-IA workspace](../../opportunities/cte-ia-2026/README.md). Its rules are a dated reading of the supplied PDF v1, not confirmation of current deadlines or eligibility. The private source directory is available through the repository-local `evidentgraph.privateContext` setting; exact paths and receipt records stay outside public Git.
+
+The technical handoff is complete. Instructions to return outputs to the previous assistant, reapply L7 or treat it as unsent are superseded. Preserve those records as history. Preparation of the CTE-IA proposal does not require a new L8 or release. Merge, deploy, publication, destructive actions, spending, third-party contact and application submission still require the user's specific approval here.
 
 ## Current checkpoint — L7, 2026-10-19
 
@@ -8,19 +16,19 @@ Read [30_L7_EVIDENCE_REVIEW.md](./30_L7_EVIDENCE_REVIEW.md) and [review-ui/READM
 
 L7 presents indication, bounded inference and recorded test outcomes separately in the existing graph/list and operational review. Aurora Revisão (13 assets/12 relations) and Aurora Validação (9/8) are separate from the preserved Grupo Aurora (240/512). Showing historical results does not execute tests; UNKNOWN remains inconclusive. Notes do not change evidence or outcomes.
 
-Validated code head: `1a1324c56694474dcf76a16466c0c22693d808a9`. All three runs checked out temporary PR merge `3f07940e795ec69561e69a57116b5b241dde16e0`, with that head and `main` as parents; its tree was verified equal to the code head.
+Last fully validated head, including its checkpoint documentation: `41b282601c25d6f3e0f9ec574dec9d4049782e62`. All three final runs checked out temporary PR merge `3d73a58c9df3fea9323e51bc52e73b43de742c10`, with that head and `main` as parents; its tree was verified equal to the head. The earlier code/workflow validation at `1a1324c56694474dcf76a16466c0c22693d808a9` remains historical. Transfer commits after `41b2826` modify Markdown only; no new functional-test result is claimed for them.
 
 | Run | Confirmed result |
 | --- | --- |
-| [39335649585 — evaluation](https://github.com/ASCCJR/asccjr.github.io/actions/runs/39335649585) | 124 lab + 43 L6-A + 62 L6-B Python tests passed |
-| [39335649610 — runtime](https://github.com/ASCCJR/asccjr.github.io/actions/runs/39335649610) | Capability check passed; 124 repeated Python tests; 12 navigation + 10 authorization HTTP cases passed |
-| [39335649617 — review](https://github.com/ASCCJR/asccjr.github.io/actions/runs/39335649617) | Capability check passed; 20 L7 Python + 14 HTTP cases passed; three additional corrected-startup repetitions passed |
+| [39336262728 — evaluation](https://github.com/ASCCJR/asccjr.github.io/actions/runs/39336262728) | 124 lab + 43 L6-A + 62 L6-B Python tests passed |
+| [39336262737 — runtime](https://github.com/ASCCJR/asccjr.github.io/actions/runs/39336262737) | Capability check passed; 124 repeated Python tests; 12 navigation + 10 authorization HTTP cases passed |
+| [39336262753 — review](https://github.com/ASCCJR/asccjr.github.io/actions/runs/39336262753) | Capability check passed; 20 L7 Python + 14 HTTP cases passed; three additional corrected-startup repetitions passed |
 
 Totals: **249 distinct Python tests and 36 distinct HTTP cases**, zero failures/errors/skips in these runs. The repeated 124 tests, three startup repetitions and two capability checks do not increase those totals. Twelve actual HTTP screenshots were opened and inspected; see checkpoint 30 for observations and capture limits. Only the two browser jobs moved to Ubuntu 22.04, retaining Python 3.12, Playwright 1.57.0, Chromium 143.0.7499.4/revision 1200 and `chromium_sandbox=True`, as non-root UID 1001. No protection policy was disabled. This is an environment capability check, not a full security audit.
 
 Local WSL remains Ubuntu 26.04 and unsupported by the pinned browser installer. Earlier Ubuntu 24.04 CI attempts failed at sandbox launch before executing HTTP cases; those failures remain recorded. The isolated legacy fixture now demonstrates a missed late listener; the corrected bootstrap and three repeats passed. The earlier L6-B timeout's cause remains unproven.
 
-Changes after the validated code head are limited to this file, checkpoint 30 and `review-ui/README.md`: continuity documentation only. No application, harness, dependency or workflow changed after these successful runs. Logs and PNG artifacts have seven-day GitHub retention; necessary local evidence is outside the repository in `EvidentGraph-L7-evidencias-20261019/etapa3-ubuntu22/` beside this clone. No viewer was uploaded as an artifact or published.
+The original `41b2826` documentation commit changed this file, checkpoint 30 and `review-ui/README.md`, and then passed the final runs above. This integral transfer makes further documentation-only changes. No application, harness, dependency or workflow changed. Necessary final logs and PNGs were reverified in durable private local copies, independently of the seven-day GitHub retention. No viewer was uploaded as an artifact or published.
 
 ## Previous checkpoint — L6-B, 2026-10-16
 
@@ -39,9 +47,9 @@ Eight new cases: 3 correct exception predictions, 5 unknown. Three tasks violate
 1. Review PR #3, checkpoint 30 and the exact successful runs above; keep the PR a draft until the owner decides otherwise.
 2. Read checkpoint 29 and `evaluation/refinement/README.md` for the unchanged experimental limits.
 3. Preserve L6-A and L6-B results, abstentions, additional-information caveats and previous CI failures.
-4. Remaining: independent task/case review and an explicit owner decision about merge/publication. No independent user evaluation has occurred, and this checkpoint authorizes no further product work.
+4. Remaining technical decisions: independent task/case review and an explicit owner decision about merge/publication. Next strategic work: CTE-IA problem, audience, differentiation, honest AI role, team, targets and Annex I gaps, in its separate workspace. No automatic product expansion follows.
 
-Independent review and user sessions have not occurred. Do not fabricate their completion. The CTE-IA application stays separate until the functional Core milestone is consolidated.
+Independent review and user sessions have not occurred. Do not fabricate their completion. L7 closed the agreed technical cycle; CTE-IA preparation can continue here without waiting for deployment. Keep the opportunity separate from Core and Campus Mobile.
 
 ## Source-of-truth hierarchy
 

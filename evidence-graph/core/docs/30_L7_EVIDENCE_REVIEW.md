@@ -1,5 +1,13 @@
 # L7 — níveis de evidência na experiência existente
 
+## Atualização de continuidade em 20/10/2026
+
+A L7 permaneceu integrada durante a transferência integral. O HEAD final `41b282601c25d6f3e0f9ec574dec9d4049782e62` também foi validado após o commit documental: avaliação [39336262728](https://github.com/ASCCJR/asccjr.github.io/actions/runs/39336262728), laboratório [39336262737](https://github.com/ASCCJR/asccjr.github.io/actions/runs/39336262737) e revisão [39336262753](https://github.com/ASCCJR/asccjr.github.io/actions/runs/39336262753). Checkout real `3d73a58c9df3fea9323e51bc52e73b43de742c10`, com árvore idêntica ao HEAD. Os resultados continuam 249 Python e 36 HTTP distintos, mais três repetições corrigidas; a segunda rodada não aumenta os totais.
+
+Os logs finais, relatórios e 12 screenshots finais foram preservados e reconferidos em cópias privadas locais. A memória integral recebida não substitui esses registros diretamente verificados. As alterações posteriores de transferência são apenas documentais; não reexecutam suites, reaplicam patches ou modificam código, requisitos, testes ou workflows. O estado do PR continua rascunho, sem merge/deploy/publicação autorizados.
+
+Os registros abaixo mantêm a cronologia, incluindo a primeira validação em `1a1324c` e as falhas anteriores. As passagens históricas “L7 somente local”, “não enviada”, “execução pendente” e equivalentes foram superadas pelos resultados acima; não são instruções de reaplicação ou de retorno ao chat anterior. Ver decisões D-013/D-014 e o índice de retomada.
+
 ## Estado atual — Checkpoint 3 concluído, 2026-10-19
 
 **L7 pronta para revisão de merge; publicação não autorizada.** PR [#3](https://github.com/ASCCJR/asccjr.github.io/pull/3) permanece rascunho, na branch `feat/core-runtime-lab-20261015`. As seções históricas abaixo descrevem seus respectivos momentos, inclusive bloqueios e falhas; o resultado atual é o desta seção.
