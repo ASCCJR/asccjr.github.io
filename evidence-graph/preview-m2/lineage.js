@@ -2,7 +2,7 @@
 // One graph model; task results remain the bounded Python analysis, not graph heuristics.
 (() => {
   const NS='http://www.w3.org/2000/svg';
-  const W=184,H=66,DX=222,DY=87,TOP=57;
+  const W=208,H=78,DX=246,DY=100,TOP=57;
   const cols={application:0,agent:0,identity:0,api:1,mcp_tool:1,mcp_server:1,service:2,pipeline:2,table:3,column:4,model:4,dashboard:4};
   const headings=['APLICAÇÕES & AGENTES','APIs & FERRAMENTAS','SERVIÇOS & PIPELINES','DADOS','MODELOS & PAINÉIS'];
   const domainNames={comercial:'Comercial',atendimento:'Atendimento',operacoes:'Operações',financeiro:'Financeiro',dados:'Dados',plataforma:'Plataforma'};
@@ -10,19 +10,28 @@
   const relNames={CALLS:'Chama',READS:'Lê',WRITES:'Grava',DERIVES_TO:'Origina',ROUTES_TO:'Encaminha para',CONTAINS:'Contém',USES_TOOL:'Usa ferramenta',HOSTS:'Hospeda',HAS_IDENTITY:'Tem identidade',USES_MODEL:'Usa modelo',TRAINED_ON:'Treinado com'};
   const symbols={application:'▣',agent:'✧',api:'↗',service:'⊞',pipeline:'⇢',table:'▤',column:'#',model:'◇',dashboard:'▥',mcp_server:'⌘',mcp_tool:'⚒',identity:'○'};
   let custom=null;
-  let root,selected,shown=[],links=[],positions={},expanded=new Set(),zoom=1,tx=0,ty=0,graphWidth=0,graphHeight=0,pan=null,ready=false,resizeObserver;
+  let root,selected,shown=[],links=[],positions={},expanded=new Set(),zoom=1,tx=0,ty=0,graphWidth=0,graphHeight=0,pan=null,ready=false,resizeObserver,activeColumns=[],keyboardNavigation=false;
   const label=a=>{
     if(!a)return '';
     if(a.name!==a.id)return a.name;
     const bits=a.id.split('-'),tail=bits.slice(2).join(' '),topic=names[bits[2]]||tail||domainNames[a.domain];
     if(a.kind==='table')return (bits.at(-1)==='raw'?'Bruto · ':'Tratado · ')+topic;
-    if(a.kind==='column')return topic.replace(/ (raw|curated)\.id$/,'')+' · id';
+    if(a.kind==='column'){const layer=a.id.includes('-raw.')?'Bruto':a.id.includes('-curated.')?'Tratado':'';const field=a.id.split('.').at(-1);return `${layer?layer+' · ':''}${topic.replace(/ (raw|curated)\.[^.]+$/,'')}.${field}`;}
     if(['service','pipeline','api'].includes(a.kind))return `${{service:'Serviço',pipeline:'Pipeline',api:'API'}[a.kind]} · ${topic}`;
     return ({agent:'Agente',model:'Modelo',dashboard:'Painel',application:'Portal',mcp_tool:'Ferramenta',mcp_server:'Servidor MCP',identity:'Identidade'}[a.kind]||'Ativo')+' · '+(domainNames[a.domain]||a.domain)+(bits[2]?` ${names[bits[2]]||bits[2]}`:'');
   };
   function svgEl(tag,attrs={},text){const e=document.createElementNS(NS,tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;return e;}
   function addText(g,x,y,text,cls){const t=svgEl('text',{x,y,class:cls},text);g.appendChild(t);return t;}
   function short(text,n=24){return text.length>n?text.slice(0,n-1)+'…':text;}
+  function nameLines(text,measure){
+    const limit=W-22;if(measure(text)<=limit)return [text];
+    let cut=text.lastIndexOf(' ');
+    while(cut>0&&measure(text.slice(0,cut))>limit)cut=text.lastIndexOf(' ',cut-1);
+    if(cut<=0){cut=text.length;while(cut>1&&measure(text.slice(0,cut))>limit)cut--;}
+    const rest=text.slice(cut).trim();let second=rest;
+    if(measure(second)>limit){let length=second.length;while(length>1&&measure(second.slice(0,length)+'…')>limit)length--;second=second.slice(0,length)+'…';}
+    return [text.slice(0,cut),second];
+  }
   function neighbors(ids){const out=new Set(ids);for(const r of data.relations)if(ids.has(r.source)||ids.has(r.target)){out.add(r.source);out.add(r.target);}return out;}
   function visibleSet(){
     let ids;
@@ -52,8 +61,9 @@
       });
     }
     const longest=Math.max(1,...buckets.map(b=>b.length));
-    positions={};buckets.forEach((b,c)=>b.forEach((a,i)=>positions[a.id]={x:24+c*DX,y:TOP+i*DY+(longest-b.length)*Math.min(18,DY/2)}));
-    graphWidth=24+4*DX+W+24;graphHeight=TOP+longest*DY+20;
+    activeColumns=buckets.map((b,i)=>b.length?i:-1).filter(i=>i>=0);
+    positions={};activeColumns.forEach((c,column)=>buckets[c].forEach((a,i)=>positions[a.id]={x:24+column*DX,y:TOP+i*DY+(longest-buckets[c].length)*Math.min(18,DY/2)}));
+    graphWidth=48+Math.max(0,activeColumns.length-1)*DX+W;graphHeight=TOP+longest*DY+20;
   }
   function route(r){
     const a=positions[r.source],b=positions[r.target];
@@ -68,11 +78,16 @@
     const svg=$('lineageSvg');svg.replaceChildren();
     const defs=svgEl('defs');for(const [id,color] of [['dependency','#a1b0bf'],['lineage','#4e917d'],['structure','#b4bec9'],['selected','#3869b0']]){const m=svgEl('marker',{id:'arr-'+id,viewBox:'0 0 10 10',refX:9,refY:5,markerWidth:6,markerHeight:6,orient:'auto-start-reverse',markerUnits:'strokeWidth'});m.appendChild(svgEl('path',{d:'M1 1 L9 5 L1 9 z',fill:color}));defs.appendChild(m);}svg.appendChild(defs);
     const scene=svgEl('g',{id:'graphScene'});svg.appendChild(scene);
-    headings.forEach((name,i)=>{scene.appendChild(svgEl('rect',{x:12+i*DX,y:14,width:DX-10,height:graphHeight-14,rx:10,class:'graph-lane'}));addText(scene,24+i*DX,35,name,'lane-title');});
+    const context=typeof window.CanvasRenderingContext2D==='function'?document.createElement('canvas').getContext('2d'):null;
+    if(context){const probe=addText(scene,0,0,'','node-name');context.font=getComputedStyle(probe).font;probe.remove();}
+    const measure=text=>context?context.measureText(text).width:text.length*8;
+    activeColumns.forEach((column,i)=>{scene.appendChild(svgEl('rect',{x:12+i*DX,y:14,width:DX-10,height:graphHeight-14,rx:10,class:'graph-lane'}));addText(scene,24+i*DX,35,column===4&&shown.some(a=>a.kind==='column')?'CAMPOS, MODELOS & PAINÉIS':headings[column],'lane-title');});
     for(const r of links){const type=edgeType(r),g=svgEl('g',{'data-edge':r.id,class:'graph-edge-group',role:'button',tabindex:-1,'aria-label':`${label(assets[r.source])} ${relNames[r.kind]||r.kind} ${label(assets[r.target])}`});g.appendChild(svgEl('path',{d:route(r),class:`graph-edge ${type}`,'marker-end':`url(#arr-${type})`}));g.appendChild(svgEl('path',{d:route(r),class:'edge-hit'}));g.appendChild(svgEl('title',{},`${label(assets[r.source])} → ${label(assets[r.target])} · ${relNames[r.kind]||r.kind}`));scene.appendChild(g);}
     const consumers=new Map(result.consumers.map(r=>[r.consumer,r]));
     for(const a of shown){const pos=positions[a.id],row=consumers.get(a.id),isTarget=a.id===result.change.target,g=svgEl('g',{transform:`translate(${pos.x},${pos.y})`,class:`graph-node kind-${a.kind}${isTarget?' change-target':''}`,role:'button',tabindex:0,'aria-label':`${label(a)}, ${KINDS[a.kind]}, ${domainNames[a.domain]}`, 'data-node':a.id});
-      g.appendChild(svgEl('rect',{width:W,height:H,rx:7,class:'node-card'}));g.appendChild(svgEl('rect',{x:0,y:10,width:3,height:H-20,rx:1.5,class:'node-stripe'}));g.appendChild(svgEl('rect',{x:11,y:11,width:25,height:25,rx:5,class:'node-icon-bg'}));addText(g,23.5,28,symbols[a.kind]||'◇','node-symbol');addText(g,44,23,short(KINDS[a.kind].toUpperCase(),23),'node-kind');addText(g,11,47,short(label(a),24),'node-name');
+      g.appendChild(svgEl('rect',{width:W,height:H,rx:7,class:'node-card'}));g.appendChild(svgEl('rect',{x:0,y:10,width:3,height:H-20,rx:1.5,class:'node-stripe'}));g.appendChild(svgEl('rect',{x:11,y:11,width:25,height:25,rx:5,class:'node-icon-bg'}));addText(g,23.5,28,symbols[a.kind]||'◇','node-symbol');addText(g,44,23,short(KINDS[a.kind].toUpperCase(),23),'node-kind');const lines=nameLines(label(a),measure);
+      addText(g,11,lines.length>1?46:51,lines[0],'node-name');
+      if(lines.length>1)addText(g,11,64,lines[1],'node-name');
       if(row){g.appendChild(svgEl('circle',{cx:W-12,cy:16,r:4,class:'node-status '+IMPACT[row.impact][1]}));}
       g.appendChild(svgEl('title',{},`${label(a)}\n${a.id}\n${team(a.owner)}${row?'\n'+IMPACT[row.impact][0]:''}`));scene.appendChild(g);
     }
@@ -80,10 +95,17 @@
     $('graphVisibleCount').textContent=`${shown.length} ativos · ${links.length} relações neste recorte`;
     $('graphCatalogTotal').textContent=`${data.assets.length} ativos · ${data.relations.length} relações`;
     $('graphEmpty').hidden=shown.length>0;
-    fit();highlight();inspector();emit('graphpaint');
+    readable();highlight();inspector();emit('graphpaint');
   }
   function transform(){const g=$('graphScene');if(g)g.setAttribute('transform',`translate(${tx},${ty}) scale(${zoom})`);$('graphZoomLabel').textContent=Math.round(zoom*100)+'%';}
   function fit(){const v=$('graphViewport');zoom=Math.max(.16,Math.min(1.15,(v.clientWidth-32)/graphWidth,(v.clientHeight-28)/graphHeight));tx=(v.clientWidth-graphWidth*zoom)/2;ty=Math.max(12,(v.clientHeight-graphHeight*zoom)/2);transform();}
+  function readable(){
+    const v=$('graphViewport'),p=positions[selected]||positions[root];zoom=1;
+    tx=p?v.clientWidth/2-(p.x+W/2):16;
+    ty=p?v.clientHeight/2-(p.y+H/2):16;
+    tx=Math.min(16,Math.max(v.clientWidth-graphWidth-16,tx));
+    ty=Math.min(16,Math.max(v.clientHeight-graphHeight-16,ty));transform();
+  }
   function zoomAt(factor,cx,cy){const v=$('graphViewport');cx=cx??v.clientWidth/2;cy=cy??v.clientHeight/2;const next=Math.max(.12,Math.min(2.8,zoom*factor));tx=cx-(cx-tx)*next/zoom;ty=cy-(cy-ty)*next/zoom;zoom=next;transform();}
   function highlight(){
     const row=result.consumers.find(r=>r.consumer===selected),edgeIds=new Set(row?row.paths.flat():[]),nodeIds=new Set([selected]);
@@ -102,6 +124,8 @@
     if(matches.length)html+=`<button class="primary inspector-main-action" data-review="${esc(matches[0].change.id)}">Revisar impacto →</button>`;
     if(a.id===result.change.target)html+='<div class="inspector-consumers"><h3>Consumidores em análise</h3>'+visibleRows().map(r=>`<button data-select-node="${esc(r.consumer)}"><i class="state-dot ${IMPACT[r.impact][1]}"></i><span>${esc(r.name)}<small>${esc(IMPACT[r.impact][0])}</small></span><b>↗</b></button>`).join('')+'</div>';
     if(!positions[selected])html+='<p class="local-note">O ativo selecionado está fora deste recorte. Use “Focar este ativo” para localizá-lo.</p>';
+    const adjacent=links.filter(r=>r.source===a.id||r.target===a.id);
+    if(adjacent.length)html+='<details class="inspector-connections"><summary>Conexões com evidências ('+adjacent.length+')</summary>'+adjacent.map(r=>`<button class="text-btn" data-relation="${esc(r.id)}">${esc(label(assets[r.source]))} ${esc(relNames[r.kind]||r.kind).toLowerCase()} ${esc(label(assets[r.target]))}</button>`).join('')+'</details>';
     html+='<p class="inspector-hint">Clique em um nó para destacar suas conexões. Duplo clique para abrir sua vizinhança.</p>';
     $('graphInspector').innerHTML=html;emit('graphinspect');
   }
@@ -112,7 +136,14 @@
   // Explicit bridge: selection and filtered IDs are shared by the two representations.
   window.EGGraph={
     label,select,focus,
-    snapshot:()=>({root,selected,custom,ids:shown.map(a=>a.id),edgeIds:links.map(r=>r.id)}),
+    snapshot:()=>({root,selected,custom,expanded:[...expanded],ids:shown.map(a=>a.id),edgeIds:links.map(r=>r.id)}),
+    restore:state=>{
+      root=Object.hasOwn(assets,state.root)?state.root:result.change.target;selected=Object.hasOwn(assets,state.selected)?state.selected:root;
+      expanded=new Set((state.expanded||[]).filter(id=>Object.hasOwn(assets,id)));
+      custom=state.mode?EGExplore.query(data,root,state.mode,state.depth):null;
+      $('graphScope').value=custom?'investigation':state.scope;$('graphDomain').value=state.domain;
+      $('graphTechnical').checked=state.technical;paint();
+    },
     explore:(query)=>{custom=query;root=selected=query.root;expanded.clear();$('graphDomain').value='';$('graphScope').value='investigation';setView('lineage');paint();},
     repaint:paint
   };
@@ -131,17 +162,20 @@
     $('analysisToGraph').addEventListener('click',()=>{custom=null;root=selected=result.change.target;expanded.clear();$('graphScope').value='impact';$('graphDomain').value='';setView('lineage');window.EGInvestigation?.showGraph();});
     $('analysisToGraph').disabled=$('analysisResult').hidden;
     $('graphReview').disabled=false;
-    $('graphZoomIn').addEventListener('click',()=>zoomAt(1.25));$('graphZoomOut').addEventListener('click',()=>zoomAt(.8));$('graphFit').addEventListener('click',fit);
+    $('graphZoomIn').addEventListener('click',()=>zoomAt(1.25));$('graphZoomOut').addEventListener('click',()=>zoomAt(.8));$('graphFit').addEventListener('click',fit);$('graphReadable').addEventListener('click',readable);
     const find=()=>{const q=norm($('graphSearch').value);const a=assets[$('graphSearch').value]||data.assets.find(a=>norm(label(a))===q)||data.assets.find(a=>norm(label(a)+' '+a.id).includes(q));if(!q)return;if(a)focus(a.id);else notify('Nenhum ativo encontrado.');};
     $('graphFind').addEventListener('click',find);$('graphSearch').addEventListener('keydown',e=>{if(e.key==='Enter')find();});
     $('lineageSvg').addEventListener('click',e=>{const n=e.target.closest('[data-node]'),r=e.target.closest('[data-edge]');if(n)select(n.dataset.node);else if(r)openEdge(r.dataset.edge);});
     $('lineageSvg').addEventListener('dblclick',e=>{const n=e.target.closest('[data-node]');if(n)focus(n.dataset.node);});
     $('lineageSvg').addEventListener('keydown',e=>{const n=e.target.closest('[data-node]');if(n&&['Enter',' '].includes(e.key)){e.preventDefault();select(n.dataset.node);}});
-    $('graphInspector').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.inspect)openDetails(b.dataset.inspect,!result.consumers.some(r=>r.consumer===b.dataset.inspect));if(b.dataset.expand){custom=null;$('graphScope').value='context';expanded.add(b.dataset.expand);paint();}if(b.dataset.center)focus(b.dataset.center);if(b.dataset.selectNode)select(b.dataset.selectNode);if(b.dataset.review){currentAnalysis(b.dataset.review);setView('analysis');}});
+    $('graphInspector').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.relation){openEdge(b.dataset.relation);return;}if(b.dataset.inspect)openDetails(b.dataset.inspect,!result.consumers.some(r=>r.consumer===b.dataset.inspect));if(b.dataset.expand){custom=null;$('graphScope').value='context';expanded.add(b.dataset.expand);paint();}if(b.dataset.center)focus(b.dataset.center);if(b.dataset.selectNode)select(b.dataset.selectNode);if(b.dataset.review){currentAnalysis(b.dataset.review);setView('analysis');}});
     $('detailBody').addEventListener('click',e=>{const b=e.target.closest('[data-map]');if(b){$('detailDialog').close();focus(b.dataset.map);}});
     const vp=$('graphViewport');vp.addEventListener('pointerdown',e=>{if(e.button!==0||e.target.closest('[data-node],[data-edge],button'))return;pan={x:e.clientX,y:e.clientY,tx,ty};vp.setPointerCapture(e.pointerId);vp.classList.add('panning');});vp.addEventListener('pointermove',e=>{if(!pan)return;tx=pan.tx+e.clientX-pan.x;ty=pan.ty+e.clientY-pan.y;transform();});const end=()=>{pan=null;vp.classList.remove('panning');};vp.addEventListener('pointerup',end);vp.addEventListener('pointercancel',end);
     vp.addEventListener('wheel',e=>{if(e.ctrlKey||e.metaKey){e.preventDefault();const b=vp.getBoundingClientRect();zoomAt(e.deltaY>0?.9:1.1,e.clientX-b.left,e.clientY-b.top);}}, {passive:false});
-    resizeObserver=new ResizeObserver(()=>{if(view==='lineage')fit();});resizeObserver.observe(vp);
+    document.addEventListener('pointerdown',()=>{keyboardNavigation=false;},true);
+    document.addEventListener('keydown',e=>{if(e.key==='Tab')keyboardNavigation=true;},true);
+    $('lineageSvg').addEventListener('focusin',e=>{const node=e.target.closest('[data-node]');if(!node||!keyboardNavigation)return;const p=positions[node.dataset.node],v=$('graphViewport');if(p){tx=v.clientWidth/2-(p.x+W/2)*zoom;ty=v.clientHeight/2-(p.y+H/2)*zoom;transform();}});
+    resizeObserver=new ResizeObserver(()=>{if(view==='lineage')readable();});resizeObserver.observe(vp);
     setView('lineage');
   }
   document.addEventListener('eg:ready',initializeGraph);

@@ -24,3 +24,39 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid 
 #lineageSvg.has-highlight .graph-edge-group:not(.edge-selected) .graph-edge{opacity:.2}
 #lineageSvg.has-highlight .graph-edge-group:hover .graph-edge{opacity:1}
 @media(max-width:780px){.change-overview{padding:12px}.change-details>summary{padding:9px 12px}.analysis-filters{width:100%}.filter-options{flex-direction:column}.filter-options select{max-width:100%}.consumer-reason{min-width:210px}}
+
+/* Review round 2: readable text, visible map tools and explicit context. */
+:root{--muted:#4e5f75}
+.workspace-tools{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px}
+.workspace-tools .env{color:#405570;background:#edf2f7;white-space:normal}
+.workspace-tools .env:before{display:none}
+.graph-navigation{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);background:#f5f8fc}
+.graph-controls{position:static;display:flex;flex-wrap:wrap;max-width:100%;box-shadow:none}
+.graph-controls button{min-height:36px;padding:6px 10px;color:var(--ink)}
+.graph-controls button{font-size:12px}
+.graph-controls #graphZoomIn,.graph-controls #graphZoomOut{font-size:19px}
+.graph-controls span{font-size:12px;color:var(--muted)}
+.graph-context-bar>label{min-width:0}
+.graph-context-bar select{width:100%;min-width:0;max-width:100%}
+.graph-pan-hint{font-size:12px;color:var(--muted)}
+.graph-viewport,.explore-list{height:clamp(380px,56vh,620px)}
+.graph-canvas-head{gap:8px;flex-wrap:wrap}
+.graph-canvas-head span,.catalog-totals small,.inspector-overline,.inspector-meta dt,.inspector-hint,.inspector-consumers small,.explore-list small,.graph-legend,.footer,.inventory-id,.row-type,.review-caption{color:var(--muted)}
+.lane-title{font-size:10px;fill:#52637a}
+.node-kind{font-size:10px;fill:#52637a;letter-spacing:.2px}
+.node-name{font-size:14px}
+.investigate-actions h3{font-size:12px;color:var(--muted);margin:0 0 2px}
+.investigate-actions button{border-color:#a8b9ce;background:#f7faff;font-size:13px}
+.investigate-actions button:hover{background:#e8f0fd;border-color:#5275a8}
+.graph-inspector{max-height:calc(clamp(380px,56vh,620px) + 210px)}
+.graph-guide{padding:11px 16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.graph-guide summary,.inspector-connections summary{cursor:pointer;color:var(--blue);font-weight:600}
+.graph-guide p{margin-top:9px;font-size:12px}
+.graph-guide ul{display:flex;flex-wrap:wrap;gap:8px 18px;padding:0;list-style:none}
+.graph-guide li{display:flex;align-items:center;gap:7px}
+.graph-guide .state-dot{display:inline-block;flex:none;margin:0;width:8px;height:8px}
+.inspector-connections{padding-top:14px;font-size:12px}
+.inspector-connections button{display:block;text-align:left;white-space:normal;overflow-wrap:anywhere;margin-top:6px;padding:7px 0}
+input::placeholder,textarea::placeholder{color:#566579;opacity:1}
+#lineageSvg.has-highlight .graph-edge-group:not(.edge-selected) .graph-edge{opacity:.35}
+@media(max-width:780px){.workspace-tools{justify-content:flex-start}.graph-navigation{padding:8px}.graph-pan-hint{width:100%}.graph-controls button{padding:6px 8px}.graph-viewport,.explore-list{height:420px}.graph-inspector{max-height:none}}

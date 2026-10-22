@@ -75,7 +75,7 @@ function renderConsumers(){const metrics=[['','Todos os consumidores'],['INCOMPA
 function pathMarkup(path){return `<div class="path">${path.map((id,i)=>{const r=relations[id];return `${i===0?`<span>${esc(assets[r.source]?.name||r.source)}</span>`:''}<em>↓ ${esc(r.kind)}</em><span class="${i===path.length-1?'path-target':''}">${esc(assets[r.target]?.name||r.target)}</span>`;}).join('')}</div>`;}
 function evidenceMarkup(ev){const details=JSON.stringify(ev,null,2);return `<details class="ev"><summary><strong>${esc(FAMILIES[ev.family]||ev.family)}</strong> · ${esc(ev.claim==='consumer_fields'?'Contrato de consumo':ev.claim==='observed_use'?'Uso observado':'Relação declarada')}<br><small>${esc(ev.id)}</small></summary><pre>${esc(details)}</pre></details>`;}
 function openDetails(id, fromInventory=false){const asset=assets[id];if(!asset)return;const row=fromInventory?null:result.consumers.find(r=>r.consumer===id);
-  $('detailTitle').textContent=asset.name;$('detailKind').textContent=KINDS[asset.kind]||asset.kind;
+  $('detailTitle').textContent=window.EGGraph?.label(asset)||asset.name;$('detailKind').textContent=KINDS[asset.kind]||asset.kind;
   let html=`<div class="detail-grid"><div><small>RESPONSÁVEL</small>${esc(team(asset.owner))}</div><div><small>PROCESSO</small>${esc(proc(asset.processes))}</div><div><small>AMBIENTE / VERSÃO</small>${esc(envLabel(asset.environment))} · ${esc(asset.version)}</div><div><small>IDENTIFICADOR</small><span class="inventory-id">${esc(asset.id)}</span></div></div>`;
   if(row){const refs=row.evidence_ids.map(e=>evidences[e]);const events=refs.filter(e=>e.claim==='observed_use').map(e=>e.details.at).sort();const coverage=data.coverage.filter(c=>row.paths.flat().includes(c.relation));
     html+=`<section class="consumer-explanation" aria-label="Entenda este caso"><h3>Por que este consumidor aparece?</h3><p>${esc(consumerReason(row))}</p><p><strong>Quem precisa revisar:</strong> ${esc(team(asset.owner))}.</p><p><strong>Próximo passo:</strong> ${esc(row.next_step)}.</p></section>`;
@@ -89,7 +89,7 @@ function openDetails(id, fromInventory=false){const asset=assets[id];if(!asset)r
   }else{
     const matches=data.results.filter(r=>r.change.target===id||r.consumers.some(c=>c.consumer===id));
     html+='<h3>Análises disponíveis</h3>'+(matches.length?matches.map(r=>`<p><button class="secondary" data-goto="${esc(r.change.id)}">${esc(r.change.id)} · Abrir análise</button></p>`).join(''):'<p>Não há revisão de mudança disponível para este ativo. Explore o mapa para consultar suas dependências.</p>');
-    html+=`<p><button class="secondary" data-map="${esc(id)}">Explorar no grafo →</button></p>`;
+    html+=`<p><button class="secondary" data-map="${esc(id)}">Explorar dependências →</button></p>`;
   }
   $('detailBody').innerHTML=html;$('detailDialog').showModal();$('closeDetail').focus();
 }

@@ -17,6 +17,10 @@
     const verbs={CALLS:'chama',READS:'lê',WRITES:'grava em',DERIVES_TO:'origina',ROUTES_TO:'encaminha para',CONTAINS:'contém',USES_TOOL:'usa a ferramenta',HOSTS:'hospeda',HAS_IDENTITY:'tem identidade',USES_MODEL:'usa o modelo',TRAINED_ON:'é treinado com'};
     const edge=s.edgeIds.map(key=>relations[key]).find(r=>r&&((r.source===s.root&&r.target===id)||(r.target===s.root&&r.source===id)));
     if(edge)return `${EGGraph.label(assets[edge.source])} ${verbs[edge.kind]||edge.kind} ${EGGraph.label(assets[edge.target])}`;
+    if($('graphScope').value==='impact'&&s.root===result.change.target){
+      const path=result.consumers.find(row=>row.consumer===id)?.paths.find(p=>p.length>1&&relations[p[0]]?.source===id&&relations[p.at(-1)]?.target===s.root);
+      if(path)return 'Caminho registrado: '+[id,...path.map(key=>relations[key].target)].map(key=>EGGraph.label(assets[key])).join(' → ');
+    }
     if(s.custom?.mode==='upstream')return `Recurso a montante do foco · ${distanceLabel(id,s)}`;
     if(s.custom?.mode==='downstream')return `Consumidor a jusante do foco · ${distanceLabel(id,s)}`;
     return s.custom?.mode==='process'?'Processo compartilhado; não comprova dependência':'Sem vínculo direto com o foco neste recorte';
@@ -25,7 +29,7 @@
     if(!ready)return;const {selected,custom}=EGGraph.snapshot(),a=assets[selected];if(!a)return;
     const meta=$('graphInspector').querySelector('.inspector-meta');
     const actions=document.createElement('section');actions.className='investigate-actions';actions.setAttribute('aria-label','Investigar ativo selecionado');
-    actions.innerHTML=Object.entries(captions).map(([mode,label])=>`<button class="secondary" data-investigate="${mode}" aria-pressed="${custom?.root===selected&&custom?.mode===mode}"><span>${mode==='upstream'?'←':mode==='downstream'?'→':'▦'}</span>${label}</button>`).join('');
+    actions.innerHTML='<h3>Investigar este ativo</h3>'+Object.entries(captions).map(([mode,label])=>`<button class="secondary" data-investigate="${mode}" aria-pressed="${custom?.root===selected&&custom?.mode===mode}"><span>${mode==='upstream'?'←':mode==='downstream'?'→':'▦'}</span>${label}</button>`).join('');
     meta.after(actions);
     const dd=meta.querySelectorAll('dd');if(dd[1])dd[1].textContent=processNames(a).join(' · ')||'Processo não mapeado';
     // A selected consumer is shared even when leaving the graph for the review list.
@@ -40,10 +44,10 @@
     const hidden=q?q.ids.length-s.ids.length:0;
     $('investigationNote').textContent=q?(q.mode==='process'?'Ativos associados aos processos do foco. Associação não comprova dependência.':`Vínculos do catálogo, não uma previsão de falha. ${q.maxDepth===1?'Somente relações diretas.':`Até ${q.maxDepth} níveis.`}${q.hasMore?' Há conexões além deste alcance.':''}`)+(hidden>0?` ${hidden} ativos ocultos pelos filtros.`:''):'Selecione um ativo para destacar suas conexões. A lista de conexões mostra o mesmo recorte; Lista da análise retorna aos consumidores da mudança.';
     $('depthControl').hidden=!q||q.mode==='process';
-    $('workspaceEnvironment').textContent=$('graphScope').value==='all'?'Múltiplos ambientes':envLabel(a?.environment||'prod-demo');
+    $('workspaceEnvironment').textContent=data.provenance?'Fonte em revisão':'Demonstração · dados fictícios';
     $('graphAsGraph').classList.toggle('selected',!list);$('graphAsGraph').setAttribute('aria-pressed',String(!list));
     $('graphToList').classList.toggle('selected',list);$('graphToList').setAttribute('aria-pressed',String(list));
-    $('graphViewport').hidden=list;$('graphListPanel').hidden=!list;
+    $('graphViewport').hidden=list;$('graphListPanel').hidden=!list;$('graphNavigation').hidden=list;
     document.querySelector('.graph-legend').hidden=list;
     renderList(s);
   }
@@ -53,7 +57,7 @@
     $('exploreCount').textContent=`${ids.length} ativos · ${s.edgeIds.length} relações — mesmo recorte do grafo`;
     $('exportContext').disabled=!ids.length;
   }
-  function showRepresentation(value){list=value;refresh();if(!value)EGGraph.repaint();}
+  function showRepresentation(value){list=value;refresh();if(!value)EGGraph.repaint();emit('representation');}
   function reviewSelected(id){
     const row=result.consumers.find(r=>r.consumer===id);if(!row)return;
     clear();$('search').value=row.name;renderConsumers();setView('analysis');$('search').focus();
@@ -87,7 +91,83 @@
     $('exploreRows').addEventListener('click',e=>{const b=e.target.closest('button');if(b?.dataset.selectAsset)EGGraph.select(b.dataset.selectAsset);if(b?.dataset.exploreDetail){EGGraph.select(b.dataset.exploreDetail);openDetails(b.dataset.exploreDetail);}});
     $('consumerRows').addEventListener('click',e=>{const b=e.target.closest('[data-return-graph]');if(b){setView('lineage');EGGraph.select(b.dataset.returnGraph);showRepresentation(false);if(!EGGraph.snapshot().ids.includes(b.dataset.returnGraph))EGGraph.focus(b.dataset.returnGraph);}});
     document.querySelector('#aboutDialog .dialog-body').insertAdjacentHTML('beforeend','<p>Os vínculos usados na exploração são os do catálogo sintético; registros antigos e atuais não são reconciliados por essa navegação. “De que depende?” segue recursos usados e origens dos dados. “Quem depende dele?” percorre o sentido inverso. Estrutura e identidade não autorizam acesso. Notas são locais e podem ser apagadas pelo navegador.</p>');
-    addActions();refresh();decorateResults();
+    addActions();refresh();decorateResults();initializeNavigation();
+  }
+  // Only view/filter state belongs in the URL; local notes and checks never do.
+  let navigationReady=false,restoring=false,navigationTimer=null;
+  const routeKeys=['view','change','open','focus','asset','scope','area','technical','mode','depth','expanded','rep','impact','owner','activity','search','sort','inventory','kind','inventoryArea','page'];
+  function routeURL(){
+    const url=new URL(location.href),s=EGGraph.snapshot();
+    for(const key of routeKeys)url.searchParams.delete('eg_'+key);
+    const values={view,change:$('changeSelect').value,
+      open:result.change.id!==$('changeSelect').value?result.change.id:'',
+      focus:s.root!==result.change.target?s.root:'',asset:s.selected!==s.root?s.selected:'',
+      scope:$('graphScope').value!=='context'?$('graphScope').value:'',area:$('graphDomain').value,
+      technical:$('graphTechnical').checked?'1':'',mode:s.custom?.mode||'',
+      depth:[2,4].includes(s.custom?.maxDepth)?String(s.custom.maxDepth):'',expanded:s.expanded.join(','),rep:list?'list':'',
+      impact:impactFilter,owner:$('ownerFilter').value,activity:$('activityFilter').value,
+      search:$('search').value,sort:ascending===null?'':ascending?'asc':'desc',
+      inventory:$('inventorySearch').value,kind:$('kindFilter').value,inventoryArea:$('domainFilter').value,
+      page:inventoryPage?String(inventoryPage):''};
+    for(const [key,value] of Object.entries(values))if(value!=='')url.searchParams.set('eg_'+key,value);
+    return url;
+  }
+  function recordRoute(replace=false){
+    if(!navigationReady||restoring||!['http:','https:'].includes(location.protocol))return;
+    const url=routeURL();if(url.href===location.href)return;
+    history[replace?'replaceState':'pushState'](null,'',url.href);
+  }
+  function scheduleRoute(replace=false){
+    if(!navigationReady||restoring)return;
+    clearTimeout(navigationTimer);navigationTimer=setTimeout(()=>recordRoute(replace),0);
+  }
+  function readRoute(){
+    const p=new URL(location.href).searchParams,get=key=>(p.get('eg_'+key)||'').slice(0,12000);
+    const choice=(key,allowed,fallback)=>allowed.includes(get(key))?get(key):fallback;
+    const changes=data.results.map(r=>r.change.id),change=choice('change',changes,changes[0]);
+    const open=choice('open',changes,change),opened=data.results.find(r=>r.change.id===open);
+    const exists=id=>Object.hasOwn(assets,id),root=exists(get('focus'))?get('focus'):opened.change.target;
+    const modes=Object.keys(captions),mode=choice('mode',modes,'');
+    const domain=key=>choice(key,data.domains.map(d=>d.id),'');
+    return {view:choice('view',['lineage','analysis','inventory'],'lineage'),change,open,
+      root,selected:exists(get('asset'))?get('asset'):root,
+      mode,depth:Number(choice('depth',['1','2','4'],'1')),
+      scope:mode?'investigation':choice('scope',['context','impact','all'],p.has('eg_view')?'context':'impact'),domain:domain('area'),
+      technical:get('technical')==='1',expanded:[...new Set(get('expanded').split(',').filter(exists))],
+      list:get('rep')==='list',impact:choice('impact',Object.keys(IMPACT),''),
+      owner:choice('owner',[...new Set(opened.consumers.map(r=>r.owner))],''),
+      activity:choice('activity',Object.keys(ACTIVITY),''),search:get('search').slice(0,160),
+      ascending:get('sort')==='asc'?true:get('sort')==='desc'?false:null,
+      inventory:get('inventory').slice(0,160),kind:choice('kind',[...new Set(data.assets.map(a=>a.kind))],''),
+      inventoryArea:domain('inventoryArea'),page:Math.max(0,Math.min(Math.ceil(data.assets.length/15)-1,Number.parseInt(get('page'),10)||0))};
+  }
+  function restoreRoute(){
+    clearTimeout(navigationTimer);const s=readRoute();restoring=true;
+    try{
+      if($('detailDialog').open)$('detailDialog').close();
+      $('changeSelect').value=s.open;meta();openAnalysis();
+      $('search').value=s.search;$('ownerFilter').value=s.owner;$('activityFilter').value=s.activity;
+      impactFilter=s.impact;ascending=s.ascending;renderConsumers();
+      if(s.change!==s.open){$('changeSelect').value=s.change;meta();$('analysisResult').hidden=true;$('notAnalyzed').hidden=false;analysisStatus(true);}
+      $('inventorySearch').value=s.inventory;$('kindFilter').value=s.kind;$('domainFilter').value=s.inventoryArea;inventoryPage=s.page;
+      $('investigationDepth').value=String(s.depth);setView('lineage');EGGraph.restore(s);showRepresentation(s.list);setView(s.view);
+    }finally{restoring=false;}
+  }
+  function initializeNavigation(){
+    if(navigationReady)return;
+    navigationReady=true;restoreRoute();recordRoute(true);
+    for(const event of ['view','analysis','graphpaint','graphselect','filtered','representation'])document.addEventListener('eg:'+event,()=>scheduleRoute());
+    document.addEventListener('change',e=>{if(['changeSelect','inventorySearch','kindFilter','domainFilter'].includes(e.target.id))scheduleRoute();});
+    document.addEventListener('input',e=>{if(['search','inventorySearch'].includes(e.target.id))scheduleRoute(true);});
+    document.addEventListener('click',e=>{if(e.target.closest('#prevPage,#nextPage'))scheduleRoute();});
+    window.addEventListener('popstate',restoreRoute);
+    $('copyContextLink').disabled=!['http:','https:'].includes(location.protocol);
+    $('copyContextLink').addEventListener('click',async()=>{
+      clearTimeout(navigationTimer);recordRoute(true);
+      try{await navigator.clipboard.writeText(location.href);notify('Link copiado. Ele reabre esta vista, a seleção e os filtros. Notas continuam locais.');}
+      catch{notify('Copie o endereço na barra do navegador para compartilhar esta vista. Notas continuam locais.');}
+    });
+    window.EGNavigation={url:()=>routeURL().href};
   }
   document.addEventListener('eg:ready',initializeInvestigation);
   document.addEventListener('eg:graphinspect',addActions);
