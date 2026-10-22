@@ -1,0 +1,2 @@
+# Optional browser validation; application requirements stay in requirements.txt.
+playwright==1.57.0

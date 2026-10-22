@@ -35,3 +35,9 @@ The course itself must not silently redefine the project.
 ## Equipe
 
 Os integrantes da equipe estão registrados em [TEAM.md](./TEAM.md).
+
+## Continuidade recebida em 20/10/2026
+
+Segundo o proponente, Incubação, Analogia e Sprint de Inovação foram aprovadas como definitivas e enviadas por e-mail. Preservar essas versões e o feedback real registrado; não reabrir entregas nem fabricar painel de pares. O relato de envio não representa recuperação dos e-mails/anexos originais nesta transferência.
+
+EvidentGraph e ParkAI permanecem projetos distintos, com a relação de autoria registrada em `TEAM.md`. O grupo acadêmico não implica cargos, sociedade, disponibilidade ou compromisso de inscrição em edital. A candidatura CTE-IA tem [workspace próprio](../../../opportunities/cte-ia-2026/README.md), e os dados privados da composição candidata permanecem fora do Git público.

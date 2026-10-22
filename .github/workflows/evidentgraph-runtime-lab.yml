@@ -1,0 +1,88 @@
+name: EvidentGraph runtime lab
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'evidence-graph/core/lab-runtime/**'
+      - 'evidence-graph/preview-m2/**'
+      - '.github/workflows/evidentgraph-runtime-lab.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+defaults:
+  run:
+    shell: bash
+concurrency:
+  group: runtime-lab-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 12
+    env:
+      EG_PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      DEBUG: pw:browser
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install fixed laboratory and browser dependencies
+        run: |
+          python -m pip install -r evidence-graph/core/lab-runtime/requirements.txt -r evidence-graph/core/lab-runtime/requirements-browser.txt
+          python -m playwright install --with-deps chromium
+      - name: Record actual checkout and fixed test environment
+        env:
+          EG_TEST_EVIDENCE_DIR: ${{ runner.temp }}/evidentgraph-runtime
+        run: |
+          printf 'EG_TEST_EVIDENCE_DIR=%s\n' "$EG_TEST_EVIDENCE_DIR" >> "$GITHUB_ENV"
+          mkdir -p "$EG_TEST_EVIDENCE_DIR"
+          python - <<'PY' | tee "$EG_TEST_EVIDENCE_DIR/environment.log"
+          import json, os, platform, subprocess, sys
+          from importlib.metadata import version
+          from pathlib import Path
+          actual = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          raw_commit = subprocess.check_output(['git', 'cat-file', '-p', 'HEAD'], text=True)
+          parents = [line.split(' ', 1)[1] for line in raw_commit.splitlines() if line.startswith('parent ')]
+          head = os.environ['EG_PR_HEAD_SHA']
+          assert not head or head in [actual, *parents], 'Checkout does not contain the PR head'
+          assert actual == os.environ['GITHUB_SHA'], 'Unexpected checkout revision'
+          assert version('playwright') == '1.57.0'
+          print(json.dumps({'pr_head_sha': head, 'checkout_sha': actual, 'parents': parents, 'github_sha': os.environ['GITHUB_SHA'], 'python': sys.version, 'platform': platform.platform(), 'os_release': Path('/etc/os-release').read_text(), 'playwright': version('playwright'), 'chromium_sandbox': True, 'packages': subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'], text=True).splitlines()}, indent=2))
+          PY
+      - name: Check sandboxed browser and real loopback HTTP capability
+        run: python evidence-graph/core/lab-runtime/check_browser_environment.py 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/browser-capability.log"
+      - name: Laboratory Python and both HTTP suites, preserving all exit codes
+        working-directory: evidence-graph/core/lab-runtime
+        run: |
+          status=0
+          run_suite() {
+            local log_name="$1"
+            shift
+            set +e
+            python -m unittest -v "$@" 2>&1 | tee "$EG_TEST_EVIDENCE_DIR/$log_name.log"
+            local codes=("${PIPESTATUS[@]}")
+            set -e
+            printf 'suite=%s python_exit=%s tee_exit=%s\n' "$log_name" "${codes[0]}" "${codes[1]}" | tee -a "$EG_TEST_EVIDENCE_DIR/suite-status.log"
+            if (( codes[0] != 0 || codes[1] != 0 )); then status=1; fi
+          }
+          run_suite runtime-unit test_lab test_adapter test_capture_history test_auth
+          run_suite runtime-http test_browser_http
+          run_suite auth-http test_auth_browser
+          exit "$status"
+      - name: Keep selected runtime test logs for seven days
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidentgraph-l7-runtime-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 7
+          if-no-files-found: warn
+          path: |
+            ${{ runner.temp }}/evidentgraph-runtime/environment.log
+            ${{ runner.temp }}/evidentgraph-runtime/browser-capability.log
+            ${{ runner.temp }}/evidentgraph-runtime/suite-status.log
+            ${{ runner.temp }}/evidentgraph-runtime/runtime-unit.log
+            ${{ runner.temp }}/evidentgraph-runtime/runtime-http.log
+            ${{ runner.temp }}/evidentgraph-runtime/auth-http.log

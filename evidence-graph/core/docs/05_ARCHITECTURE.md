@@ -1,5 +1,11 @@
 # Architecture — v0 Concept
 
+## Implementation status at integral transfer, 2026-10-20
+
+This file preserves the conceptual architecture, not a list of delivered components. The implemented laboratory uses Python/FastAPI, HTTPX/Uvicorn, SQLite and manual OpenTelemetry instrumentation, with HTML/CSS/JavaScript views and Python/Playwright tests. L7 presents bounded evidence in the existing experience; it does not introduce a general collector or inference engine. See [checkpoint 30](./30_L7_EVIDENCE_REVIEW.md).
+
+Neo4j, PostgreSQL, Docker Compose, enterprise connectors, MCP/LLM tools and a Next.js application remain conceptual or conditional choices. No privileged installation, connector access or architecture expansion is authorized by this transfer. NLP/generative extraction of references from heterogeneous documents is a research hypothesis for discussion, not an approved implementation.
+
 ## Evidence sources
 
 ### Metadata / lineage

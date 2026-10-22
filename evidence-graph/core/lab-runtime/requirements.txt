@@ -1,0 +1,6 @@
+# Versions exercised locally; do not claim these are the latest releases.
+fastapi==0.128.2
+uvicorn==0.48.0
+httpx==0.28.1
+opentelemetry-api==1.42.1
+opentelemetry-sdk==1.42.1
