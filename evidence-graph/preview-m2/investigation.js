@@ -53,7 +53,7 @@
   }
   function renderList(s){
     const ids=[...s.ids].sort((a,b)=>a===s.root?-1:b===s.root?1:(s.custom?.distance[a]??0)-(s.custom?.distance[b]??0)||EGGraph.label(assets[a]).localeCompare(EGGraph.label(assets[b]),'pt-BR'));
-    $('exploreRows').innerHTML=ids.map(id=>{const a=assets[id];return `<tr data-explore-row="${esc(id)}" class="${id===s.selected?'active-row':''}"><td><button class="text-btn asset-select" data-select-asset="${esc(id)}">${esc(EGGraph.label(a))}</button><small>${esc(KINDS[a.kind])} · ${esc(envLabel(a.environment))}</small></td><td>${esc(relationshipLabel(id,s))}</td><td>${esc(team(a.owner))}<small>${esc(processNames(a).join(' · ')||'Processo não mapeado')}</small></td><td><button class="row-open" data-explore-detail="${esc(id)}">Detalhes</button></td></tr>`;}).join('')||'<tr><td colspan="4" class="empty">Nenhum ativo corresponde aos filtros.</td></tr>';
+    $('exploreRows').innerHTML=ids.map(id=>{const a=assets[id];return `<tr data-explore-row="${esc(id)}" class="${id===s.selected?'active-row':''}"><td data-label="Ativo"><button class="text-btn asset-select" data-select-asset="${esc(id)}">${esc(EGGraph.label(a))}</button><small>${esc(KINDS[a.kind])} · ${esc(envLabel(a.environment))}</small></td><td data-label="Relação com o foco">${esc(relationshipLabel(id,s))}</td><td data-label="Responsável / operação">${esc(team(a.owner))}<small>${esc(processNames(a).join(' · ')||'Processo não mapeado')}</small></td><td data-label="Ações"><button class="row-open" data-explore-detail="${esc(id)}">Detalhes</button></td></tr>`;}).join('')||'<tr><td colspan="4" class="empty">Nenhum ativo corresponde aos filtros.</td></tr>';
     $('exploreCount').textContent=`${ids.length} ativos · ${s.edgeIds.length} relações — mesmo recorte do grafo`;
     $('exportContext').disabled=!ids.length;
   }
@@ -93,9 +93,9 @@
     document.querySelector('#aboutDialog .dialog-body').insertAdjacentHTML('beforeend','<p>Os vínculos usados na exploração são os do catálogo sintético; registros antigos e atuais não são reconciliados por essa navegação. “De que depende?” segue recursos usados e origens dos dados. “Quem depende dele?” percorre o sentido inverso. Estrutura e identidade não autorizam acesso. Notas são locais e podem ser apagadas pelo navegador.</p>');
     addActions();refresh();decorateResults();initializeNavigation();
   }
-  // Only view/filter state belongs in the URL; local notes and checks never do.
+  // Share view state and evidence identifiers; local notes and checks never do.
   let navigationReady=false,restoring=false,navigationTimer=null;
-  const routeKeys=['view','change','open','focus','asset','scope','area','technical','mode','depth','expanded','rep','impact','owner','activity','search','sort','inventory','kind','inventoryArea','page'];
+  const routeKeys=['view','change','open','focus','asset','scope','area','technical','mode','depth','expanded','rep','impact','owner','activity','search','sort','inventory','kind','inventoryArea','page','detail','detailKind','evidence'];
   function routeURL(){
     const url=new URL(location.href),s=EGGraph.snapshot();
     for(const key of routeKeys)url.searchParams.delete('eg_'+key);
@@ -104,11 +104,12 @@
       focus:s.root!==result.change.target?s.root:'',asset:s.selected!==s.root?s.selected:'',
       scope:$('graphScope').value!=='context'?$('graphScope').value:'',area:$('graphDomain').value,
       technical:$('graphTechnical').checked?'1':'',mode:s.custom?.mode||'',
-      depth:[2,4].includes(s.custom?.maxDepth)?String(s.custom.maxDepth):'',expanded:s.expanded.join(','),rep:list?'list':'',
+      depth:[2,4].includes(s.custom?.maxDepth)?String(s.custom.maxDepth):'',expanded:s.expanded.join(','),rep:list?'list':'graph',
       impact:impactFilter,owner:$('ownerFilter').value,activity:$('activityFilter').value,
       search:$('search').value,sort:ascending===null?'':ascending?'asc':'desc',
       inventory:$('inventorySearch').value,kind:$('kindFilter').value,inventoryArea:$('domainFilter').value,
-      page:inventoryPage?String(inventoryPage):''};
+      page:inventoryPage?String(inventoryPage):'',
+      detail:$('detailDialog').open?detailContext?.id||'':'',detailKind:$('detailDialog').open?detailContext?.kind||'':'',evidence:$('detailDialog').open?detailContext?.evidence||'':''};
     for(const [key,value] of Object.entries(values))if(value!=='')url.searchParams.set('eg_'+key,value);
     return url;
   }
@@ -129,12 +130,16 @@
     const exists=id=>Object.hasOwn(assets,id),root=exists(get('focus'))?get('focus'):opened.change.target;
     const modes=Object.keys(captions),mode=choice('mode',modes,'');
     const domain=key=>choice(key,data.domains.map(d=>d.id),'');
+    const detailKind=choice('detailKind',['asset','consumer','relation'],''),detailId=get('detail');
+    const row=detailKind==='consumer'&&change===open?opened.consumers.find(r=>r.consumer===detailId):null;
+    const detail=detailKind==='asset'&&exists(detailId)||row||detailKind==='relation'&&Object.hasOwn(relations,detailId)?{kind:detailKind,id:detailId,evidence:''}:null;
+    if(detail){const allowed=detail.kind==='relation'?relations[detail.id].evidence_ids:row?.evidence_ids||assets[detail.id]?.evidence_ids||[];if(allowed.includes(get('evidence')))detail.evidence=get('evidence');}
     return {view:choice('view',['lineage','analysis','inventory'],'lineage'),change,open,
       root,selected:exists(get('asset'))?get('asset'):root,
       mode,depth:Number(choice('depth',['1','2','4'],'1')),
       scope:mode?'investigation':choice('scope',['context','impact','all'],p.has('eg_view')?'context':'impact'),domain:domain('area'),
       technical:get('technical')==='1',expanded:[...new Set(get('expanded').split(',').filter(exists))],
-      list:get('rep')==='list',impact:choice('impact',Object.keys(IMPACT),''),
+      list:choice('rep',['list','graph'],window.matchMedia?.('(max-width: 780px)').matches?'list':'graph')==='list',detail,impact:choice('impact',Object.keys(IMPACT),''),
       owner:choice('owner',[...new Set(opened.consumers.map(r=>r.owner))],''),
       activity:choice('activity',Object.keys(ACTIVITY),''),search:get('search').slice(0,160),
       ascending:get('sort')==='asc'?true:get('sort')==='desc'?false:null,
@@ -144,6 +149,7 @@
   function restoreRoute(){
     clearTimeout(navigationTimer);const s=readRoute();restoring=true;
     try{
+      dismissNotice();detailContext=null;
       if($('detailDialog').open)$('detailDialog').close();
       $('changeSelect').value=s.open;meta();openAnalysis();
       $('search').value=s.search;$('ownerFilter').value=s.owner;$('activityFilter').value=s.activity;
@@ -151,22 +157,41 @@
       if(s.change!==s.open){$('changeSelect').value=s.change;meta();$('analysisResult').hidden=true;$('notAnalyzed').hidden=false;analysisStatus(true);}
       $('inventorySearch').value=s.inventory;$('kindFilter').value=s.kind;$('domainFilter').value=s.inventoryArea;inventoryPage=s.page;
       $('investigationDepth').value=String(s.depth);setView('lineage');EGGraph.restore(s);showRepresentation(s.list);setView(s.view);
+      if(s.detail){
+        if(s.detail.kind==='relation')EGGraph.openEdge(s.detail.id);else openDetails(s.detail.id,s.detail.kind==='asset');
+        const ev=Array.from($('detailBody').querySelectorAll('[data-evidence-id]')).find(el=>el.dataset.evidenceId===s.detail.evidence);
+        if(ev){detailContext.evidence=s.detail.evidence;ev.open=true;ev.querySelector('summary').focus();ev.scrollIntoView?.({block:'nearest'});}
+      }
     }finally{restoring=false;}
   }
   function initializeNavigation(){
     if(navigationReady)return;
     navigationReady=true;restoreRoute();recordRoute(true);
-    for(const event of ['view','analysis','graphpaint','graphselect','filtered','representation'])document.addEventListener('eg:'+event,()=>scheduleRoute());
+    for(const event of ['view','analysis','graphpaint','graphselect','filtered','representation','detail'])document.addEventListener('eg:'+event,()=>scheduleRoute());
     document.addEventListener('change',e=>{if(['changeSelect','inventorySearch','kindFilter','domainFilter'].includes(e.target.id))scheduleRoute();});
     document.addEventListener('input',e=>{if(['search','inventorySearch'].includes(e.target.id))scheduleRoute(true);});
     document.addEventListener('click',e=>{if(e.target.closest('#prevPage,#nextPage'))scheduleRoute();});
     window.addEventListener('popstate',restoreRoute);
-    $('copyContextLink').disabled=!['http:','https:'].includes(location.protocol);
-    $('copyContextLink').addEventListener('click',async()=>{
+    // Commit dismissal before an immediate reload can restore the previous dialog URL.
+    const dismissDetailRoute=()=>{detailContext=null;recordRoute();};
+    $('closeDetail').addEventListener('click',dismissDetailRoute);
+    $('detailDialog').addEventListener('cancel',dismissDetailRoute);
+    $('detailDialog').addEventListener('close',()=>{if(!$('detailDialog').open)dismissDetailRoute();});
+    $('detailBody').addEventListener('toggle',e=>{
+      if(!detailContext||!e.target.matches('[data-evidence-id]'))return;
+      if(e.target.open)detailContext.evidence=e.target.dataset.evidenceId;
+      else if(detailContext.evidence===e.target.dataset.evidenceId)detailContext.evidence='';
+      scheduleRoute();
+    },true);
+    for(const id of ['copyContextLink','copyDetailLink'])$(id).disabled=!['http:','https:'].includes(location.protocol);
+    const copyLink=async()=>{
       clearTimeout(navigationTimer);recordRoute(true);
-      try{await navigator.clipboard.writeText(location.href);notify('Link copiado. Ele reabre esta vista, a seleção e os filtros. Notas continuam locais.');}
-      catch{notify('Copie o endereço na barra do navegador para compartilhar esta vista. Notas continuam locais.');}
-    });
+      let message;
+      try{await navigator.clipboard.writeText(location.href);message=$('detailDialog').open?'Link copiado. Reabre este detalhe e a evidência selecionada. Notas continuam locais.':'Link copiado. Ele reabre esta vista, a seleção e os filtros. Notas continuam locais.';}
+      catch{message='Copie o endereço na barra do navegador. Notas continuam locais.';}
+      if($('detailDialog').open)$('detailShareStatus').textContent=message;else notify(message);
+    };
+    $('copyContextLink').addEventListener('click',copyLink);$('copyDetailLink').addEventListener('click',copyLink);
     window.EGNavigation={url:()=>routeURL().href};
   }
   document.addEventListener('eg:ready',initializeInvestigation);

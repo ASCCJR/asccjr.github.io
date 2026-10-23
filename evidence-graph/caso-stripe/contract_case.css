@@ -1,0 +1,16 @@
+.workspace-picker{display:block;padding:0 18px 20px;font-size:12px;color:#c6d5e5}
+.workspace-picker select{display:block;width:100%;margin-top:8px;padding:9px 4px;border-radius:5px}
+.case-notice{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:20px;padding:16px;border:1px solid #b8cbe1;border-radius:7px;background:#f0f5fb;color:#294264}
+.case-notice p{font-size:13px;margin-top:7px}
+.case-notice .primary{white-space:normal}
+.contract-comparison{border:1px solid var(--line);background:#fff;border-radius:7px;padding:18px;margin:18px 0}
+.contract-versions{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.contract-versions h3{font-size:15px;margin:0 0 8px}.contract-versions p{margin:8px 0;font-size:13px}
+.contract-versions code{font-size:14px;overflow-wrap:anywhere}.contract-versions article{min-width:0}
+.case-migration{padding:14px 0;font-size:13px;line-height:1.6}
+.contract-comparison details{border-top:1px solid var(--line);padding-top:12px;font-size:12px}
+.contract-comparison summary{color:var(--blue);font-weight:600;cursor:pointer}
+.contract-comparison details p{margin-top:12px;overflow-wrap:anywhere}
+.contract-comparison a{color:#245795;text-decoration:underline}
+.contract-case .investigate-actions,.contract-case .inspector-consumers{display:none}
+@media(max-width:780px){.case-notice{align-items:flex-start;flex-direction:column}.contract-versions{grid-template-columns:1fr}.contract-versions article+article{border-top:1px solid var(--line);padding-top:16px}}

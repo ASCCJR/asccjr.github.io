@@ -4,8 +4,8 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="EvidentGraph: prévia sintética para revisão de impacto de mudanças.">
 <title>EvidentGraph · Revisão de mudanças</title>
-<link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="lineage.css"><link rel="stylesheet" href="investigation.css">
-<script src="data.js" defer></script><script src="app.js" defer></script><script src="lineage.js" defer></script><script src="exploration.js" defer></script><script src="investigation.js" defer></script>
+<link rel="stylesheet" href="styles.css?v=816976e282be9827"><link rel="stylesheet" href="lineage.css?v=ab8f37216dc863ca"><link rel="stylesheet" href="investigation.css?v=cb1e7f9322e10d48">
+<script src="data.js?v=e4a6f53682fa8bcc" defer></script><script src="app.js?v=ed868c8ed817d779" defer></script><script src="lineage.js?v=e805ccb8483dac4c" defer></script><script src="exploration.js?v=8c428651296725df" defer></script><script src="investigation.js?v=7acd963e99f663fc" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Ir para o conteúdo</a>
@@ -16,6 +16,7 @@
     <button data-view="lineage" class="nav"><span aria-hidden="true">◇</span> Mapa de dependências</button>
     <button data-view="analysis" class="nav active" aria-current="page"><span aria-hidden="true">↳</span> Análises de mudança</button>
     <button data-view="inventory" class="nav"><span aria-hidden="true">▦</span> Inventário</button>
+    <a class="nav" href="../caso-stripe/?source=case&amp;eg_view=analysis&amp;eg_change=CASE-001&amp;eg_scope=all&amp;eg_technical=1" aria-label="Abrir caso público da Stripe com consumidor simulado"><span aria-hidden="true">↗</span> Caso Stripe</a>
   </nav>
   <div class="side-foot"><span class="workspace-label">COMÉRCIO E DISTRIBUIÇÃO</span><button id="aboutBtn" class="side-link">Sobre o ambiente ↗</button></div>
 </aside>
@@ -31,7 +32,7 @@
       <div class="graph-workspace">
         <section class="graph-canvas-card" aria-label="Exploração do lineage">
           <div class="graph-canvas-head"><div><strong id="graphFocusName"></strong><span id="graphVisibleCount"></span></div><button id="graphReset" class="text-btn">Focar ativo da mudança</button></div>
-          <div id="graphNavigation" class="graph-navigation"><div class="graph-controls" role="group" aria-label="Navegar no grafo"><button id="graphZoomOut" aria-label="Diminuir zoom">−</button><span id="graphZoomLabel" aria-live="polite">100%</span><button id="graphZoomIn" aria-label="Aumentar zoom">+</button><button id="graphReadable">Leitura</button><button id="graphFit">Ajustar tudo</button></div><span class="graph-pan-hint">Arraste o fundo para mover o mapa.</span></div>
+          <div id="graphNavigation" class="graph-navigation"><div class="graph-controls" role="group" aria-label="Navegar no grafo"><button id="graphZoomOut" aria-label="Diminuir zoom">−</button><span id="graphZoomLabel" aria-live="polite">100%</span><button id="graphZoomIn" aria-label="Aumentar zoom">+</button><button id="graphReadable">Leitura</button><button id="graphFit">Ajustar tudo</button></div><span class="graph-pan-hint">Arraste o fundo ou use as setas para mover o mapa.</span><div class="graph-orientation"><p id="graphViewportStatus"></p><div id="graphPanControls" role="group" aria-label="Revelar outras partes do mapa"><button class="secondary" data-pan="left" aria-label="Ver ativos à esquerda">←</button><button class="secondary" data-pan="up" aria-label="Ver ativos acima">↑</button><button class="secondary" data-pan="down" aria-label="Ver ativos abaixo">↓</button><button class="secondary" data-pan="right" aria-label="Ver ativos à direita">→</button><button id="graphFocusSelected" class="text-btn">Voltar ao ativo selecionado</button></div></div></div>
           <div id="graphViewport" class="graph-viewport" tabindex="0" role="region" aria-label="Grafo interativo. Arraste o fundo para mover; use os botões de zoom e Tab para selecionar ativos."><svg id="lineageSvg" xmlns="http://www.w3.org/2000/svg" aria-label="Ativos e relações direcionadas"></svg><div class="graph-empty" id="graphEmpty" hidden>Nenhum ativo neste recorte. Altere os filtros ou escolha outra área.</div></div>
           <div id="graphListPanel" class="explore-list" hidden><div class="table-scroll"><table><thead><tr><th>Ativo</th><th>Relação com o foco</th><th>Responsável / operação</th><th>Ações</th></tr></thead><tbody id="exploreRows"></tbody></table></div><div class="table-footer" id="exploreCount" role="status"></div></div>
           <div class="graph-legend"><span><i class="key-dep"></i>Dependência</span><span><i class="key-lineage"></i>Linhagem de dados</span><span><i class="key-structure"></i>Estrutura / identidade</span><span class="legend-end">Setas seguem a relação indicada · arraste para navegar</span></div>
@@ -69,7 +70,7 @@
     <footer class="footer"><span>EvidentGraph · Grupo Aurora</span><span id="datasetLabel"></span></footer>
   </main>
 </div>
-<dialog id="detailDialog" aria-labelledby="detailTitle"><div class="dialog-head"><div><span class="eyebrow" id="detailKind"></span><h2 id="detailTitle"></h2></div><button id="closeDetail" class="close-btn" aria-label="Fechar detalhes">×</button></div><div id="detailBody" class="dialog-body"></div></dialog>
+<dialog id="detailDialog" aria-labelledby="detailTitle"><div class="dialog-head"><div><span class="eyebrow" id="detailKind"></span><h2 id="detailTitle"></h2><button id="copyDetailLink" class="text-btn">Copiar link deste detalhe</button><p id="detailShareStatus" class="small" role="status"></p></div><button id="closeDetail" class="close-btn" aria-label="Fechar detalhes">×</button></div><div id="detailBody" class="dialog-body"></div></dialog>
 <dialog id="aboutDialog" aria-labelledby="aboutTitle"><div class="dialog-head"><h2 id="aboutTitle">Sobre o ambiente</h2><button id="closeAbout" class="close-btn" aria-label="Fechar informações do ambiente">×</button></div><div class="dialog-body"><p>Grupo Aurora é uma organização fictícia utilizada neste protótipo do EvidentGraph. Todos os ativos e registros são sintéticos; não representam uma empresa real. O inventário contém 240 ativos; as evidências detalhadas são um recorte dos cenários CHG-001, CHG-002 e CHG-003.</p><p>Os resultados são calculados pelo analisador Python M1 durante a geração dos arquivos. O navegador consulta, filtra e exporta esses resultados; não reavalia contratos arbitrários nem consulta uma empresa real.</p><p>As verificações e notas são guardadas apenas neste navegador quando o armazenamento local está disponível. Elas não são enviadas aos responsáveis e não comprovam a resolução de um risco.</p><p>O mapa explora as 512 relações do catálogo, com os tipos e sentidos preservados. A avaliação de autorização não está implementada. As análises de impacto continuam limitadas aos três cenários descritos. O site público anterior não foi substituído.</p><p><strong>Versão de avaliação M3.</strong> A exploração percorre vínculos tipados do catálogo, sem avaliar permissões ou concluir impacto arbitrário. Processos compartilhados são associações declaradas. O mapa e sua lista mostram o mesmo recorte. O histórico de notas fica somente neste navegador.</p></div></dialog>
 <div id="toast" class="toast" role="status" hidden></div>
 </body></html>

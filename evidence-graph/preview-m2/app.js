@@ -14,7 +14,7 @@ const KINDS = {application:'Aplicação',api:'API',service:'Serviço',pipeline:'
 const SCENARIOS = {'CHG-001':'Remover campo da API de clientes','CHG-002':'Alterar saída da previsão de demanda','CHG-003':'Desativar API legada'};
 const FAMILIES = {config:'Configuração',code:'Contrato / código',lineage:'Lineage',runtime:'Execução',authorization:'Autorização'};
 let data, assets, teams, processes, relations, evidences, result, view='analysis', impactFilter='', ascending=null, inventoryPage=0;
-let checks={}, persist=true, toastTimer;
+let checks={}, persist=true, toastTimer, detailContext=null;
 window.EG_READY=false;
 const date = s => s ? new Intl.DateTimeFormat('pt-BR',{timeZone:'UTC',dateStyle:'short',timeStyle:'short'}).format(new Date(s))+' UTC' : 'Não disponível';
 const team = id => (teams[id]?.name || id).replace('Equipe Demo ', 'Equipe ');
@@ -25,6 +25,7 @@ const badge = row => `<span class="badge ${IMPACT[row.impact][1]}">${esc(IMPACT[
 const key = id => `${result.change.id}:${id}`;
 const check = id => checks[key(id)] || {done:false,note:''};
 function notify(text){$('toast').textContent=text;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,3200);}
+function dismissNotice(){clearTimeout(toastTimer);$('toast').hidden=true;$('toast').textContent='';$('detailShareStatus').textContent='';}
 function store(id, patch){checks[key(id)]={...check(id),...patch};try{localStorage.setItem('eg-m2:'+data.dataset_version,JSON.stringify(checks));}catch{persist=false;}updateSummary();}
 function updateSummary(){const count=result.consumers.filter(c=>check(c.consumer).done).length;$('summaryLine').textContent=`${result.consumers.length} consumidores no recorte · ${count} verificações anotadas ${persist?'neste navegador':'nesta sessão'}.`;}
 function meta(){const r=data.results.find(r=>r.change.id===$('changeSelect').value),c=r.change;
@@ -73,7 +74,7 @@ function renderConsumers(){const metrics=[['','Todos os consumidores'],['INCOMPA
   $('sortMark').textContent=ascending===null?'↕':ascending?'↑':'↓';$('sortName').closest('th').setAttribute('aria-sort',ascending===null?'none':ascending?'ascending':'descending');emit('filtered');
 }
 function pathMarkup(path){return `<div class="path">${path.map((id,i)=>{const r=relations[id];return `${i===0?`<span>${esc(assets[r.source]?.name||r.source)}</span>`:''}<em>↓ ${esc(r.kind)}</em><span class="${i===path.length-1?'path-target':''}">${esc(assets[r.target]?.name||r.target)}</span>`;}).join('')}</div>`;}
-function evidenceMarkup(ev){const details=JSON.stringify(ev,null,2);return `<details class="ev"><summary><strong>${esc(FAMILIES[ev.family]||ev.family)}</strong> · ${esc(ev.claim==='consumer_fields'?'Contrato de consumo':ev.claim==='observed_use'?'Uso observado':'Relação declarada')}<br><small>${esc(ev.id)}</small></summary><pre>${esc(details)}</pre></details>`;}
+function evidenceMarkup(ev){const details=JSON.stringify(ev,null,2);return `<details class="ev" data-evidence-id="${esc(ev.id)}"><summary><strong>${esc(FAMILIES[ev.family]||ev.family)}</strong> · ${esc(ev.claim==='consumer_fields'?'Contrato de consumo':ev.claim==='observed_use'?'Uso observado':'Relação declarada')}<br><small>${esc(ev.id)}</small></summary><pre>${esc(details)}</pre></details>`;}
 function openDetails(id, fromInventory=false){const asset=assets[id];if(!asset)return;const row=fromInventory?null:result.consumers.find(r=>r.consumer===id);
   $('detailTitle').textContent=window.EGGraph?.label(asset)||asset.name;$('detailKind').textContent=KINDS[asset.kind]||asset.kind;
   let html=`<div class="detail-grid"><div><small>RESPONSÁVEL</small>${esc(team(asset.owner))}</div><div><small>PROCESSO</small>${esc(proc(asset.processes))}</div><div><small>AMBIENTE / VERSÃO</small>${esc(envLabel(asset.environment))} · ${esc(asset.version)}</div><div><small>IDENTIFICADOR</small><span class="inventory-id">${esc(asset.id)}</span></div></div>`;
@@ -91,7 +92,7 @@ function openDetails(id, fromInventory=false){const asset=assets[id];if(!asset)r
     html+='<h3>Análises disponíveis</h3>'+(matches.length?matches.map(r=>`<p><button class="secondary" data-goto="${esc(r.change.id)}">${esc(r.change.id)} · Abrir análise</button></p>`).join(''):'<p>Não há revisão de mudança disponível para este ativo. Explore o mapa para consultar suas dependências.</p>');
     html+=`<p><button class="secondary" data-map="${esc(id)}">Explorar dependências →</button></p>`;
   }
-  $('detailBody').innerHTML=html;$('detailDialog').showModal();$('closeDetail').focus();
+  $('detailBody').innerHTML=html;detailContext={kind:row?'consumer':'asset',id,evidence:''};$('detailShareStatus').textContent='';$('detailDialog').showModal();$('closeDetail').focus();emit('detail');
 }
 function setView(next){view=next;$('lineageView').hidden=next!=='lineage';$('analysisView').hidden=next!=='analysis';$('inventoryView').hidden=next!=='inventory';$('breadcrumb').textContent=next==='analysis'?'Análises de mudança':next==='lineage'?'Mapa de dependências':'Inventário';document.querySelectorAll('[data-view]').forEach(b=>{b.classList.toggle('active',b.dataset.view===next);if(b.dataset.view===next)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});if(next==='inventory')renderInventory();emit('view');}
 function inventoryRows(){return data.assets.filter(a=>(!$('kindFilter').value||a.kind===$('kindFilter').value)&&(!$('domainFilter').value||a.domain===$('domainFilter').value)&&norm([a.name,a.id,team(a.owner)].join(' ')).includes(norm($('inventorySearch').value))).sort((a,b)=>a.name.localeCompare(b.name,'pt-BR'));}

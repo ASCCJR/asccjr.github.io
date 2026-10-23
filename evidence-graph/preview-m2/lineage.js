@@ -97,7 +97,16 @@
     $('graphEmpty').hidden=shown.length>0;
     readable();highlight();inspector();emit('graphpaint');
   }
-  function transform(){const g=$('graphScene');if(g)g.setAttribute('transform',`translate(${tx},${ty}) scale(${zoom})`);$('graphZoomLabel').textContent=Math.round(zoom*100)+'%';}
+  function viewportState(){
+    const v=$('graphViewport'),boxes=shown.map(a=>{const p=positions[a.id];return {x:p.x*zoom+tx,y:p.y*zoom+ty,right:(p.x+W)*zoom+tx,bottom:(p.y+H)*zoom+ty};});
+    return {width:v.clientWidth,height:v.clientHeight,whole:boxes.filter(b=>b.x>=0&&b.y>=0&&b.right<=v.clientWidth&&b.bottom<=v.clientHeight).length,
+      left:boxes.some(b=>b.x<0),right:boxes.some(b=>b.right>v.clientWidth),up:boxes.some(b=>b.y<0),down:boxes.some(b=>b.bottom>v.clientHeight)};
+  }
+  function transform(){const g=$('graphScene');if(g)g.setAttribute('transform',`translate(${tx},${ty}) scale(${zoom})`);$('graphZoomLabel').textContent=Math.round(zoom*100)+'%';
+    const s=viewportState();$('graphViewportStatus').textContent=s.whole===shown.length?`${shown.length} ativos inteiros na área visível.`:`${s.whole} de ${shown.length} ativos inteiros na área visível. Use as setas, Ajustar tudo ou Lista de conexões para ver o restante.`;
+    $('graphPanControls').querySelectorAll('[data-pan]').forEach(b=>b.disabled=!s[b.dataset.pan]);
+  }
+  function moveMap(direction){const s=viewportState();if(!s[direction])return;if(direction==='left')tx+=s.width*.65;if(direction==='right')tx-=s.width*.65;if(direction==='up')ty+=s.height*.65;if(direction==='down')ty-=s.height*.65;transform();}
   function fit(){const v=$('graphViewport');zoom=Math.max(.16,Math.min(1.15,(v.clientWidth-32)/graphWidth,(v.clientHeight-28)/graphHeight));tx=(v.clientWidth-graphWidth*zoom)/2;ty=Math.max(12,(v.clientHeight-graphHeight*zoom)/2);transform();}
   function readable(){
     const v=$('graphViewport'),p=positions[selected]||positions[root];zoom=1;
@@ -131,11 +140,11 @@
   }
   function select(id){if(!assets[id])return;selected=id;highlight();inspector();emit('graphselect');}
   function focus(id){if(!assets[id])return;custom=null;root=id;selected=id;expanded.clear();$('graphScope').value='context';$('graphDomain').value='';if(['column','identity'].includes(assets[id].kind))$('graphTechnical').checked=true;setView('lineage');paint();}
-  function openEdge(id){const r=relations[id];if(!r)return;$('detailTitle').textContent=relNames[r.kind]||r.kind;$('detailKind').textContent='RELAÇÃO';$('detailBody').innerHTML=`<div class="path"><span>${esc(label(assets[r.source]))}</span><em>↓ ${esc(r.kind)}</em><span>${esc(label(assets[r.target]))}</span></div><h3>Evidências de origem</h3>${r.evidence_ids.map(id=>evidences[id]).filter(Boolean).map(evidenceMarkup).join('')}<p class="local-note">A relação descreve o vínculo indicado, não comprova por si só uma execução, permissão ou falha.</p>`;$('detailDialog').showModal();$('closeDetail').focus();}
+  function openEdge(id){const r=relations[id];if(!r)return;$('detailTitle').textContent=relNames[r.kind]||r.kind;$('detailKind').textContent='RELAÇÃO';$('detailBody').innerHTML=`<div class="path"><span>${esc(label(assets[r.source]))}</span><em>↓ ${esc(r.kind)}</em><span>${esc(label(assets[r.target]))}</span></div><h3>Evidências de origem</h3>${r.evidence_ids.map(id=>evidences[id]).filter(Boolean).map(evidenceMarkup).join('')}<p class="local-note">A relação descreve o vínculo indicado, não comprova por si só uma execução, permissão ou falha.</p>`;detailContext={kind:'relation',id,evidence:''};$('detailShareStatus').textContent='';$('detailDialog').showModal();$('closeDetail').focus();emit('detail');}
   function currentAnalysis(id){$('changeSelect').value=id;meta();openAnalysis();$('graphChange').value=id;}
   // Explicit bridge: selection and filtered IDs are shared by the two representations.
   window.EGGraph={
-    label,select,focus,
+    label,select,focus,openEdge,
     snapshot:()=>({root,selected,custom,expanded:[...expanded],ids:shown.map(a=>a.id),edgeIds:links.map(r=>r.id)}),
     restore:state=>{
       root=Object.hasOwn(assets,state.root)?state.root:result.change.target;selected=Object.hasOwn(assets,state.selected)?state.selected:root;
@@ -163,6 +172,9 @@
     $('analysisToGraph').disabled=$('analysisResult').hidden;
     $('graphReview').disabled=false;
     $('graphZoomIn').addEventListener('click',()=>zoomAt(1.25));$('graphZoomOut').addEventListener('click',()=>zoomAt(.8));$('graphFit').addEventListener('click',fit);$('graphReadable').addEventListener('click',readable);
+    $('graphFocusSelected').addEventListener('click',()=>{if(positions[selected])readable();else focus(selected);});
+    $('graphPanControls').addEventListener('click',e=>{const b=e.target.closest('[data-pan]');if(b)moveMap(b.dataset.pan);});
+    $('graphViewport').addEventListener('keydown',e=>{const direction={ArrowLeft:'left',ArrowRight:'right',ArrowUp:'up',ArrowDown:'down'}[e.key];if(e.target===$('graphViewport')&&direction){e.preventDefault();moveMap(direction);}});
     const find=()=>{const q=norm($('graphSearch').value);const a=assets[$('graphSearch').value]||data.assets.find(a=>norm(label(a))===q)||data.assets.find(a=>norm(label(a)+' '+a.id).includes(q));if(!q)return;if(a)focus(a.id);else notify('Nenhum ativo encontrado.');};
     $('graphFind').addEventListener('click',find);$('graphSearch').addEventListener('keydown',e=>{if(e.key==='Enter')find();});
     $('lineageSvg').addEventListener('click',e=>{const n=e.target.closest('[data-node]'),r=e.target.closest('[data-edge]');if(n)select(n.dataset.node);else if(r)openEdge(r.dataset.edge);});

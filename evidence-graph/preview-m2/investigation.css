@@ -26,6 +26,7 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid 
 @media(max-width:780px){.change-overview{padding:12px}.change-details>summary{padding:9px 12px}.analysis-filters{width:100%}.filter-options{flex-direction:column}.filter-options select{max-width:100%}.consumer-reason{min-width:210px}}
 
 /* Review round 2: readable text, visible map tools and explicit context. */
+.nav[href]{display:block;text-decoration:none}
 :root{--muted:#4e5f75}
 .workspace-tools{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px}
 .workspace-tools .env{color:#405570;background:#edf2f7;white-space:normal}
@@ -60,3 +61,19 @@ button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid 
 input::placeholder,textarea::placeholder{color:#566579;opacity:1}
 #lineageSvg.has-highlight .graph-edge-group:not(.edge-selected) .graph-edge{opacity:.35}
 @media(max-width:780px){.workspace-tools{justify-content:flex-start}.graph-navigation{padding:8px}.graph-pan-hint{width:100%}.graph-controls button{padding:6px 8px}.graph-viewport,.explore-list{height:420px}.graph-inspector{max-height:none}}
+
+/* Map orientation remains readable; narrow screens begin with the same nodes in a list. */
+.graph-orientation{width:100%;border-top:1px solid var(--line);padding-top:8px}
+.graph-orientation p{font-size:12px;color:var(--muted);margin:0 0 6px}
+#graphPanControls{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+#graphPanControls [data-pan]{min-width:36px;min-height:36px}
+#graphPanControls button:disabled{opacity:.45}
+#detailShareStatus:empty{display:none}
+#copyDetailLink{margin-top:7px;padding-left:0}
+@media(max-width:780px){
+  .explore-list table{min-width:0}.explore-list thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  .explore-list tbody,.explore-list tr,.explore-list td{display:block;width:100%}
+  .explore-list tr{padding:10px 0;border-bottom:1px solid var(--line)}
+  .explore-list td{border:0;padding:6px 12px;overflow-wrap:anywhere}
+  .explore-list td[data-label]:before{content:attr(data-label);display:block;font-size:11px;color:var(--muted);font-weight:600;margin-bottom:4px}
+}

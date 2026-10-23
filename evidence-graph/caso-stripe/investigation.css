@@ -1,0 +1,78 @@
+/* Preserve the approved graph/list identity; add focused investigation controls. */
+[hidden]{display:none!important}
+.investigation-context{display:flex;align-items:center;gap:14px;margin:0 0 12px;padding:12px 16px;border:1px solid #dbe3ed;border-radius:7px;background:#fff}
+.investigation-context>div{flex:1;min-width:0}.investigation-context strong{font-size:13px;color:#294264}.investigation-context p{font-size:11px;margin:4px 0 0;line-height:1.5}.investigation-context>label{font-size:11px;color:#64748b;display:flex;align-items:center;gap:8px;flex:none}.investigation-context .secondary{font-size:11px;white-space:nowrap}.investigation-context select{font-size:11px}
+.investigate-actions{display:grid;gap:7px;margin:14px 0 4px}.investigate-actions button{display:flex;gap:10px;text-align:left;align-items:center;padding:10px;font-size:12px;white-space:normal}.investigate-actions button span{width:16px;flex:none;text-align:center;color:#5275a8}.investigate-actions button[aria-pressed=true]{background:#edf3ff;border-color:#5275a8;color:#244c90}.investigate-actions button:hover{background:#f1f5fc}
+.explore-list{height:clamp(540px,63vh,740px);overflow:auto;min-width:0}.explore-list table{min-width:600px;width:100%}.explore-list th{position:sticky;top:0;background:#f3f6fa;z-index:1}.explore-list small{display:block;font-size:11px;line-height:1.5;color:#748397;margin-top:4px}.explore-list .asset-select{padding:0;text-align:left;font-size:12px;font-weight:600}.explore-list td{padding:11px 14px;font-size:12px}.explore-list .active-row td,#consumerRows .active-row td{background:#eef4ff}.in-graph{display:block;margin-top:9px;font-size:11px}.graph-inspector{scrollbar-width:thin}.graph-inspector .inspector-actions{padding-top:10px}.graph-inspector .inspector-hint{padding-top:8px}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid #265ca7;outline-offset:3px}
+@media(max-width:1450px){.explore-list{height:610px}.graph-inspector{max-height:718px}.investigation-context{flex-wrap:wrap}.investigation-context>div{min-width:250px}}
+@media(max-width:1180px){.graph-inspector .investigate-actions{grid-column:1/-1;grid-template-columns:repeat(3,1fr)}.explore-list{height:660px}}
+@media(max-width:780px){.graph-inspector .investigate-actions{grid-template-columns:1fr}.investigation-context>div{min-width:100%}.explore-list{height:620px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+/* Show the decision first; keep filters and technical context available on demand. */
+.change-overview{padding:12px 18px}.change-overview>p:first-child{font-size:13px;color:var(--ink)}
+.analysis-state{font-size:12px;color:#365e4d;margin-top:7px}.analysis-state.pending{color:#855b1c}
+.change-details{border-top:1px solid #e8edf2}.change-details>summary{padding:9px 18px;font-size:12px;color:var(--muted);cursor:pointer}.change-details .change-meta{margin:0;padding-top:5px}
+#analysisView .metrics{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:13px}
+#analysisView .metric{display:flex;flex-direction:row;align-items:center;gap:7px;padding:8px 11px;min-height:38px}
+#analysisView .metric strong{font-size:15px;margin:0}#analysisView .metric span{font-size:12px}#analysisView .metric-dot{display:none}
+.analysis-filters{flex:none;max-width:100%}.analysis-filters>summary{font-size:12px;color:var(--blue);cursor:pointer;padding:8px}
+.filter-options{display:flex;flex-wrap:wrap;gap:12px;padding:8px}.filter-options label{display:grid;gap:5px}
+.consumer-reason{font-size:12px;line-height:1.55;max-width:410px;margin-top:6px}
+.consumer-explanation{padding:14px 16px;border:1px solid #d7e2ef;border-radius:6px;background:#f5f8fc;margin:16px 0}.consumer-explanation h3{margin:0 0 8px}.consumer-explanation p{margin:7px 0;line-height:1.6}
+#lineageSvg.has-highlight .graph-edge-group:not(.edge-selected) .graph-edge{opacity:.2}
+#lineageSvg.has-highlight .graph-edge-group:hover .graph-edge{opacity:1}
+@media(max-width:780px){.change-overview{padding:12px}.change-details>summary{padding:9px 12px}.analysis-filters{width:100%}.filter-options{flex-direction:column}.filter-options select{max-width:100%}.consumer-reason{min-width:210px}}
+
+/* Review round 2: readable text, visible map tools and explicit context. */
+:root{--muted:#4e5f75}
+.workspace-tools{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:8px}
+.workspace-tools .env{color:#405570;background:#edf2f7;white-space:normal}
+.workspace-tools .env:before{display:none}
+.graph-navigation{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);background:#f5f8fc}
+.graph-controls{position:static;display:flex;flex-wrap:wrap;max-width:100%;box-shadow:none}
+.graph-controls button{min-height:36px;padding:6px 10px;color:var(--ink)}
+.graph-controls button{font-size:12px}
+.graph-controls #graphZoomIn,.graph-controls #graphZoomOut{font-size:19px}
+.graph-controls span{font-size:12px;color:var(--muted)}
+.graph-context-bar>label{min-width:0}
+.graph-context-bar select{width:100%;min-width:0;max-width:100%}
+.graph-pan-hint{font-size:12px;color:var(--muted)}
+.graph-viewport,.explore-list{height:clamp(380px,56vh,620px)}
+.graph-canvas-head{gap:8px;flex-wrap:wrap}
+.graph-canvas-head span,.catalog-totals small,.inspector-overline,.inspector-meta dt,.inspector-hint,.inspector-consumers small,.explore-list small,.graph-legend,.footer,.inventory-id,.row-type,.review-caption{color:var(--muted)}
+.lane-title{font-size:10px;fill:#52637a}
+.node-kind{font-size:10px;fill:#52637a;letter-spacing:.2px}
+.node-name{font-size:14px}
+.investigate-actions h3{font-size:12px;color:var(--muted);margin:0 0 2px}
+.investigate-actions button{border-color:#a8b9ce;background:#f7faff;font-size:13px}
+.investigate-actions button:hover{background:#e8f0fd;border-color:#5275a8}
+.graph-inspector{max-height:calc(clamp(380px,56vh,620px) + 210px)}
+.graph-guide{padding:11px 16px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.graph-guide summary,.inspector-connections summary{cursor:pointer;color:var(--blue);font-weight:600}
+.graph-guide p{margin-top:9px;font-size:12px}
+.graph-guide ul{display:flex;flex-wrap:wrap;gap:8px 18px;padding:0;list-style:none}
+.graph-guide li{display:flex;align-items:center;gap:7px}
+.graph-guide .state-dot{display:inline-block;flex:none;margin:0;width:8px;height:8px}
+.inspector-connections{padding-top:14px;font-size:12px}
+.inspector-connections button{display:block;text-align:left;white-space:normal;overflow-wrap:anywhere;margin-top:6px;padding:7px 0}
+input::placeholder,textarea::placeholder{color:#566579;opacity:1}
+#lineageSvg.has-highlight .graph-edge-group:not(.edge-selected) .graph-edge{opacity:.35}
+@media(max-width:780px){.workspace-tools{justify-content:flex-start}.graph-navigation{padding:8px}.graph-pan-hint{width:100%}.graph-controls button{padding:6px 8px}.graph-viewport,.explore-list{height:420px}.graph-inspector{max-height:none}}
+
+/* Map orientation remains readable; narrow screens begin with the same nodes in a list. */
+.graph-orientation{width:100%;border-top:1px solid var(--line);padding-top:8px}
+.graph-orientation p{font-size:12px;color:var(--muted);margin:0 0 6px}
+#graphPanControls{display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+#graphPanControls [data-pan]{min-width:36px;min-height:36px}
+#graphPanControls button:disabled{opacity:.45}
+#detailShareStatus:empty{display:none}
+#copyDetailLink{margin-top:7px;padding-left:0}
+@media(max-width:780px){
+  .explore-list table{min-width:0}.explore-list thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  .explore-list tbody,.explore-list tr,.explore-list td{display:block;width:100%}
+  .explore-list tr{padding:10px 0;border-bottom:1px solid var(--line)}
+  .explore-list td{border:0;padding:6px 12px;overflow-wrap:anywhere}
+  .explore-list td[data-label]:before{content:attr(data-label);display:block;font-size:11px;color:var(--muted);font-weight:600;margin-bottom:4px}
+}

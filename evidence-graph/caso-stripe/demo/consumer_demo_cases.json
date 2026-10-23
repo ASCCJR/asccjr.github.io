@@ -1,0 +1,66 @@
+{
+  "schema_version": "eg-consumer-demo-cases/v1",
+  "synthetic": true,
+  "scope": "Selected-field excerpts, not complete Stripe invoices. Expectations authored for the demonstration.",
+  "cases": [
+    {
+      "id": "subscription-id",
+      "label": "Fatura vinculada a uma assinatura",
+      "category": "selected_fields",
+      "before": {"payload": {"subscription": "sub_demo_001"}, "expected": {"status": "LINKED", "subscription_id": "sub_demo_001"}},
+      "after": {"payload": {"parent": {"type": "subscription_details", "subscription_details": {"subscription": "sub_demo_001"}}}, "expected": {"status": "LINKED", "subscription_id": "sub_demo_001"}}
+    },
+    {
+      "id": "expanded-subscription",
+      "label": "Referência da assinatura como objeto expandido",
+      "category": "selected_fields",
+      "before": {"payload": {"subscription": {"id": "sub_demo_002"}}, "expected": {"status": "LINKED", "subscription_id": "sub_demo_002"}},
+      "after": {"payload": {"parent": {"type": "subscription_details", "subscription_details": {"subscription": {"id": "sub_demo_002"}}}}, "expected": {"status": "LINKED", "subscription_id": "sub_demo_002"}}
+    },
+    {
+      "id": "explicit-null",
+      "label": "Ausência explícita de assinatura",
+      "category": "selected_fields",
+      "before": {"payload": {"subscription": null}, "expected": {"status": "NO_SUBSCRIPTION", "subscription_id": null}},
+      "after": {"payload": {"parent": null}, "expected": {"status": "NO_SUBSCRIPTION", "subscription_id": null}}
+    },
+    {
+      "id": "optional-omitted",
+      "label": "Campo opcional ausente: pedir revisão",
+      "category": "selected_fields",
+      "before": {"payload": {}, "expected": {"status": "REVIEW", "subscription_id": null}},
+      "after": {"payload": {}, "expected": {"status": "REVIEW", "subscription_id": null}}
+    },
+    {
+      "id": "quote-origin",
+      "label": "Fatura originada de orçamento",
+      "category": "selected_fields",
+      "before": {"payload": {"subscription": null}, "expected": {"status": "NO_SUBSCRIPTION", "subscription_id": null}},
+      "after": {"payload": {"parent": {"type": "quote_details"}}, "expected": {"status": "NO_SUBSCRIPTION", "subscription_id": null}}
+    },
+    {
+      "id": "null-details",
+      "label": "Tipo de assinatura com detalhes nulos",
+      "category": "robustness",
+      "after": {"payload": {"parent": {"type": "subscription_details", "subscription_details": null}}, "expected": {"status": "REVIEW", "subscription_id": null}}
+    },
+    {
+      "id": "missing-required-reference",
+      "label": "Detalhes sem a referência obrigatória",
+      "category": "robustness",
+      "after": {"payload": {"parent": {"type": "subscription_details", "subscription_details": {}}}, "expected": {"status": "REVIEW", "subscription_id": null}}
+    },
+    {
+      "id": "unknown-parent-type",
+      "label": "Tipo de origem fora do escopo conhecido",
+      "category": "robustness",
+      "after": {"payload": {"parent": {"type": "future_demo_type"}}, "expected": {"status": "REVIEW", "subscription_id": null}}
+    },
+    {
+      "id": "malformed-reference",
+      "label": "Referência em formato inválido",
+      "category": "robustness",
+      "after": {"payload": {"parent": {"type": "subscription_details", "subscription_details": {"subscription": 42}}}, "expected": {"status": "REVIEW", "subscription_id": null}}
+    }
+  ]
+}

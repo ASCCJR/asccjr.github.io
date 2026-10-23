@@ -1,0 +1,87 @@
+{
+  "adapter": "eg-contract-case/v1",
+  "m3_sources_sha256": {
+    "index.html": "d39f1da26092184bdabcb722424cd22d0bc57fe345256cb328e6a57eb5102a25",
+    "styles.css": "816976e282be9827e297891dc554b53d3f8ab407a83b8b97cd753a8a5cee608c",
+    "lineage.css": "ab8f37216dc863ca048e8f864fe7731ec41d7c1c386644a93caad22e05072cc8",
+    "investigation.css": "87a662b31cf1ab6ddbcdcc573716ccea5cc9d9f658f78e631e0a36d5fa088f35",
+    "data.js": "e4a6f53682fa8bcc3785310f0863cf22215e12fc81c8e24f819d125b780553bc",
+    "app.js": "ed868c8ed817d7790e8eee0d48945c6d0ca1da62bd6fde05db61432f6bb49536",
+    "lineage.js": "e805ccb8483dac4c5199ffafe9a07fb78df467b52c7df49c42ae21cf2c4fd902",
+    "exploration.js": "8c428651296725dfc4c51272d0d84a8293d117da10654d30b1cd73d2926df708",
+    "investigation.js": "7acd963e99f663fc48bd8270a7b4b6825e7c7f40cae3101cd1b295073855b448",
+    "manifest.json": "5a9fdae09931666fc1839d523d92debdfbe24e2b9be246f1190da5631fe542fe"
+  },
+  "inputs": [
+    {
+      "id": "before",
+      "url": "https://raw.githubusercontent.com/stripe/openapi/5a411d0d1e527229cdb4d6633197ab8009899ce6/openapi/spec3.json",
+      "sha256": "1199cc3c55746cb73b7be5c67b6e41f9b30b6ac428ca6c6d5ac904fa0f7b6acd",
+      "version": "2025-02-24.acacia",
+      "file": "sources/before.json"
+    },
+    {
+      "id": "after",
+      "url": "https://raw.githubusercontent.com/stripe/openapi/072fe51d85959b0ca71c1296b32725c14a78f4a8/openapi/spec3.json",
+      "sha256": "5582327458972d9128a7a5f6e824d5fec72c1b934c6b5972b7e6e3e4ed1bbfaa",
+      "version": "2025-03-31.basil",
+      "file": "sources/after.json"
+    }
+  ],
+  "consumer_coverage": "UNKNOWN",
+  "runtime": "NOT_VERIFIED",
+  "consumer_demo": {
+    "included": true,
+    "scope": "LOCAL_PYTHON_SYNTHETIC_EXCERPTS",
+    "record": "demo/result.json"
+  },
+  "case_assets": 6,
+  "case_relations": 4,
+  "aurora_assets": 240,
+  "aurora_relations": 512,
+  "outputs_sha256": {
+    "README.md": "f2ed4d0ab578b87a95b17c57d028ff05116cdd976193eeaf0346700ac33f7967",
+    "app.js": "82d29b23494123a643a707beaaa4aae742cc0badc333a4424191de37f7f4d4a8",
+    "case-bundle.json": "a272014a1ec1da7859a39b054f0858dc832fb7b619d78ba01d4a92daf292e116",
+    "consumer_demo.css": "624fe182516456abd635d2194157dd53d4c03585041ab3ce13b7cdc08241b9f6",
+    "consumer_demo.js": "129bc98b060efb10d3ea36b79cb7b11040348f04c342d01c31b4a77ed5913783",
+    "contract_case.css": "58478c749b8dada89ea76a27b3b532f57062ebbda62fb0c7c9a1b1c8e00731b9",
+    "contract_case.js": "38133cf013a0b846bdbdb221d9af1fef75c37f4ff20c1c9c7e389bc4ea074266",
+    "data.js": "75ac76d33f4d79c905f9546fb046dfec5070179271066f6f5a11fd371d35ac56",
+    "demo/consumer_demo.py": "bb9a66d916576e7b0ef6d6a4e88259a6dda3b18ff4daacb782bf03670e3b967d",
+    "demo/consumer_demo_cases.json": "8b7a65e10768612cbba1cf21202037d585d5082437578c238fd557a41dad341f",
+    "demo/replay_consumer.py": "b826dac42e4c5e7c5b8d5d0898b9c34fbf101c3a8ffa6858f866da40049d11ca",
+    "demo/result.json": "8459d8fcc751eba2b0c8785c371e6aee53b2156a6e55f7442daffacf24a72dd3",
+    "exploration.js": "8c428651296725dfc4c51272d0d84a8293d117da10654d30b1cd73d2926df708",
+    "index.html": "1ac9865b457475d397723f440980ad4d79c0dc27612013835923d8d16ba9ecc2",
+    "investigation.css": "87a662b31cf1ab6ddbcdcc573716ccea5cc9d9f658f78e631e0a36d5fa088f35",
+    "investigation.js": "31e9c77bfb006464b192c277ce4df46bf06f4ac8846d0dc954c17453b04e8742",
+    "lineage.css": "ab8f37216dc863ca048e8f864fe7731ec41d7c1c386644a93caad22e05072cc8",
+    "lineage.js": "c64243fb5ffab3d0d7dcd12ed38f49f4c066ae6e475d49f0aa8756334c131e08",
+    "sources/CONTRACTS_LICENSE.txt": "8c1ce883f4eee7b531e0b7872dbfc72d410ced87dfff9501305de05ca8d203e5",
+    "sources/after.json": "5582327458972d9128a7a5f6e824d5fec72c1b934c6b5972b7e6e3e4ed1bbfaa",
+    "sources/before.json": "1199cc3c55746cb73b7be5c67b6e41f9b30b6ac428ca6c6d5ac904fa0f7b6acd",
+    "styles.css": "816976e282be9827e297891dc554b53d3f8ab407a83b8b97cd753a8a5cee608c",
+    "view_bootstrap.js": "e10487de5b5e0b73b5fde642600acfaede8438ae9c9c8b2a8163c97df79ed12c"
+  },
+  "publication": {
+    "generated_source_manifest_sha256": "35f918d469b909e2500c3644497775db9909547e8520a2cab1f2af3afff72b86",
+    "resource_cache_versions": {
+      "styles.css": "816976e282be9827",
+      "lineage.css": "ab8f37216dc863ca",
+      "investigation.css": "87a662b31cf1ab6d",
+      "data.js": "75ac76d33f4d79c9",
+      "app.js": "82d29b23494123a6",
+      "lineage.js": "c64243fb5ffab3d0",
+      "exploration.js": "8c428651296725df",
+      "investigation.js": "31e9c77bfb006464",
+      "contract_case.js": "38133cf013a0b846",
+      "contract_case.css": "58478c749b8dada8",
+      "consumer_demo.js": "129bc98b060efb10",
+      "consumer_demo.css": "624fe182516456ab",
+      "view_bootstrap.js": "e10487de5b5e0b73"
+    },
+    "scope": "Public contracts and owned simulated consumer only; real consumers UNKNOWN and real runtime NOT_VERIFIED.",
+    "replay": "demo/replay_consumer.py"
+  }
+}

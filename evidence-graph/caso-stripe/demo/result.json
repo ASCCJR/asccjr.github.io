@@ -1,0 +1,618 @@
+{
+  "schema_version": "eg-consumer-demo/v1",
+  "synthetic": true,
+  "material_kind": "simulated_consumer",
+  "title": "Associar uma fatura à assinatura · demonstração simulada",
+  "executed_at": "2026-10-23T01:40:46.498527+00:00",
+  "execution_scope": "LOCAL_PYTHON_SYNTHETIC_EXCERPTS",
+  "external_api_called": false,
+  "real_consumer_coverage": "UNKNOWN",
+  "real_consumer_runtime": "NOT_VERIFIED",
+  "business_expectation": "No exemplo, preservar a referência da assinatura quando presente; separar ausência explícita de informação insuficiente.",
+  "contract_scope": {
+    "status": "SELECTED_FIELD_SHAPES_CHECKED",
+    "complete_response_validation": false,
+    "pointers": [
+      "#/components/schemas/invoice/properties/subscription",
+      "#/components/schemas/invoice/properties/parent",
+      "#/components/schemas/billing_bill_resource_invoicing_parents_invoice_parent/properties/type",
+      "#/components/schemas/billing_bill_resource_invoicing_parents_invoice_parent/properties/subscription_details",
+      "#/components/schemas/billing_bill_resource_invoicing_parents_invoice_subscription_parent/properties/subscription"
+    ],
+    "note": "Recortes sintéticos; somente os tipos e condições selecionados foram conferidos. Casos de robustez incluem entradas incompletas ou fora do contrato."
+  },
+  "contract_sources": [
+    {
+      "id": "before",
+      "url": "https://raw.githubusercontent.com/stripe/openapi/5a411d0d1e527229cdb4d6633197ab8009899ce6/openapi/spec3.json",
+      "sha256": "1199cc3c55746cb73b7be5c67b6e41f9b30b6ac428ca6c6d5ac904fa0f7b6acd",
+      "version": "2025-02-24.acacia",
+      "file": "sources/before.json"
+    },
+    {
+      "id": "after",
+      "url": "https://raw.githubusercontent.com/stripe/openapi/072fe51d85959b0ca71c1296b32725c14a78f4a8/openapi/spec3.json",
+      "sha256": "5582327458972d9128a7a5f6e824d5fec72c1b934c6b5972b7e6e3e4ed1bbfaa",
+      "version": "2025-03-31.basil",
+      "file": "sources/after.json"
+    }
+  ],
+  "files": [
+    {
+      "file": "demo/consumer_demo.py",
+      "sha256": "bb9a66d916576e7b0ef6d6a4e88259a6dda3b18ff4daacb782bf03670e3b967d"
+    },
+    {
+      "file": "demo/consumer_demo_cases.json",
+      "sha256": "8b7a65e10768612cbba1cf21202037d585d5082437578c238fd557a41dad341f"
+    }
+  ],
+  "summary": [
+    {
+      "stage": "before",
+      "implementation": "legacy",
+      "total": 5,
+      "matched": 4,
+      "mismatched": 1,
+      "exceptions": 0
+    },
+    {
+      "stage": "after",
+      "implementation": "legacy",
+      "total": 9,
+      "matched": 2,
+      "mismatched": 7,
+      "exceptions": 0
+    },
+    {
+      "stage": "after",
+      "implementation": "migrated",
+      "total": 9,
+      "matched": 9,
+      "mismatched": 0,
+      "exceptions": 0
+    }
+  ],
+  "runs": [
+    {
+      "case_id": "subscription-id",
+      "label": "Fatura vinculada a uma assinatura",
+      "category": "selected_fields",
+      "stage": "before",
+      "implementation": "legacy",
+      "api_version": "2025-02-24.acacia",
+      "input": {
+        "subscription": "sub_demo_001"
+      },
+      "expected": {
+        "status": "LINKED",
+        "subscription_id": "sub_demo_001"
+      },
+      "actual": {
+        "status": "LINKED",
+        "subscription_id": "sub_demo_001"
+      },
+      "exception": null,
+      "matches_expectation": true
+    },
+    {
+      "case_id": "subscription-id",
+      "label": "Fatura vinculada a uma assinatura",
+      "category": "selected_fields",
+      "stage": "after",
+      "implementation": "legacy",
+      "api_version": "2025-03-31.basil",
+      "input": {
+        "parent": {
+          "type": "subscription_details",
+          "subscription_details": {
+            "subscription": "sub_demo_001"
+          }
+        }
+      },
+      "expected": {
+        "status": "LINKED",
+        "subscription_id": "sub_demo_001"
+      },
+      "actual": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": false
+    },
+    {
+      "case_id": "subscription-id",
+      "label": "Fatura vinculada a uma assinatura",
+      "category": "selected_fields",
+      "stage": "after",
+      "implementation": "migrated",
+      "api_version": "2025-03-31.basil",
+      "input": {
+        "parent": {
+          "type": "subscription_details",
+          "subscription_details": {
+            "subscription": "sub_demo_001"
+          }
+        }
+      },
+      "expected": {
+        "status": "LINKED",
+        "subscription_id": "sub_demo_001"
+      },
+      "actual": {
+        "status": "LINKED",
+        "subscription_id": "sub_demo_001"
+      },
+      "exception": null,
+      "matches_expectation": true
+    },
+    {
+      "case_id": "expanded-subscription",
+      "label": "Referência da assinatura como objeto expandido",
+      "category": "selected_fields",
+      "stage": "before",
+      "implementation": "legacy",
+      "api_version": "2025-02-24.acacia",
+      "input": {
+        "subscription": {
+          "id": "sub_demo_002"
+        }
+      },
+      "expected": {
+        "status": "LINKED",
+        "subscription_id": "sub_demo_002"
+      },
+      "actual": {
+        "status": "LINKED",
+        "subscription_id": "sub_demo_002"
+      },
+      "exception": null,
+      "matches_expectation": true
+    },
+    {
+      "case_id": "expanded-subscription",
+      "label": "Referência da assinatura como objeto expandido",
+      "category": "selected_fields",
+      "stage": "after",
+      "implementation": "legacy",
+      "api_version": "2025-03-31.basil",
+      "input": {
+        "parent": {
+          "type": "subscription_details",
+          "subscription_details": {
+            "subscription": {
+              "id": "sub_demo_002"
+            }
+          }
+        }
+      },
+      "expected": {
+        "status": "LINKED",
+        "subscription_id": "sub_demo_002"
+      },
+      "actual": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": false
+    },
+    {
+      "case_id": "expanded-subscription",
+      "label": "Referência da assinatura como objeto expandido",
+      "category": "selected_fields",
+      "stage": "after",
+      "implementation": "migrated",
+      "api_version": "2025-03-31.basil",
+      "input": {
+        "parent": {
+          "type": "subscription_details",
+          "subscription_details": {
+            "subscription": {
+              "id": "sub_demo_002"
+            }
+          }
+        }
+      },
+      "expected": {
+        "status": "LINKED",
+        "subscription_id": "sub_demo_002"
+      },
+      "actual": {
+        "status": "LINKED",
+        "subscription_id": "sub_demo_002"
+      },
+      "exception": null,
+      "matches_expectation": true
+    },
+    {
+      "case_id": "explicit-null",
+      "label": "Ausência explícita de assinatura",
+      "category": "selected_fields",
+      "stage": "before",
+      "implementation": "legacy",
+      "api_version": "2025-02-24.acacia",
+      "input": {
+        "subscription": null
+      },
+      "expected": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": true
+    },
+    {
+      "case_id": "explicit-null",
+      "label": "Ausência explícita de assinatura",
+      "category": "selected_fields",
+      "stage": "after",
+      "implementation": "legacy",
+      "api_version": "2025-03-31.basil",
+      "input": {
+        "parent": null
+      },
+      "expected": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": true
+    },
+    {
+      "case_id": "explicit-null",
+      "label": "Ausência explícita de assinatura",
+      "category": "selected_fields",
+      "stage": "after",
+      "implementation": "migrated",
+      "api_version": "2025-03-31.basil",
+      "input": {
+        "parent": null
+      },
+      "expected": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": true
+    },
+    {
+      "case_id": "optional-omitted",
+      "label": "Campo opcional ausente: pedir revisão",
+      "category": "selected_fields",
+      "stage": "before",
+      "implementation": "legacy",
+      "api_version": "2025-02-24.acacia",
+      "input": {},
+      "expected": {
+        "status": "REVIEW",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": false
+    },
+    {
+      "case_id": "optional-omitted",
+      "label": "Campo opcional ausente: pedir revisão",
+      "category": "selected_fields",
+      "stage": "after",
+      "implementation": "legacy",
+      "api_version": "2025-03-31.basil",
+      "input": {},
+      "expected": {
+        "status": "REVIEW",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": false
+    },
+    {
+      "case_id": "optional-omitted",
+      "label": "Campo opcional ausente: pedir revisão",
+      "category": "selected_fields",
+      "stage": "after",
+      "implementation": "migrated",
+      "api_version": "2025-03-31.basil",
+      "input": {},
+      "expected": {
+        "status": "REVIEW",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "REVIEW",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": true
+    },
+    {
+      "case_id": "quote-origin",
+      "label": "Fatura originada de orçamento",
+      "category": "selected_fields",
+      "stage": "before",
+      "implementation": "legacy",
+      "api_version": "2025-02-24.acacia",
+      "input": {
+        "subscription": null
+      },
+      "expected": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": true
+    },
+    {
+      "case_id": "quote-origin",
+      "label": "Fatura originada de orçamento",
+      "category": "selected_fields",
+      "stage": "after",
+      "implementation": "legacy",
+      "api_version": "2025-03-31.basil",
+      "input": {
+        "parent": {
+          "type": "quote_details"
+        }
+      },
+      "expected": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": true
+    },
+    {
+      "case_id": "quote-origin",
+      "label": "Fatura originada de orçamento",
+      "category": "selected_fields",
+      "stage": "after",
+      "implementation": "migrated",
+      "api_version": "2025-03-31.basil",
+      "input": {
+        "parent": {
+          "type": "quote_details"
+        }
+      },
+      "expected": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": true
+    },
+    {
+      "case_id": "null-details",
+      "label": "Tipo de assinatura com detalhes nulos",
+      "category": "robustness",
+      "stage": "after",
+      "implementation": "legacy",
+      "api_version": "2025-03-31.basil",
+      "input": {
+        "parent": {
+          "type": "subscription_details",
+          "subscription_details": null
+        }
+      },
+      "expected": {
+        "status": "REVIEW",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": false
+    },
+    {
+      "case_id": "null-details",
+      "label": "Tipo de assinatura com detalhes nulos",
+      "category": "robustness",
+      "stage": "after",
+      "implementation": "migrated",
+      "api_version": "2025-03-31.basil",
+      "input": {
+        "parent": {
+          "type": "subscription_details",
+          "subscription_details": null
+        }
+      },
+      "expected": {
+        "status": "REVIEW",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "REVIEW",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": true
+    },
+    {
+      "case_id": "missing-required-reference",
+      "label": "Detalhes sem a referência obrigatória",
+      "category": "robustness",
+      "stage": "after",
+      "implementation": "legacy",
+      "api_version": "2025-03-31.basil",
+      "input": {
+        "parent": {
+          "type": "subscription_details",
+          "subscription_details": {}
+        }
+      },
+      "expected": {
+        "status": "REVIEW",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": false
+    },
+    {
+      "case_id": "missing-required-reference",
+      "label": "Detalhes sem a referência obrigatória",
+      "category": "robustness",
+      "stage": "after",
+      "implementation": "migrated",
+      "api_version": "2025-03-31.basil",
+      "input": {
+        "parent": {
+          "type": "subscription_details",
+          "subscription_details": {}
+        }
+      },
+      "expected": {
+        "status": "REVIEW",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "REVIEW",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": true
+    },
+    {
+      "case_id": "unknown-parent-type",
+      "label": "Tipo de origem fora do escopo conhecido",
+      "category": "robustness",
+      "stage": "after",
+      "implementation": "legacy",
+      "api_version": "2025-03-31.basil",
+      "input": {
+        "parent": {
+          "type": "future_demo_type"
+        }
+      },
+      "expected": {
+        "status": "REVIEW",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": false
+    },
+    {
+      "case_id": "unknown-parent-type",
+      "label": "Tipo de origem fora do escopo conhecido",
+      "category": "robustness",
+      "stage": "after",
+      "implementation": "migrated",
+      "api_version": "2025-03-31.basil",
+      "input": {
+        "parent": {
+          "type": "future_demo_type"
+        }
+      },
+      "expected": {
+        "status": "REVIEW",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "REVIEW",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": true
+    },
+    {
+      "case_id": "malformed-reference",
+      "label": "Referência em formato inválido",
+      "category": "robustness",
+      "stage": "after",
+      "implementation": "legacy",
+      "api_version": "2025-03-31.basil",
+      "input": {
+        "parent": {
+          "type": "subscription_details",
+          "subscription_details": {
+            "subscription": 42
+          }
+        }
+      },
+      "expected": {
+        "status": "REVIEW",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "NO_SUBSCRIPTION",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": false
+    },
+    {
+      "case_id": "malformed-reference",
+      "label": "Referência em formato inválido",
+      "category": "robustness",
+      "stage": "after",
+      "implementation": "migrated",
+      "api_version": "2025-03-31.basil",
+      "input": {
+        "parent": {
+          "type": "subscription_details",
+          "subscription_details": {
+            "subscription": 42
+          }
+        }
+      },
+      "expected": {
+        "status": "REVIEW",
+        "subscription_id": null
+      },
+      "actual": {
+        "status": "REVIEW",
+        "subscription_id": null
+      },
+      "exception": null,
+      "matches_expectation": true
+    }
+  ],
+  "limitations": [
+    "Código, recortes e expectativas foram preparados pelo mesmo autor; não é avaliação independente.",
+    "Não há consumidor, cliente, incidente, ganho de tempo ou perda financeira real identificado.",
+    "O leitor antigo é um exemplo controlado; não representa todas as integrações existentes.",
+    "O leitor adaptado cobre somente a versão Basil e estes campos. Pedir revisão também pode ser o resultado correto.",
+    "Uma execução sem exceção pode descumprir a expectativa. Passar nestes exemplos não garante migração segura."
+  ]
+}
