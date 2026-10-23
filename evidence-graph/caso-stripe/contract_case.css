@@ -4,6 +4,10 @@
 .case-notice p{font-size:13px;margin-top:7px}
 .case-notice .primary{white-space:normal}
 .contract-comparison{border:1px solid var(--line);background:#fff;border-radius:7px;padding:18px;margin:18px 0}
+.contract-comparison>h2{margin-bottom:16px}
+#contractComparisonTitle,#consumerDemoTitle{scroll-margin-top:16px}
+#contractComparisonTitle:focus-visible,#consumerDemoTitle:focus-visible{outline:2px solid #265ca7;outline-offset:4px}
+#demoLinkStatus:empty{display:none}
 .contract-versions{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .contract-versions h3{font-size:15px;margin:0 0 8px}.contract-versions p{margin:8px 0;font-size:13px}
 .contract-versions code{font-size:14px;overflow-wrap:anywhere}.contract-versions article{min-width:0}

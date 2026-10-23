@@ -95,7 +95,7 @@
   }
   // Share view state and evidence identifiers; local notes and checks never do.
   let navigationReady=false,restoring=false,navigationTimer=null;
-  const routeKeys=['view','change','open','focus','asset','scope','area','technical','mode','depth','expanded','rep','impact','owner','activity','search','sort','inventory','kind','inventoryArea','page','detail','detailKind','evidence'];
+  const routeKeys=['view','change','open','focus','asset','scope','area','technical','mode','depth','expanded','rep','impact','owner','activity','search','sort','inventory','kind','inventoryArea','page','detail','detailKind','evidence','example'];
   function routeURL(){
     const url=new URL(location.href),s=EGGraph.snapshot();
     for(const key of routeKeys)url.searchParams.delete('eg_'+key);
@@ -108,7 +108,7 @@
       impact:impactFilter,owner:$('ownerFilter').value,activity:$('activityFilter').value,
       search:$('search').value,sort:ascending===null?'':ascending?'asc':'desc',
       inventory:$('inventorySearch').value,kind:$('kindFilter').value,inventoryArea:$('domainFilter').value,
-      page:inventoryPage?String(inventoryPage):'',
+      page:inventoryPage?String(inventoryPage):'',example:window.EGConsumerDemo?.selection()||'',
       detail:$('detailDialog').open?detailContext?.id||'':'',detailKind:$('detailDialog').open?detailContext?.kind||'':'',evidence:$('detailDialog').open?detailContext?.evidence||'':''};
     for(const [key,value] of Object.entries(values))if(value!=='')url.searchParams.set('eg_'+key,value);
     return url;
@@ -138,7 +138,7 @@
       root,selected:exists(get('asset'))?get('asset'):root,
       mode,depth:Number(choice('depth',['1','2','4'],'1')),
       scope:mode?'investigation':choice('scope',['context','impact','all'],!p.has('eg_view')&&data.provenance?.kind==='public_contract_case'?'all':p.has('eg_view')?'context':'impact'),domain:domain('area'),
-      technical:get('technical')==='1'||(!p.has('eg_view')&&data.provenance?.kind==='public_contract_case'),expanded:[...new Set(get('expanded').split(',').filter(exists))],
+      technical:get('technical')==='1'||(!p.has('eg_view')&&data.provenance?.kind==='public_contract_case'),expanded:[...new Set(get('expanded').split(',').filter(exists))],example:get('example'),
       list:choice('rep',['list','graph'],window.matchMedia?.('(max-width: 780px)').matches?'list':'graph')==='list',detail,impact:choice('impact',Object.keys(IMPACT),''),
       owner:choice('owner',[...new Set(opened.consumers.map(r=>r.owner))],''),
       activity:choice('activity',Object.keys(ACTIVITY),''),search:get('search').slice(0,160),
@@ -157,6 +157,7 @@
       if(s.change!==s.open){$('changeSelect').value=s.change;meta();$('analysisResult').hidden=true;$('notAnalyzed').hidden=false;analysisStatus(true);}
       $('inventorySearch').value=s.inventory;$('kindFilter').value=s.kind;$('domainFilter').value=s.inventoryArea;inventoryPage=s.page;
       $('investigationDepth').value=String(s.depth);setView('lineage');EGGraph.restore(s);showRepresentation(s.list);setView(s.view);
+      window.EGConsumerDemo?.restore(s.example);
       if(s.detail){
         if(s.detail.kind==='relation')EGGraph.openEdge(s.detail.id);else openDetails(s.detail.id,s.detail.kind==='asset');
         const ev=Array.from($('detailBody').querySelectorAll('[data-evidence-id]')).find(el=>el.dataset.evidenceId===s.detail.evidence);
@@ -168,6 +169,8 @@
     if(navigationReady)return;
     navigationReady=true;restoreRoute();recordRoute(true);
     for(const event of ['view','analysis','graphpaint','graphselect','filtered','representation','detail'])document.addEventListener('eg:'+event,()=>scheduleRoute());
+    // Record a selected example before an immediate copy or reload can lose it.
+    document.addEventListener('eg:example',()=>{clearTimeout(navigationTimer);recordRoute();});
     document.addEventListener('change',e=>{if(['changeSelect','inventorySearch','kindFilter','domainFilter'].includes(e.target.id))scheduleRoute();});
     document.addEventListener('input',e=>{if(['search','inventorySearch'].includes(e.target.id))scheduleRoute(true);});
     document.addEventListener('click',e=>{if(e.target.closest('#prevPage,#nextPage'))scheduleRoute();});

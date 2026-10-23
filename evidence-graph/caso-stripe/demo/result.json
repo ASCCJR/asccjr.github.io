@@ -3,7 +3,7 @@
   "synthetic": true,
   "material_kind": "simulated_consumer",
   "title": "Associar uma fatura à assinatura · demonstração simulada",
-  "executed_at": "2026-10-23T01:40:46.498527+00:00",
+  "executed_at": "2026-10-23T04:06:39.434859+00:00",
   "execution_scope": "LOCAL_PYTHON_SYNTHETIC_EXCERPTS",
   "external_api_called": false,
   "real_consumer_coverage": "UNKNOWN",

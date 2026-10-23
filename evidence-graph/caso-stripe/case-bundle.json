@@ -1,6 +1,6 @@
 {
   "synthetic": true,
-  "dataset_version": "contract-case-v1-e4ed91bae1946e1e-demo-8459d8fcc751",
+  "dataset_version": "contract-case-v1-e4ed91bae1946e1e-demo-1deba087f5ec",
   "clock": "2026-10-23T00:44:41.086207+00:00",
   "provenance": {
     "kind": "public_contract_case",
@@ -105,7 +105,7 @@
       "synthetic": true,
       "material_kind": "simulated_consumer",
       "title": "Associar uma fatura à assinatura · demonstração simulada",
-      "executed_at": "2026-10-23T01:40:46.498527+00:00",
+      "executed_at": "2026-10-23T04:06:39.434859+00:00",
       "execution_scope": "LOCAL_PYTHON_SYNTHETIC_EXCERPTS",
       "external_api_called": false,
       "real_consumer_coverage": "UNKNOWN",
@@ -969,10 +969,10 @@
       "family": "runtime",
       "claim": "local_simulation_result",
       "reference": "demo/result.json",
-      "collected_at": "2026-10-23T01:40:46.498527+00:00",
+      "collected_at": "2026-10-23T04:06:39.434859+00:00",
       "environment": "simulation",
       "version": "demo-v1",
-      "sha256": "8459d8fcc751eba2b0c8785c371e6aee53b2156a6e55f7442daffacf24a72dd3",
+      "sha256": "1deba087f5ec7f38c80a588f3a2223d6edb41966e240066c9a77e6540998be75",
       "implementation": "legacy",
       "synthetic": true,
       "details": {
@@ -1315,10 +1315,10 @@
       "family": "runtime",
       "claim": "local_simulation_result",
       "reference": "demo/result.json",
-      "collected_at": "2026-10-23T01:40:46.498527+00:00",
+      "collected_at": "2026-10-23T04:06:39.434859+00:00",
       "environment": "simulation",
       "version": "demo-v1",
-      "sha256": "8459d8fcc751eba2b0c8785c371e6aee53b2156a6e55f7442daffacf24a72dd3",
+      "sha256": "1deba087f5ec7f38c80a588f3a2223d6edb41966e240066c9a77e6540998be75",
       "implementation": "migrated",
       "synthetic": true,
       "details": {

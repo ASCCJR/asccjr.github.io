@@ -27,6 +27,11 @@
   openDetails=function(id,inventory=false){
     originalDetails(id,inventory);
     if(!isCase()||!assets[id]||!$('detailDialog').open)return;
+    const heading=Array.from($('detailBody').querySelectorAll('h3')).find(h=>h.textContent==='Análises disponíveis');
+    if(heading){
+      heading.textContent='Nesta comparação';
+      heading.nextElementSibling.innerHTML=`<button class="secondary" data-case-return>Voltar à comparação ${esc(result.change.id)}</button>`;
+    }
     const refs=(assets[id].evidence_ids||[]).map(key=>evidences[key]).filter(Boolean);
     const simulated=assets[id].material_kind==='simulated_consumer';
     $('detailBody').insertAdjacentHTML('beforeend',simulated?'<h3>Execução do exemplo simulado</h3><p>Código próprio executado localmente em recortes fictícios. Não identifica uso real da Stripe.</p>'+refs.map(evidenceMarkup).join(''):'<h3>Contrato e origem</h3><p>O registro descreve o contrato nesta versão. Não comprova consumo ou execução.</p>'+refs.map(evidenceMarkup).join(''));
@@ -37,6 +42,13 @@
     if(!isCase())return;
     const explanation=document.querySelector('.inspector-impact p');
     if(explanation)explanation.textContent='Consumidores desconhecidos. Consulte o contrato e a orientação documental antes de investigar uma integração.';
+  }
+  function showComparison(){
+    if(!isCase())return;
+    if($('detailDialog').open)$('detailDialog').close();
+    setView('analysis');
+    const title=$('consumerDemoTitle')||$('contractComparisonTitle');
+    if(title){title.tabIndex=-1;title.focus({preventScroll:true});title.scrollIntoView({block:'start',behavior:'auto'});}
   }
   function renderCase(){
     if(!isCase())return;
@@ -56,7 +68,7 @@
     document.querySelector('#analysisResult .bottom-note').innerHTML='<strong>Próximo passo</strong><p>Identificar uma integração que use essa resposta, sua versão da API e o uso do campo. Só então avaliar um teste e o responsável pela revisão.</p>';
     if(!$('contractComparison')){
       const section=document.createElement('section');section.id='contractComparison';section.className='contract-comparison';section.setAttribute('aria-label','Antes e depois do contrato');
-      section.innerHTML=`<div class="contract-versions"><article><h3>Antes</h3><p>${esc(f.sources[0].version)}</p><code>${esc(f.field.join('.'))}</code><p>Campo declarado · ${f.previous.required?'obrigatório':'opcional'}</p><button class="secondary" data-contract-detail="response-before">Examinar contrato anterior</button></article><article><h3>Depois</h3><p>${esc(f.sources[1].version)}</p><code>${esc(f.replacement_field.join('.')||'Sem caminho alternativo informado')}</code><p>O campo original não está declarado no mesmo objeto.</p><button class="secondary" data-contract-detail="response-after">Examinar contrato posterior</button></article></div><p class="case-migration">${esc(f.migration_note)}</p><details><summary>Fontes e verificação dos arquivos</summary><p><a href="${esc(f.documentation_url)}" target="_blank" rel="noopener noreferrer">Orientação publicada pelo fornecedor ↗</a></p>${f.sources.map(s=>`<p><strong>${esc(s.version)}</strong> · <a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">Fonte original ↗</a> · <a href="${esc(s.file)}" download>Cópia preservada</a><br><small>SHA-256: <code>${esc(s.sha256)}</code></small></p>`).join('')}<p>A conferência verifica o campo selecionado nos contratos. Não executa a API nem determina automaticamente os consumidores.</p></details>`;
+      section.innerHTML=`<h2 id="contractComparisonTitle">Comparação dos contratos</h2><div class="contract-versions"><article><h3>Antes</h3><p>${esc(f.sources[0].version)}</p><code>${esc(f.field.join('.'))}</code><p>Campo declarado · ${f.previous.required?'obrigatório':'opcional'}</p><button class="secondary" data-contract-detail="response-before">Examinar contrato anterior</button></article><article><h3>Depois</h3><p>${esc(f.sources[1].version)}</p><code>${esc(f.replacement_field.join('.')||'Sem caminho alternativo informado')}</code><p>O campo original não está declarado no mesmo objeto.</p><button class="secondary" data-contract-detail="response-after">Examinar contrato posterior</button></article></div><p class="case-migration">${esc(f.migration_note)}</p><details><summary>Fontes e verificação dos arquivos</summary><p><a href="${esc(f.documentation_url)}" target="_blank" rel="noopener noreferrer">Orientação publicada pelo fornecedor ↗</a></p>${f.sources.map(s=>`<p><strong>${esc(s.version)}</strong> · <a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">Fonte original ↗</a> · <a href="${esc(s.file)}" download>Cópia preservada</a><br><small>SHA-256: <code>${esc(s.sha256)}</code></small></p>`).join('')}<p>A conferência verifica o campo selecionado nos contratos. Não executa a API nem determina automaticamente os consumidores.</p></details>`;
       document.querySelector('#analysisResult .conclusion').after(section);
       section.addEventListener('click',e=>{const b=e.target.closest('[data-contract-detail]');if(b)openDetails(b.dataset.contractDetail,true);});
     }
@@ -77,8 +89,9 @@
     $('graphReset').textContent='Focar contrato anterior';
     $('graphReview').textContent='← Revisar esta mudança';
     $('contractCaseNotice').hidden=false;
-    $('contractCaseNotice').innerHTML=`<div><strong>${esc(f.title)}</strong><p>Contratos públicos reais. Consumidores e execução ainda desconhecidos.</p></div><button id="reviewPublicCase" class="primary">Entender esta mudança →</button>`;
-    $('reviewPublicCase').addEventListener('click',()=>setView('analysis'));
+    $('contractCaseNotice').innerHTML=`<div><strong>${esc(f.title)}</strong><p>Contratos públicos reais. Consumidores e execução ainda desconhecidos.</p></div><button id="reviewPublicCase" class="primary">Ver comparação →</button>`;
+    $('reviewPublicCase').addEventListener('click',showComparison);
+    $('detailBody').addEventListener('click',e=>{if(e.target.closest('[data-case-return]'))showComparison();});
     $('analysisToGraph').addEventListener('click',()=>{$('graphScope').value='all';$('graphTechnical').checked=true;EGGraph.repaint();});
     document.querySelector('#aboutDialog .dialog-body').innerHTML='<p>Este espaço apresenta contratos públicos preservados e uma conferência local do campo selecionado. As relações do mapa representam campos documentados em cada versão, sem conectar as versões como fluxo operacional.</p><p>Nenhum consumidor foi identificado, nenhuma chamada à API foi executada e nenhum responsável de integração foi confirmado. UNKNOWN não significa ausência de risco.</p><p>O caminho alternativo foi indicado na descrição do caso e conferido no contrato posterior. Isso não comprova equivalência semântica ou sucesso de migração. Grupo Aurora permanece disponível como conjunto fictício separado.</p>';
     renderCase();renderCaseInspector();

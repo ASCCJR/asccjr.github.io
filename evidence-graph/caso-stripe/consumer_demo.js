@@ -3,7 +3,7 @@
 (() => {
   const demo=()=>data?.provenance?.consumer_demo;
   const labels={LINKED:'Assinatura associada',NO_SUBSCRIPTION:'Sem assinatura',REVIEW:'Pedir revisão'};
-  let selected='subscription-id',ready=false;
+  let selected='subscription-id',ready=false,invalidExample=false;
   const outcome=value=>value?`${labels[value.status]||value.status}${value.subscription_id?' · '+value.subscription_id:''}`:'Sem resultado';
   function report(){
     const d=demo();if(!d)return '';
@@ -20,6 +20,9 @@
     return lines.join('\n');
   }
   function renderSelection(){
+    if(!$('demoCaseSelect'))return;
+    $('demoCaseSelect').value=selected;
+    $('demoLinkStatus').textContent=invalidExample?'O exemplo indicado no link não foi encontrado. Mostrando “Fatura vinculada a uma assinatura”.':'';
     const d=demo(),host=$('demoExample');if(!d||!host)return;
     const rows=d.runs.filter(r=>r.case_id===selected);
     host.classList.toggle('two',rows.length===2);
@@ -48,7 +51,8 @@
       const cases=[...new Map(d.runs.map(r=>[r.case_id,r])).values()];
       section.innerHTML=`<header><span class="demo-tag">CONSUMIDOR SIMULADO</span><h3 id="consumerDemoTitle">O que acontece com a associação da fatura?</h3><p>${esc(d.business_expectation)}</p></header><p>Executamos nosso código com recortes fictícios das duas versões. Os cartões mostram resultados gravados; trocar o cenário não faz chamadas à Stripe.</p><label for="demoCaseSelect">Exemplo para conferir</label><select id="demoCaseSelect">${cases.map(r=>`<option value="${esc(r.case_id)}">${esc(r.label)}</option>`).join('')}</select><p id="demoCategory" class="demo-scope"></p><div id="demoExample" class="demo-results"></div><p id="demoSelectionStatus" class="sr-only" role="status"></p><p class="demo-learning"><strong>Terminar sem erro não basta.</strong> É preciso comparar a saída com a expectativa da tarefa. Informação ausente deve continuar pedindo revisão.</p><div class="demo-actions"><button class="secondary" data-demo-detail="demo-legacy">Examinar leitor antigo</button><button class="secondary" data-demo-detail="demo-migrated">Examinar leitor adaptado</button></div><details class="demo-evidence"><summary>Resultados completos, código e limites</summary><p>Execução registrada em ${esc(date(d.executed_at))}. Foram ${d.runs.length} execuções sobre ${cases.length} cenários preparados, incluindo casos de robustez. Não são testes com clientes.</p><ul>${d.summary.map(s=>`<li>${s.implementation==='legacy'?'Antigo':'Adaptado'} / ${s.stage==='before'?'contrato anterior':'contrato novo'}: ${s.matched} de ${s.total} resultados conferem; ${s.mismatched} divergem; ${s.exceptions} exceções.</li>`).join('')}</ul><p><a href="demo/result.json" download>Baixar resultados completos</a> · <a href="demo/consumer_demo.py" download>Baixar código do exemplo</a> · <a href="demo/consumer_demo_cases.json" download>Baixar recortes e expectativas</a></p><p>Reproduzir a execução requer o projeto e os contratos preservados; instruções no README do adaptador. O arquivo de código isolado não é um aplicativo.</p><ul>${d.limitations.map(t=>`<li>${esc(t)}</li>`).join('')}</ul><p>O leitor antigo já confunde um campo omitido com ausência de assinatura no contrato anterior. Essa limitação também aparece nos resultados.</p></details>`;
       $('contractComparison').before(section);
-      $('demoCaseSelect').addEventListener('change',e=>{selected=e.target.value;renderSelection();});
+      const status=document.createElement('p');status.id='demoLinkStatus';status.className='demo-scope';status.setAttribute('role','status');$('demoCaseSelect').after(status);
+      $('demoCaseSelect').addEventListener('change',e=>{selected=e.target.value;invalidExample=false;renderSelection();emit('example');});
       section.addEventListener('click',e=>{const b=e.target.closest('[data-demo-detail]');if(b)openDetails(b.dataset.demoDetail,true);});
       renderSelection();
     }
@@ -62,7 +66,15 @@
     if(!p){const section=document.createElement('div');section.className='inspector-impact';section.innerHTML='<p></p>';document.querySelector('.inspector-actions').before(section);p=section.querySelector('p');}
     if(p)p.textContent=asset?.material_kind==='simulated_consumer'?'Leitor criado para demonstração. Seus resultados locais ficam nos detalhes; não representa uma integração real.':'Documento público. Os vínculos com leitores simulados explicam o exemplo, sem comprovar uso real.';
   }
-  window.EGConsumerDemo={report};
+  window.EGConsumerDemo={report,
+    selection:()=>demo()?selected:'',
+    restore:value=>{
+      const ids=new Set((demo()?.runs||[]).map(r=>r.case_id));
+      invalidExample=Boolean(value)&&ids.size>0&&!ids.has(value);
+      selected=ids.has(value)?value:'subscription-id';
+      if(ready&&demo())renderSelection();
+    }
+  };
   document.addEventListener('eg:ready',()=>{ready=true;render();inspector();});
   document.addEventListener('eg:analysis',render);
   document.addEventListener('eg:view',render);
