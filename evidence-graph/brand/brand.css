@@ -1,0 +1,74 @@
+/* EvidentGraph Fenda: shared visual identity. Font licenses are in fonts/. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url(fonts/inter-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url(fonts/inter-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Roboto Mono';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url(fonts/roboto-mono-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Roboto Mono';
+  font-style: normal;
+  font-weight: 400 500;
+  font-display: swap;
+  src: url(fonts/roboto-mono-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
+:root{--ink:#1c1d2f;--muted:#5a5b70;--line:#e3e3ed;--blue:#3a58ee;--bg:#f6f6fa;--side:#1c1d2f}
+body{font-family:Inter,Arial,sans-serif;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit}button,a,input,select,summary{ -webkit-tap-highlight-color:transparent }
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #3a58ee;outline-offset:3px}
+.sidebar{width:248px;padding:30px 20px 24px;background:#1c1d2f;color:white;z-index:2}
+.brand{gap:11px;font-size:20px;letter-spacing:-.7px;font-weight:600;white-space:nowrap}
+.eg-symbol{display:block;width:43px;height:43px;flex:none;color:#fff;--symbol-second:#699bfb}
+.brand small{font:400 10px/1.5 Inter,Arial,sans-serif;color:#c6c5da;letter-spacing:.1px;margin-top:2px}
+.workspace-label{margin:45px 10px 12px;font:400 10px/1.5 'Roboto Mono',monospace;letter-spacing:.8px;color:#aaa9c1}
+.company{padding:12px 12px;border:1px solid #414155;border-radius:10px;font-size:13px;font-weight:500;background:#252638}
+.company small{font-size:11px;font-weight:400;color:#c1bfd2;margin-top:2px}
+.sidebar nav{margin-top:26px;gap:7px}.sidebar .nav{font-size:12px;line-height:1.6;border-radius:8px;padding:12px 11px;color:#d3d2e0;display:flex;align-items:center;gap:7px;min-height:44px}
+.nav span{width:20px;flex:none;font-size:18px}.sidebar .nav.active{background:#3a58ee;color:white;box-shadow:none}.sidebar .nav:hover{background:#35364e}.sidebar .nav.active:hover{background:#304bd4}
+.side-foot{border-color:#414155;padding:22px 9px 0}.side-foot .workspace-label{color:#c1bfd2;font-size:9px}.side-foot .side-link{font-size:12px;color:#e5e3f4}
+.shell{margin-left:248px}.topbar{height:auto;min-height:80px;padding:14px 36px;gap:14px;flex-wrap:wrap;background:white;font-size:12px}.slash{color:#a5a3bb}
+.workspace-tools{gap:10px}.workspace-tools .env{background:#f2f1f8;color:#55546b;padding:6px 10px;border-radius:6px;font-size:11px}
+main{max-width:1530px;padding:29px 36px 25px;margin:auto}
+.eyebrow{font:500 10px/1.5 'Roboto Mono',monospace;color:#535578;letter-spacing:1.15px;margin-bottom:9px}
+h1{font-size:31px;line-height:1.25;letter-spacing:-1.1px;font-weight:600}h2{font-size:17px;font-weight:600}h3{font-weight:600}
+.page-head{margin-bottom:22px}.page-head p{font-size:14px;line-height:1.6;margin-top:10px}
+.view-tabs{border:1px solid #dedceb;border-radius:9px;padding:4px;background:#fff;gap:4px}.view-tabs button{font-size:12px;border-radius:6px;padding:8px 15px;color:#5a5971}.view-tabs button.selected{background:#eae7f7;color:#34326a;font-weight:600}
+.analysis-view-tabs{margin-bottom:20px}
+.change-card,.table-card,.graph-canvas-card,.graph-inspector,.investigation-context{border-color:#e0deec;border-radius:11px;box-shadow:0 2px 3px #1c1d2f03}
+.change-card{margin-bottom:20px}.change-choose{padding:18px 20px;gap:16px;border-color:#eeedf5}.change-choose label{font-size:12px}.change-choose select{font-size:13px;color:#1c1d2f;font-weight:500}
+input,select,textarea{border-color:#d8d6e5;border-radius:7px;min-height:40px}input::placeholder{color:#6a687d}
+.primary,.secondary{border-radius:7px;font-size:12px;padding:10px 15px;min-height:40px}.primary{background:#3a58ee;box-shadow:0 2px 4px #3a58ee18}.primary:hover{background:#2945cf}.secondary{border-color:#d8d6e5;color:#3e3d56;background:white}.secondary:hover{background:#f2f0fa}
+.change-overview{padding:16px 20px}.change-overview>p:first-child{font-size:13px}.analysis-state{font-size:12px}.change-details{border-color:#eeedf5}.change-details>summary{padding:10px 20px;font-size:11px}
+.conclusion{padding:16px 20px;margin-bottom:26px;border-radius:9px;background:#fffaf0;border-color:#e8ddc2;border-left:3px solid #b58831}.conclusion h2{font-size:15px}.conclusion p{font-size:13px}.conclusion .small{font-size:11px}
+.section-heading{margin-bottom:14px}.section-heading h2{font-size:18px;letter-spacing:-.35px}.section-heading p{font-size:12px;margin-top:5px}
+#analysisView .metrics{gap:8px;margin-bottom:16px}#analysisView .metric{border-radius:7px;padding:8px 12px;gap:8px;min-height:40px;background:transparent}
+#analysisView .metric strong{font-size:14px}#analysisView .metric span{font-size:11px}.metric[aria-pressed=true]{border-color:#3a58ee;background:#edf0ff!important;box-shadow:none}.metric:hover{background:#eeedf6!important}
+.toolbar{padding:16px 18px;background:white;gap:10px}.toolbar input{font-size:12px}.search-wrap{max-width:440px;flex:1}.analysis-filters>summary{font-size:12px}
+th{font:500 11px/1.5 Inter,Arial,sans-serif;color:#615e77;background:#faf9fd}td{font-size:12px;padding:18px 15px;vertical-align:top}.consumer-reason{font-size:12px;line-height:1.65;margin-top:8px;max-width:330px}.row-name{font-size:13px;font-weight:600;color:#1c1d2f}.row-type{font-size:11px}.row-open,.in-graph{color:#304ad1;font-weight:500}.badge{padding:4px 7px;border-radius:5px}.text-btn{color:#304ad1}.table-footer{padding:12px 18px;font-size:10px}.bottom-note{margin-top:22px;color:#68657c}.bottom-note p{font-size:11px;max-width:940px;line-height:1.7}
+code,.inventory-id{font-family:'Roboto Mono',monospace}.footer{border-color:#e3e1ed;margin-top:26px;font-size:10px}
+.graph-viewport{background-color:#faf9fd;background-image:radial-gradient(#ddd8ed .8px,transparent .8px)}.graph-navigation{background:#f6f4fc;border-color:#e0dcec}.node-name{font-family:Inter,Arial,sans-serif;fill:#1c1d2f}.node-kind{font-family:Inter,Arial,sans-serif}.graph-node.selected .node-card{fill:#efecfb;stroke:#3a58ee}.graph-node:hover .node-card{stroke:#3a58ee}.graph-node.change-target .node-card{stroke:#3a58ee}.graph-guide summary,.inspector-connections summary{color:#304ad1}.inspector-title>span{color:#3a58ee;background:#eeebfb}.investigate-actions button{border-color:#d0cae5;background:#f8f6fd;color:#3d3b58}.investigate-actions button:hover{background:#eeeaf9;border-color:#968bc8}.investigate-actions button[aria-pressed=true]{background:#e6e1f6;border-color:#8b7fc4;color:#393165}
+dialog{font-family:Inter,Arial,sans-serif}dialog::backdrop{background:#15152399;backdrop-filter:blur(3px)}.dialog-head{padding:24px;border-color:#e3e1ed}.dialog-body{padding:24px}.dialog-head h2{font-size:21px;letter-spacing:-.5px}.consumer-explanation{background:#f5f3fc;border-color:#ddd6f0;border-radius:9px}
+@media(min-width:1600px){main{padding:34px 42px}.sidebar{width:260px}.shell{margin-left:260px}}
+@media(max-width:1180px) and (min-width:781px){.sidebar{width:220px;padding:25px 16px}.shell{margin-left:220px}.brand{font-size:18px;gap:8px}.brand .eg-symbol{width:35px;height:35px}.sidebar .nav{font-size:11px}main{padding:25px}.topbar{padding:16px 25px}h1{font-size:27px}}
+@media(max-width:780px){.sidebar{position:static;width:auto;padding:18px 18px 12px}.shell{margin-left:0}.brand{font-size:20px}.brand .eg-symbol{width:36px;height:36px}.sidebar .workspace-label,.sidebar .company,.side-foot{display:none}.sidebar nav{display:flex;overflow-x:auto;margin-top:17px;gap:6px;padding:4px 0}.sidebar .nav{width:auto;flex:none;padding:9px 11px;min-height:40px;font-size:11px}.sidebar .nav span{width:15px;font-size:16px}.topbar{padding:15px 18px;min-height:75px;gap:11px}.topbar>div:first-child{font-size:11px}.workspace-tools{width:100%;justify-content:space-between;gap:8px}.workspace-tools .env{font-size:10px}main{padding:23px 18px}.page-head{margin-bottom:20px}h1{font-size:28px;letter-spacing:-.8px}.page-head p{font-size:13px}.eyebrow{font-size:9px}.view-tabs{max-width:100%;display:flex}.view-tabs button{font-size:11px;padding:9px 10px;flex:1}.change-choose{padding:15px;flex-wrap:wrap;gap:10px}.change-choose label{width:100%}.change-choose select{width:100%;flex-basis:100%;font-size:12px}.change-choose .primary{width:100%}.change-overview{padding:14px 15px}.change-details>summary{padding:10px 15px}.conclusion{padding:15px;gap:10px}.conclusion h2{font-size:14px}.conclusion p{font-size:12px}.section-heading{align-items:flex-start;gap:10px}.section-heading h2{font-size:17px}.section-heading .secondary{font-size:10px;padding:8px 10px}#analysisView .metric{padding:8px 10px}#analysisView .metric span{font-size:10px}.toolbar{padding:14px;align-items:center}.search-wrap{max-width:none;min-width:100%}.toolbar input{width:100%}.analysis-filters{width:auto}.consumer-table td{padding:9px 16px}.consumer-table .row-open{font-size:13px;min-height:40px}.consumer-table .in-graph{font-size:12px}.table-footer{font-size:10px}.footer{gap:12px;flex-wrap:wrap}.graph-toolbar{gap:8px}.graph-toolbar label{font-size:11px}.graph-context-bar{gap:12px}.graph-workspace{display:block}.graph-inspector{margin-top:15px}.graph-controls button{min-height:38px}.dialog-head h2{font-size:20px}}

@@ -1,0 +1,28 @@
+{
+  "identity": "Fenda",
+  "version": "1",
+  "palette": {
+    "night": "#1c1d2f",
+    "blue": "#3a58ee",
+    "atlantic": "#699bfb",
+    "lavender": "#dedaf4",
+    "white": "#ffffff"
+  },
+  "fonts": [
+    "Inter",
+    "Roboto Mono"
+  ],
+  "scope": "Shared visual identity for the current Aurora preview and public Stripe case. Scenario data and application behavior are unchanged.",
+  "files_sha256": {
+    "brand.css": "cf2e6575670e64a0d06611c2ff5b331d8c51fd94459187c24a599f625be5cdfe",
+    "favicon.svg": "e4fd1542565591fd2f4e8b2065bdb1fbc23b97853e28af447a392ae7feb88954",
+    "fenda-white.svg": "b343b52e2c855e95c48fbfaafb41b979954d0a85c2d7f8b8e0d943d1622bae54",
+    "fenda.svg": "781c6950129b5f8e1e0cc596f46b5cd67b0a1e178e7d153b7cab43382b00f04d",
+    "fonts/Inter-OFL.txt": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57",
+    "fonts/RobotoMono-OFL.txt": "50ab8dd54680d3473f649c9db86fece88434d097c7834475c1c72d2f8c429215",
+    "fonts/inter-latin-ext.woff2": "34b9c504cab7a73e37b746343a449132e56cf7b5481af2cb81dc74dcff25c956",
+    "fonts/inter-latin.woff2": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62",
+    "fonts/roboto-mono-latin-ext.woff2": "4cc0d52e0fa37c28084e0cbce3589a8ab32dd21e6ea619489c5f7c6e8c43b922",
+    "fonts/roboto-mono-latin.woff2": "b81cd55177300649be8f95b3b747d721ce607e8ed2856e25bd0c630cfd631faf"
+  }
+}
