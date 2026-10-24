@@ -37,3 +37,9 @@ Then consult the canonical Core only when needed.
 ## Rule
 
 > Adapt EvidentGraph to Campus Mobile here. Never rewrite the Core to satisfy this edital.
+
+## Status reconciliado em 20/10/2026
+
+O proponente informou “feito” após o apoio aos campos da inscrição e retomou o Core. Preservar isso como relato de avanço no preenchimento; não é comprovante de submissão homologada, seleção ou aprovação. Não reenviar nem substituir a candidatura sem instrução específica. Quando esta oportunidade for retomada, conferir regulamento, cadastro, equipe, prazo e recibo próprios.
+
+A [candidatura CTE-IA](../cte-ia-2026/README.md) é outra oportunidade. Não transportar automaticamente requisitos móveis, equipe, limites de texto ou respostas da Claro para ela. Ambas continuam sendo trabalhadas neste ambiente.
