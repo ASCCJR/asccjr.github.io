@@ -6,7 +6,7 @@
   <meta name="description" content="Automação de vagas públicas com Make e Greenhouse, extração de requisitos por trilha e resumo por e-mail.">
   <meta name="theme-color" content="#1c1d2f">
   <link rel="canonical" href="https://asccjr.github.io/portfolio/monitor-de-vagas/">
-  <link rel="stylesheet" href="../style.css?rev=revez">
+  <link rel="stylesheet" href="../style.css?rev=layout">
   <title>Monitor de Vagas | Antonio Sergio</title>
 </head>
 <body>
@@ -30,25 +30,8 @@
       </div>
     </section>
 
-    <div class="wrap case-content">
-      <section aria-labelledby="titulo-comparacao">
-        <h2 id="titulo-comparacao">Extração de requisitos por trilha</h2>
-        <p class="lead">Quando um anúncio reúne várias trilhas, o fluxo separa a descrição de cada vaga antes da extração. Em um anúncio do iFood, esse recorte corrigiu a interpretação do requisito de formação.</p>
-        <div class="comparison">
-          <article class="card comparison-card">
-            <p class="category">Anúncio completo</p>
-            <h3>Graduação concluída</h3>
-            <p>A extração incluiu uma exigência de outra trilha.</p>
-          </article>
-          <article class="card comparison-card corrected">
-            <p class="category">Trecho da trilha</p>
-            <h3>Estudantes elegíveis</h3>
-            <p>A extração identificou a elegibilidade prevista na descrição da vaga.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="case-section" aria-labelledby="titulo-cenario">
+    <div class="wrap case-content split-case">
+      <section aria-labelledby="titulo-cenario">
         <h2 id="titulo-cenario">Cenário no Make</h2>
         <div class="proof-grid">
           <figure class="card diagram">
@@ -75,10 +58,29 @@
         </div>
       </section>
 
-      <section class="case-note" aria-labelledby="titulo-validacao">
-        <h2 id="titulo-validacao">Deduplicação e validação</h2>
-        <p>O histórico do monitor evita reenvios. A triagem foi conferida em três anúncios públicos do iFood, e o envio automático do resumo por e-mail foi validado.</p>
-      </section>
+      <div class="case-sidebar">
+        <section aria-labelledby="titulo-comparacao">
+          <h2 id="titulo-comparacao">Extração de requisitos por trilha</h2>
+          <p class="lead">Quando um anúncio reúne várias trilhas, o fluxo separa a descrição de cada vaga antes da extração. Em um anúncio do iFood, esse recorte corrigiu a interpretação do requisito de formação.</p>
+          <div class="comparison">
+            <article class="card comparison-card">
+              <p class="category">Anúncio completo</p>
+              <h3>Graduação concluída</h3>
+              <p>A extração incluiu uma exigência de outra trilha.</p>
+            </article>
+            <article class="card comparison-card corrected">
+              <p class="category">Trecho da trilha</p>
+              <h3>Estudantes elegíveis</h3>
+              <p>A extração identificou a elegibilidade prevista na descrição da vaga.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="case-note" aria-labelledby="titulo-validacao">
+          <h2 id="titulo-validacao">Deduplicação e validação</h2>
+          <p>O histórico do monitor evita reenvios. A triagem foi conferida em três anúncios públicos do iFood, e o envio automático do resumo por e-mail foi validado.</p>
+        </section>
+      </div>
     </div>
   </main>
   <footer class="wrap footer">
