@@ -52,11 +52,11 @@ img { display: block; max-width: 100%; height: auto; }
   color: var(--paper);
 }
 .header-inner, .footer, nav { display: flex; align-items: center; }
-.header-inner { justify-content: center; min-height: 4.25rem; padding-block: .6rem; }
+.header-inner { justify-content: flex-end; min-height: 4.25rem; padding-block: .6rem; }
 .footer { justify-content: space-between; gap: .75rem 1.5rem; }
 nav { gap: clamp(.7rem, 2.7vw, 1.8rem); flex-wrap: wrap; }
 nav a { color: var(--hero-muted); font-size: .875rem; font-weight: 620; }
-.header-nav { justify-content: center; gap: .55rem; }
+.header-nav { justify-content: flex-end; gap: .55rem; }
 .header-nav a {
   display: inline-flex;
   align-items: center;
