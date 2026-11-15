@@ -25,54 +25,66 @@
       <div class="wrap hero-inner">
         <a class="back" href="/portfolio/#projetos"><span aria-hidden="true">←</span> Todos os projetos</a>
         <h1 id="titulo">Painel de SLAs de atendimento</h1>
-        <p>Prazos de primeira resposta e resolução de chamados para avaliar o atendimento dos prestadores terceirizados.</p>
+        <p>Do acompanhamento mensal dos SLAs à investigação do histórico de um chamado do Freshservice.</p>
+        <nav class="feature-actions" aria-label="Telas do painel">
+          <a class="action hero-action" href="#ticket-support">Ticket Support <span aria-hidden="true">↓</span></a>
+          <a class="action hero-action" href="#details">Details <span aria-hidden="true">↓</span></a>
+        </nav>
       </div>
     </section>
 
     <div class="wrap case-content">
-      <!--
-        Inserir aqui os mockups exportados do Figma, antes do contexto do projeto.
-        Usar um elemento figure por imagem, com as dimensões e texto alternativo da exportação.
-        As legendas devem identificar as telas como mockups de portfólio.
-
-        <section aria-labelledby="titulo-mockups">
-          <h2 id="titulo-mockups">Mockups do painel</h2>
-          <div class="proof-grid">
-            <figure class="card diagram">
-              <img src="../assets/painel-de-slas-visao-geral.webp" alt="Visão geral do painel de SLAs de atendimento">
-              <figcaption>Visão geral do painel. Mockup de portfólio criado no Figma.</figcaption>
-            </figure>
-          </div>
-        </section>
-      -->
-
       <div class="split-case">
         <section aria-labelledby="impacto">
           <h2 id="impacto">O que a gestão passou a avaliar</h2>
-          <p class="lead">A gestão passou a acompanhar, por prestador, o cumprimento dos tempos de primeira resposta e resolução acordados em contrato. Os indicadores também permitiram avaliar os prazos dos chamados urgentes e deram à gestão uma base para analisar a renovação dos contratos.</p>
+          <p class="lead">A avaliação dos prazos dependia de relatórios preparados por alguns prestadores a partir de exportações do Freshservice. Com o painel, a gestão passou a acompanhar os prazos de primeira resposta e resolução acordados em contrato, inclusive nos chamados urgentes, e ganhou uma base para avaliar renovações.</p>
         </section>
         <section aria-labelledby="contexto">
-          <h2 id="contexto">Antes do painel</h2>
-          <p class="lead">A gestão dependia de relatórios enviados por alguns prestadores, que solicitavam exportações do Freshservice e preparavam seus próprios relatórios manualmente.</p>
+          <h2 id="contexto">Indicium · Programa Lighthouse</h2>
+          <p class="lead">Painel desenvolvido no Power BI. As duas telas apresentadas aqui foram reconstruídas no Figma com dados simulados.</p>
         </section>
       </div>
 
-      <div class="comparison">
-        <section class="card comparison-card" aria-labelledby="dados">
-          <h3 id="dados">Construção e validação</h3>
-          <p>Os chamados do Freshservice alimentaram os indicadores no Power BI. Divergências entre relatórios foram corrigidas nas regras em SQL e dbt, com validação da liderança e da TI do cliente.</p>
-        </section>
-        <section class="card comparison-card" aria-labelledby="stack">
-          <h3 id="stack">Ferramentas</h3>
-          <ul class="stack-badges" aria-label="Tecnologias utilizadas">
-            <li>Freshservice</li>
-            <li>Power BI</li>
-            <li>SQL</li>
-            <li>dbt</li>
-            <li>Figma (mockups)</li>
-          </ul>
-        </section>
-      </div>
+      <section class="case-note" id="ticket-support" aria-labelledby="titulo-ticket-support">
+        <h2 id="titulo-ticket-support">Ticket Support</h2>
+        <p>A visão mensal ajuda a identificar onde investigar variações de volume e de SLA. No exemplo simulado, 78 de 82 chamados avaliados cumpriram o SLA de primeira resposta (95,1%). Entre os 77 chamados resolvidos, 72 ficaram no prazo de resolução (93,5%).</p>
+        <div class="proof-grid">
+          <figure class="card diagram">
+            <img src="../assets/data-governance-ticket-support.png" alt="Mockup da aba Ticket Support com o volume de chamados por mês, as séries de SLA de primeira resposta e resolução e os recortes por unidade, departamento e prioridade." width="1280" height="1016" loading="lazy">
+            <figcaption>
+              <span>Ticket Support · Mockup do Figma com dados simulados.</span>
+              <a href="../assets/data-governance-ticket-support.png">Abrir Ticket Support em tamanho original</a>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="case-note" id="details" aria-labelledby="titulo-details">
+        <h2 id="titulo-details">Details</h2>
+        <p>A visão por chamado mostra a situação dos dois SLAs e as datas que sustentam a avaliação. No chamado fictício TS-2075, a primeira resposta levou 1 h 15 min e a resolução levou 18 h 20 min. Ambos os prazos foram cumpridos no cenário simulado.</p>
+        <div class="proof-grid">
+          <figure class="card diagram">
+            <img src="../assets/data-governance-details.png" alt="Mockup da aba Details com filtros, lista de chamados, situação dos dois SLAs e histórico de atendimento do chamado fictício TS-2075." width="1280" height="1016" loading="lazy">
+            <figcaption>
+              <span>Details · Mockup do Figma com dados simulados.</span>
+              <a href="../assets/data-governance-details.png">Abrir Details em tamanho original</a>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="case-note" aria-labelledby="contribuicao">
+        <h2 id="contribuicao">Contribuição e ferramentas</h2>
+        <p>Modelei dados do Freshservice com SQL e dbt Core no Databricks e desenvolvi os indicadores, as comparações mensais e a visão por chamado no Power BI. Divergências entre relatórios foram corrigidas nas regras de cálculo, com validação da liderança e da TI do cliente.</p>
+        <ul class="stack-badges" aria-label="Tecnologias utilizadas">
+          <li>Freshservice</li>
+          <li>Power BI</li>
+          <li>SQL</li>
+          <li>dbt Core</li>
+          <li>Databricks</li>
+          <li>Figma (mockups)</li>
+        </ul>
+      </section>
     </div>
   </main>
   <footer class="wrap footer">
