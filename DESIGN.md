@@ -29,7 +29,7 @@ Mantenha cada estado de gráfico identificado por texto e pela legenda. Reserve 
 ## Layout e imagens
 
 - Use fundo claro, cartões brancos com borda fina, cantos de **14–18 px** e espaçamento consistente. Use o azul-marinho no cabeçalho e o padrão pontilhado discreto nas áreas de destaque da vitrine.
-- Mostre o que o projeto faz em um título claro, um parágrafo curto e uma ação específica. Abra estudos de caso com a imagem ou comparação que melhor demonstra a contribuição.
+- Mostre o que o projeto faz em um título claro, um parágrafo curto e uma ação específica. Descreva a entrega em linguagem de produto e abra estudos de caso com a imagem ou comparação que melhor demonstra o resultado.
 - Use capturas reais da versão publicada e diagramas na paleta acima. Mantenha dados simulados identificados. Atualize a capa quando a interface publicada mudar e preserve a legibilidade do diagrama em tamanho original.
 
 ## Antes de publicar

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Como uma mudança no Monitor de Vagas corrigiu a leitura de anúncios do iFood com várias trilhas.">
+  <meta name="description" content="Automação de vagas públicas com Make e Greenhouse, extração de requisitos por trilha e resumo por e-mail.">
   <meta name="theme-color" content="#1c1d2f">
   <link rel="canonical" href="https://asccjr.github.io/portfolio/monitor-de-vagas/">
   <link rel="stylesheet" href="../style.css">
@@ -26,31 +26,31 @@
       <div class="wrap hero-inner">
         <a class="back" href="/portfolio/#projetos"><span aria-hidden="true">←</span> Todos os projetos</a>
         <h1 id="titulo">Monitor de Vagas</h1>
-        <p>Um fluxo em Make que lê vagas públicas e envia por e-mail os requisitos da trilha que interessa.</p>
+        <p>Automação em Make que coleta vagas públicas no Greenhouse, extrai requisitos por trilha e envia um resumo por e-mail.</p>
       </div>
     </section>
 
     <div class="wrap case-content">
       <section aria-labelledby="titulo-comparacao">
-        <h2 id="titulo-comparacao">Um anúncio, várias trilhas</h2>
-        <p class="lead">Em um anúncio do iFood, a IA misturou requisitos de trilhas diferentes. Mudei o fluxo para separar o trecho da vaga antes de extrair os requisitos.</p>
+        <h2 id="titulo-comparacao">Extração de requisitos por trilha</h2>
+        <p class="lead">Quando um anúncio reúne várias trilhas, o fluxo separa a descrição de cada vaga antes da extração. Em um anúncio do iFood, esse recorte corrigiu a interpretação do requisito de formação.</p>
         <div class="comparison">
           <article class="card comparison-card">
-            <p class="category">Anúncio inteiro</p>
+            <p class="category">Anúncio completo</p>
             <h3>Graduação concluída</h3>
-            <p>O modelo trouxe para a vaga um requisito de outra trilha.</p>
+            <p>A extração incluiu uma exigência de outra trilha.</p>
           </article>
           <article class="card comparison-card corrected">
             <p class="category">Trecho da trilha</p>
             <h3>Estudantes elegíveis</h3>
-            <p>Com o texto da vaga certa, o modelo reconheceu que estudantes podiam se candidatar.</p>
+            <p>A extração identificou a elegibilidade prevista na descrição da vaga.</p>
           </article>
         </div>
       </section>
 
       <section class="case-note" aria-labelledby="titulo-validacao">
-        <h2 id="titulo-validacao">Do anúncio ao e-mail</h2>
-        <p>Integrei a API pública do Greenhouse ao Make, separei o texto por trilha e usei o histórico do monitor para evitar reenvios. Conferi a triagem em três descrições reais do iFood e validei o envio automático do resumo.</p>
+        <h2 id="titulo-validacao">Deduplicação e validação</h2>
+        <p>O histórico do monitor evita reenvios. A triagem foi conferida em três anúncios públicos do iFood, e o envio automático do resumo por e-mail foi validado.</p>
       </section>
     </div>
   </main>
