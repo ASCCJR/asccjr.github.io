@@ -222,8 +222,38 @@ h1 span { color: var(--hero-accent); }
   text-decoration: none;
 }
 
-.footer { min-height: 4.5rem; border-top: 1px solid var(--line); font-size: .86rem; color: var(--muted); }
-.footer a { font-weight: 650; }
+.stack-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  list-style: none;
+  margin: .65rem 0 0;
+  padding: 0;
+}
+.stack-badges li {
+  border: 1px solid #d9dff7;
+  border-radius: .4rem;
+  background: var(--lavender);
+  color: var(--link);
+  padding: .2rem .43rem;
+  font-size: .72rem;
+  font-weight: 650;
+  line-height: 1.3;
+}
+.feature-revez { margin-top: 1.1rem; }
+.revez-visual { align-content: center; gap: .7rem; }
+.revez-visual img { aspect-ratio: auto; object-fit: contain; }
+.gallery + .more-projects { padding-top: 0; }
+
+.footer {
+  flex-wrap: wrap;
+  min-height: 4.5rem;
+  padding-block: 1rem;
+  border-top: 1px solid var(--line);
+  font-size: .86rem;
+  color: var(--muted);
+}
+.footer a { color: var(--link); font-weight: 650; }
 
 .case-hero .hero-inner { padding-block: clamp(2.15rem, 5vw, 3.7rem); }
 .back {
@@ -242,7 +272,11 @@ h1 span { color: var(--hero-accent); }
 .comparison-card { padding: clamp(1.25rem, 4vw, 2.25rem); }
 .comparison-card h3 { font-size: clamp(1.25rem, 2.6vw, 1.8rem); }
 .comparison-card.corrected { background: var(--lavender); border-color: #bfc9f3; }
-.case-note { margin-top: 2.25rem; }
+.case-note, .case-section { margin-top: 2.25rem; }
+.proof-grid { display: grid; gap: .9rem; margin-top: 1.05rem; }
+.slack-proof { background: var(--ink); }
+.slack-proof img { max-width: 660px; margin-inline: auto; }
+.slack-proof figcaption { background: var(--paper); }
 .diagram { overflow: hidden; }
 .diagram img { width: 100%; }
 .diagram figcaption {

@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Automação no Slack para acompanhar entregas, registrar ajustes e aprovações e informar quem deve agir em seguida.">
+  <meta name="theme-color" content="#1c1d2f">
+  <link rel="canonical" href="https://asccjr.github.io/portfolio/revez/">
+  <link rel="stylesheet" href="../style.css">
+  <title>Revez | Antonio Sergio</title>
+</head>
+<body>
+  <a class="skip" href="#conteudo">Ir para o conteúdo</a>
+  <header class="header">
+    <div class="wrap header-inner">
+      <a class="name" href="/portfolio/">Antonio Sergio</a>
+      <nav aria-label="Navegação do portfólio">
+        <a href="/portfolio/#projetos">Projetos</a>
+        <a href="/">Currículo</a>
+        <a href="https://github.com/ASCCJR">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+  <main id="conteudo">
+    <section class="hero case-hero" aria-labelledby="titulo">
+      <div class="wrap hero-inner">
+        <a class="back" href="/portfolio/#projetos"><span aria-hidden="true">←</span> Todos os projetos</a>
+        <h1 id="titulo">Revez</h1>
+        <p>Acompanhamento de entregas no Slack, da revisão ao comunicado. Cada consulta informa o estado da tarefa, a próxima ação e quem deve executá-la.</p>
+      </div>
+    </section>
+
+    <div class="wrap case-content">
+      <section aria-labelledby="titulo-fluxo">
+        <h2 id="titulo-fluxo">Da revisão ao comunicado</h2>
+        <p class="lead">A IA extrai tarefas e responsáveis da proposta inicial. O Make valida permissões e versões, e o Google Sheets registra o estado da entrega e as transições.</p>
+        <div class="comparison">
+          <article class="card comparison-card">
+            <p class="category">Mensagens diretas</p>
+            <h3>Consulta, ajuste e aprovação</h3>
+            <p>A consulta responde na DM de quem perguntou. Pareceres e pedidos de ajuste são enviados apenas a quem precisa agir.</p>
+          </article>
+          <article class="card comparison-card corrected">
+            <p class="category">Thread da entrega</p>
+            <h3>Comunicado autorizado</h3>
+            <p>A liderança autoriza o comunicado após a publicação simulada. O Revez envia uma única mensagem na thread da entrega.</p>
+          </article>
+        </div>
+        <div class="proof-grid">
+          <figure class="card diagram slack-proof">
+            <img src="../assets/revez-consulta-slack.png" alt="O Revez apresenta, na DM, o estado simulado da entrega e a próxima ação da gestora." width="660" height="118" loading="lazy">
+            <figcaption>Consulta de status por DM. Captura do piloto com uma entrega fictícia.</figcaption>
+          </figure>
+          <figure class="card diagram slack-proof">
+            <img src="../assets/revez-comunicado-slack.png" alt="O Revez envia à thread a confirmação de que o painel está disponível no ambiente simulado." width="660" height="98" loading="lazy">
+            <figcaption>Comunicado na thread após a autorização. A publicação do painel foi simulada.</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section class="case-note" aria-labelledby="titulo-acesso">
+        <h2 id="titulo-acesso">Validação de acesso</h2>
+        <p>O teste com duas contas confirmou que os detalhes da tarefa só ficam disponíveis para a conta vinculada. A outra conta recebe uma resposta neutra na própria DM.</p>
+      </section>
+    </div>
+  </main>
+  <footer class="wrap footer">
+    <span>Antonio Sergio Castro de Carvalho Junior</span>
+    <nav aria-label="Links do rodapé">
+      <a href="https://www.linkedin.com/in/asccjr/">LinkedIn</a>
+      <a href="https://github.com/ASCCJR">GitHub</a>
+      <a href="/">Currículo</a>
+    </nav>
+  </footer>
+</body>
+</html>

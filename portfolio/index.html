@@ -33,13 +33,38 @@
       <h2 id="titulo-projetos">Projetos</h2>
       <article class="card feature">
         <div class="feature-copy">
-          <p class="category">Dados · Logística</p>
+          <p class="category">Logística</p>
           <h3>Copiloto de Entregas</h3>
           <p>Painel de pontualidade com dados históricos da Olist. O chat consulta o recorte ativo do painel e vincula as respostas aos pedidos correspondentes.</p>
           <a class="action primary" href="https://portfolio-antonio-sergio.vercel.app/copiloto">Abrir painel e chat <span aria-hidden="true">↗</span></a>
+          <ul class="stack-badges" aria-label="Tecnologias utilizadas">
+            <li>Next.js</li>
+            <li>TypeScript</li>
+            <li>OpenAI API</li>
+            <li>Vercel</li>
+          </ul>
         </div>
         <div class="feature-visual">
           <img src="assets/copiloto-entregas.jpg?rev=paleta" alt="Painel de entregas da Olist para o Maranhão em agosto de 2018. Das 60 entregas, 50 chegaram antes da data, uma na data e nove atrasaram." width="1255" height="1212">
+        </div>
+      </article>
+
+      <article class="card feature feature-revez">
+        <div class="feature-copy">
+          <p class="category">Colaboração</p>
+          <h3>Revez</h3>
+          <p>Automação de entregas no Slack. O fluxo concentra consultas, revisão, pedidos de ajuste e aprovação, com a próxima ação e a versão vinculadas à tarefa.</p>
+          <a class="action primary" href="revez/">Ver fluxo no Slack <span aria-hidden="true">→</span></a>
+          <ul class="stack-badges" aria-label="Tecnologias utilizadas">
+            <li>Slack</li>
+            <li>Make</li>
+            <li>Google Sheets</li>
+            <li>IA generativa</li>
+          </ul>
+        </div>
+        <div class="feature-visual revez-visual">
+          <img src="assets/revez-consulta-slack.png" alt="Em uma DM no Slack, o Revez informa o estado da entrega e a próxima ação em uma simulação." width="660" height="118" loading="lazy">
+          <img src="assets/revez-comunicado-slack.png" alt="Na thread da entrega, o Revez comunica a disponibilidade do painel simulado." width="660" height="98" loading="lazy">
         </div>
       </article>
 
@@ -49,10 +74,16 @@
             <img src="assets/evidentgraph.jpg" alt="Mapa que liga versões do contrato da Stripe a campos documentados e leitores simulados." width="1142" height="648" loading="lazy">
           </div>
           <div class="project-copy">
-            <p class="category">APIs · Dependências</p>
+            <p class="category">Contratos de API</p>
             <h3>EvidentGraph</h3>
             <p>Análise de impacto de mudanças em contratos de API. O caso Stripe compara versões do contrato e mapeia campos alterados, consumidores simulados e evidências de dependência.</p>
             <a class="text-action" href="https://evidentgraph.github.io/evidence-graph/caso-stripe/">Abrir caso Stripe <span aria-hidden="true">↗</span></a>
+            <ul class="stack-badges" aria-label="Tecnologias utilizadas">
+              <li>FastAPI</li>
+              <li>SQLite</li>
+              <li>OpenTelemetry</li>
+              <li>OpenAPI</li>
+            </ul>
           </div>
         </article>
 
@@ -65,10 +96,16 @@
             </ol>
           </div>
           <div class="project-copy">
-            <p class="category">Automação · Make</p>
+            <p class="category">Triagem de vagas</p>
             <h3>Monitor de Vagas</h3>
             <p>Automação que coleta vagas públicas, extrai os requisitos de cada trilha e envia um resumo por e-mail, com controle de duplicatas.</p>
             <a class="text-action" href="monitor-de-vagas/">Ver funcionamento <span aria-hidden="true">→</span></a>
+            <ul class="stack-badges" aria-label="Tecnologias utilizadas">
+              <li>Make</li>
+              <li>Greenhouse API</li>
+              <li>Google Sheets</li>
+              <li>Gmail</li>
+            </ul>
           </div>
         </article>
 
@@ -77,18 +114,118 @@
             <img src="assets/fluxo-analise-jupytext.png?rev=paleta" alt="Fluxo de análise com Claude, um script Python, Jupytext e um notebook com gráfico." width="1672" height="941" loading="lazy">
           </div>
           <div class="project-copy">
-            <p class="category">Python · Claude</p>
+            <p class="category">Data Science</p>
             <h3>Análise exploratória com Jupytext</h3>
             <p>Fluxo de exploração de dados em que o código Python gera o gráfico para o notebook e uma descrição textual dos mesmos dados para o Claude.</p>
             <a class="text-action" href="analise-com-jupytext/">Ver fluxo de análise <span aria-hidden="true">→</span></a>
+            <ul class="stack-badges" aria-label="Tecnologias utilizadas">
+              <li>Python</li>
+              <li>Matplotlib</li>
+              <li>Jupytext</li>
+              <li>Claude</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="wrap gallery more-projects" aria-labelledby="titulo-mais-projetos">
+      <h2 id="titulo-mais-projetos">Projetos no GitHub</h2>
+      <div class="grid">
+        <article class="card project">
+          <div class="project-copy">
+            <p class="category">Engenharia de dados</p>
+            <h3>LH Nautical</h3>
+            <p>Pipeline de vendas e câmbio PTAX, com camadas Bronze, Silver e Gold para análise de rentabilidade.</p>
+            <a class="text-action" href="https://github.com/ASCCJR/Indicium_LH_Nautical">Ver repositório <span aria-hidden="true">↗</span></a>
+            <ul class="stack-badges" aria-label="Tecnologias utilizadas">
+              <li>Databricks</li>
+              <li>PySpark</li>
+              <li>Delta Lake</li>
+              <li>Streamlit</li>
+            </ul>
+          </div>
+        </article>
+        <article class="card project">
+          <div class="project-copy">
+            <p class="category">Data Science</p>
+            <h3>One Bank — Churn Prediction</h3>
+            <p>Comparação de modelos de churn com validação cruzada, explicação por SHAP e simulação de retorno financeiro.</p>
+            <a class="text-action" href="https://github.com/ASCCJR/One_Bank_Churn_Prediction">Ver repositório <span aria-hidden="true">↗</span></a>
+            <ul class="stack-badges" aria-label="Tecnologias utilizadas">
+              <li>scikit-learn</li>
+              <li>XGBoost</li>
+              <li>SHAP</li>
+              <li>SMOTE</li>
+            </ul>
+          </div>
+        </article>
+        <article class="card project">
+          <div class="project-copy">
+            <p class="category">Data Science</p>
+            <h3>Online Retail Analytics</h3>
+            <p>Análise de varejo com segmentação RFM, sazonalidade e investigação de anomalias financeiras.</p>
+            <a class="text-action" href="https://github.com/ASCCJR/Online_Retail_EDA">Ver repositório <span aria-hidden="true">↗</span></a>
+            <ul class="stack-badges" aria-label="Tecnologias utilizadas">
+              <li>Python</li>
+              <li>pandas</li>
+              <li>seaborn</li>
+              <li>statsmodels</li>
+            </ul>
+          </div>
+        </article>
+        <article class="card project">
+          <div class="project-copy">
+            <p class="category">MLOps</p>
+            <h3>Sentimento em Foco</h3>
+            <p>Comparação de três modelos de sentimento com métricas registradas no MLflow e predições em lote por API.</p>
+            <a class="text-action" href="https://github.com/ASCCJR/sentiment-analysis-mlops">Ver repositório <span aria-hidden="true">↗</span></a>
+            <ul class="stack-badges" aria-label="Tecnologias utilizadas">
+              <li>Python</li>
+              <li>MLflow</li>
+              <li>FastAPI</li>
+              <li>Gradio</li>
+            </ul>
+          </div>
+        </article>
+        <article class="card project">
+          <div class="project-copy">
+            <p class="category">Visão computacional</p>
+            <h3>Caderno de Visão Computacional</h3>
+            <p>Aplicação que processa vídeos e extrai indicadores de varejo, como fluxo de pessoas e ocupação.</p>
+            <a class="text-action" href="https://github.com/ASCCJR/caderno-visao-computacional">Ver repositório <span aria-hidden="true">↗</span></a>
+            <ul class="stack-badges" aria-label="Tecnologias utilizadas">
+              <li>YOLO11</li>
+              <li>OpenCV</li>
+              <li>CLIP</li>
+              <li>Gradio</li>
+            </ul>
+          </div>
+        </article>
+        <article class="card project">
+          <div class="project-copy">
+            <p class="category">NLP</p>
+            <h3>Chatbot NLP — E-commerce</h3>
+            <p>Chatbot com classificação de intenções, reconhecimento de entidades, busca em FAQ e análise de sentimento.</p>
+            <a class="text-action" href="https://github.com/ASCCJR/Chatbot_NLP">Ver repositório <span aria-hidden="true">↗</span></a>
+            <ul class="stack-badges" aria-label="Tecnologias utilizadas">
+              <li>NLTK</li>
+              <li>scikit-learn</li>
+              <li>BERT</li>
+              <li>Gradio</li>
+            </ul>
           </div>
         </article>
       </div>
     </section>
   </main>
   <footer class="wrap footer">
-    <span>Antonio Sergio</span>
-    <a href="/">Currículo <span aria-hidden="true">↗</span></a>
+    <span>Antonio Sergio Castro de Carvalho Junior</span>
+    <nav aria-label="Links do rodapé">
+      <a href="https://www.linkedin.com/in/asccjr/">LinkedIn</a>
+      <a href="https://github.com/ASCCJR">GitHub</a>
+      <a href="/">Currículo</a>
+    </nav>
   </footer>
 </body>
 </html>
