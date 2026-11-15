@@ -216,6 +216,7 @@ h1 span { color: var(--hero-accent); }
 .preview img { width: 100%; height: 100%; object-fit: contain; }
 .graph-preview img { object-fit: cover; object-position: 50% 40%; }
 .dashboard-preview img { object-fit: cover; object-position: center top; }
+.approval-preview { aspect-ratio: 16 / 9; background: var(--ink); }
 .award-preview { padding: 1rem; color: var(--ink); text-align: center; }
 .award-preview > div {
   padding: .65rem 1.05rem;

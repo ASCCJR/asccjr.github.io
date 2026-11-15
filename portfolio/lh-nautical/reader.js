@@ -1,51 +1,46 @@
-const content = document.querySelector(".report-content");
 const status = document.getElementById("report-status");
-const controls = document.querySelector(".report-controls");
-const select = document.getElementById("page-number");
-const previous = document.getElementById("previous-page");
-const next = document.getElementById("next-page");
-const canvas = document.querySelector(".report-page");
-const pageText = document.querySelector(".report-page-text");
+const pages = document.querySelector(".report-pages");
+const originalPdf = new URL("../assets/lh-nautical-relatorio-executivo.pdf", import.meta.url);
 
-let report;
-let currentPage = 1;
-let rendering = false;
-
-function syncControls() {
-  select.disabled = rendering;
-  previous.disabled = rendering || currentPage === 1;
-  next.disabled = rendering || currentPage === report.numPages;
+function createSheet(page, total) {
+  const size = page.getViewport({ scale: 1 });
+  const sheet = document.createElement("figure");
+  sheet.className = "report-sheet";
+  sheet.dataset.page = page.pageNumber;
+  sheet.style.aspectRatio = `${size.width} / ${size.height}`;
+  sheet.setAttribute("aria-label", `Página ${page.pageNumber} de ${total}`);
+  return sheet;
 }
 
-async function showPage(number) {
-  if (rendering || number < 1 || number > report.numPages) return;
-  rendering = true;
-  syncControls();
-  content.setAttribute("aria-busy", "true");
-  status.textContent = "Carregando página…";
+async function renderSheet(sheet, page) {
+  sheet.setAttribute("aria-busy", "true");
   try {
-    const page = await report.getPage(number);
+    const canvas = document.createElement("canvas");
+    canvas.className = "report-page";
+    canvas.setAttribute("aria-hidden", "true");
+
     const original = page.getViewport({ scale: 1 });
-    const viewport = page.getViewport({ scale: 1400 / original.width });
+    const pixels = Math.min(1400, sheet.clientWidth * Math.min(window.devicePixelRatio || 1, 2));
+    const viewport = page.getViewport({ scale: pixels / original.width });
     canvas.width = Math.ceil(viewport.width);
     canvas.height = Math.ceil(viewport.height);
-    await page.render({ canvas, viewport }).promise;
-    const text = await page.getTextContent();
-    pageText.textContent = text.items.map(item => item.str ? item.str + (item.hasEOL ? "\n" : " ") : "").join("");
-    currentPage = number;
-    select.value = number;
-    canvas.hidden = false;
-    content.scrollTop = 0;
-    status.textContent = `Página ${number} de ${report.numPages}`;
+
+    const [, text] = await Promise.all([page.render({ canvas, viewport }).promise, page.getTextContent()]);
+    const accessibleText = document.createElement("div");
+    accessibleText.className = "report-page-text";
+    accessibleText.textContent = text.items.map(item => item.str ? item.str + (item.hasEOL ? "\n" : " ") : "").join("");
+    sheet.append(canvas, accessibleText);
   } catch {
-    canvas.hidden = true;
-    pageText.textContent = "";
-    select.value = currentPage;
-    status.textContent = "Não foi possível exibir esta página. Use o link “Abrir PDF original”.";
+    const message = document.createElement("p");
+    const link = document.createElement("a");
+    message.className = "report-error";
+    message.textContent = "Não foi possível exibir esta página. ";
+    link.href = originalPdf.href;
+    link.textContent = "Abrir PDF original";
+    message.append(link);
+    sheet.append(message);
   } finally {
-    rendering = false;
-    content.setAttribute("aria-busy", "false");
-    syncControls();
+    sheet.removeAttribute("aria-busy");
   }
 }
 
@@ -53,16 +48,22 @@ status.textContent = "Carregando relatório…";
 try {
   const { getDocument, GlobalWorkerOptions } = await import("./pdfjs/pdf.min.js");
   GlobalWorkerOptions.workerSrc = new URL("./pdfjs/pdf.worker.min.js", import.meta.url).href;
-  const url = new URL("../assets/lh-nautical-relatorio-executivo.pdf", import.meta.url).href;
-  report = await getDocument({ url, isEvalSupported: false, useWasm: false }).promise;
-  for (let number = 1; number <= report.numPages; number++) {
-    select.add(new Option(String(number), String(number)));
-  }
-  previous.addEventListener("click", () => showPage(currentPage - 1));
-  next.addEventListener("click", () => showPage(currentPage + 1));
-  select.addEventListener("change", () => showPage(Number(select.value)));
-  controls.hidden = false;
-  await showPage(1);
+  const report = await getDocument({ url: originalPdf.href, isEvalSupported: false, useWasm: false }).promise;
+  const documentPages = await Promise.all(
+    Array.from({ length: report.numPages }, (_, index) => report.getPage(index + 1))
+  );
+  const sheets = documentPages.map(page => createSheet(page, report.numPages));
+  pages.append(...sheets);
+  status.textContent = `${report.numPages} páginas`;
+
+  const observer = new IntersectionObserver(entries => {
+    for (const { target, isIntersecting } of entries) {
+      if (!isIntersecting) continue;
+      observer.unobserve(target);
+      void renderSheet(target, documentPages[Number(target.dataset.page) - 1]);
+    }
+  }, { rootMargin: "420px 0px" });
+  for (const sheet of sheets) observer.observe(sheet);
 } catch {
   status.textContent = "Não foi possível carregar o leitor. Use o link “Abrir PDF original”.";
 }
