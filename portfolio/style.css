@@ -215,7 +215,7 @@ h1 span { color: var(--hero-accent); }
 }
 .preview img { width: 100%; height: 100%; object-fit: contain; }
 .graph-preview img { object-fit: cover; object-position: 50% 40%; }
-.sla-preview img { object-fit: cover; object-position: center top; }
+.dashboard-preview img { object-fit: cover; object-position: center top; }
 .award-preview { padding: 1rem; color: var(--ink); text-align: center; }
 .award-preview > div {
   padding: .65rem 1.05rem;

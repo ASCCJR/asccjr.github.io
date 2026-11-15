@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Painel de manutenção com dados da API Fracttal integrados ao Power BI durante a etapa prática do EmbarcaTech.">
+  <meta name="theme-color" content="#1c1d2f">
+  <link rel="canonical" href="https://asccjr.github.io/portfolio/central-operacoes/">
+  <link rel="stylesheet" href="../style.css?rev=colunas-sla">
+  <title>Central de Operações de Manutenção | Antonio Sergio</title>
+</head>
+<body>
+  <a class="skip" href="#conteudo">Ir para o conteúdo</a>
+  <header class="header">
+    <div class="wrap header-inner">
+      <nav class="header-nav" aria-label="Navegação do portfólio">
+        <a href="/portfolio/#projetos"><svg aria-hidden="true" focusable="false"><use href="/portfolio/assets/nav-icons.svg#projects"></use></svg>Projetos</a>
+        <a href="/"><svg aria-hidden="true" focusable="false"><use href="/portfolio/assets/nav-icons.svg#resume"></use></svg>Currículo</a>
+        <a href="https://github.com/ASCCJR"><svg aria-hidden="true" focusable="false"><use href="/portfolio/assets/nav-icons.svg#github"></use></svg>GitHub</a>
+      </nav>
+    </div>
+  </header>
+  <main id="conteudo">
+    <section class="hero case-hero" aria-labelledby="titulo">
+      <div class="wrap hero-inner">
+        <a class="back" href="/portfolio/#projetos"><span aria-hidden="true">←</span> Todos os projetos</a>
+        <h1 id="titulo">Central de Operações de Manutenção</h1>
+        <p>Painel desenvolvido na etapa prática do Programa EmbarcaTech em uma empresa do setor de energia para acompanhar centenas de ordens de serviço por mês.</p>
+      </div>
+    </section>
+
+    <div class="wrap case-content split-case">
+      <section aria-labelledby="painel">
+        <h2 id="painel">Painel de manutenção</h2>
+        <div class="proof-grid">
+          <figure class="card diagram">
+            <img src="../assets/central-operacoes.png" alt="Mockup da Central de Operações com ordens por unidade, equipe disponível e gráfico de execução semanal." width="1440" height="900">
+            <figcaption>
+              <span>Reconstrução no Figma com dados simulados e retratos ilustrativos.</span>
+              <a href="../assets/central-operacoes.png">Abrir imagem em tamanho original</a>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+      <div>
+        <section aria-labelledby="impacto">
+          <h2 id="impacto">O que a operação acompanha</h2>
+          <p class="lead">O painel reúne o backlog, o tempo médio de atendimento e o cumprimento de SLA. O recorte por unidade ajuda a identificar ordens atrasadas, e a comparação entre ordens programadas e executadas mostra como a manutenção avançou ao longo da semana.</p>
+        </section>
+        <section class="case-note" aria-labelledby="integracao">
+          <h2 id="integracao">Da API ao Power BI</h2>
+          <p>Implementei a conexão direta com a API do Fracttal, preparei os dados no Power Query, criei as medidas em DAX e construí os visuais no Power BI. Apresentei a solução às áreas envolvidas no projeto.</p>
+          <ul class="stack-badges" aria-label="Tecnologias utilizadas">
+            <li>API Fracttal</li>
+            <li>Power Query</li>
+            <li>DAX</li>
+            <li>Power BI</li>
+            <li>Figma (mockup)</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </main>
+  <footer class="wrap footer">
+    <span>Antonio Sergio Castro de Carvalho Junior</span>
+    <nav aria-label="Links do rodapé">
+      <a href="https://www.linkedin.com/in/asccjr/">LinkedIn</a>
+      <a href="https://github.com/ASCCJR">GitHub</a>
+      <a href="/">Currículo</a>
+    </nav>
+  </footer>
+</body>
+</html>
