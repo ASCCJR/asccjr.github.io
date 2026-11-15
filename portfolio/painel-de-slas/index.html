@@ -6,7 +6,7 @@
   <meta name="description" content="Como a gestão passou a acompanhar o cumprimento dos SLAs de primeira resposta e resolução de chamados por prestador terceirizado.">
   <meta name="theme-color" content="#1c1d2f">
   <link rel="canonical" href="https://asccjr.github.io/portfolio/painel-de-slas/">
-  <link rel="stylesheet" href="../style.css?rev=codigo">
+  <link rel="stylesheet" href="../style.css?rev=paineis-sla">
   <title>Painel de SLAs de atendimento | Antonio Sergio</title>
 </head>
 <body>
@@ -45,10 +45,10 @@
         </section>
       </div>
 
-      <section class="case-note" id="ticket-support" aria-labelledby="titulo-ticket-support">
-        <h2 id="titulo-ticket-support">Ticket Support</h2>
-        <p>A visão mensal ajuda a identificar onde investigar variações de volume e de SLA. No exemplo simulado, 78 de 82 chamados avaliados cumpriram o SLA de primeira resposta (95,1%). Entre os 77 chamados resolvidos, 72 ficaram no prazo de resolução (93,5%).</p>
-        <div class="proof-grid">
+      <div class="sla-views">
+        <section class="sla-view" id="ticket-support" aria-labelledby="titulo-ticket-support">
+          <h2 id="titulo-ticket-support">Ticket Support</h2>
+          <p>A visão mensal ajuda a identificar onde investigar variações de volume e de SLA. No exemplo simulado, 78 de 82 chamados avaliados cumpriram o SLA de primeira resposta (95,1%). Entre os 77 chamados resolvidos, 72 ficaram no prazo de resolução (93,5%).</p>
           <figure class="card diagram">
             <img src="../assets/data-governance-ticket-support.png" alt="Mockup da aba Ticket Support com o volume de chamados por mês, as séries de SLA de primeira resposta e resolução e os recortes por unidade, departamento e prioridade." width="1280" height="1016" loading="lazy">
             <figcaption>
@@ -56,13 +56,11 @@
               <a href="../assets/data-governance-ticket-support.png">Abrir Ticket Support em tamanho original</a>
             </figcaption>
           </figure>
-        </div>
-      </section>
+        </section>
 
-      <section class="case-note" id="details" aria-labelledby="titulo-details">
-        <h2 id="titulo-details">Details</h2>
-        <p>A visão por chamado mostra a situação dos dois SLAs e as datas que sustentam a avaliação. No chamado fictício TS-2075, a primeira resposta levou 1 h 15 min e a resolução levou 18 h 20 min. Ambos os prazos foram cumpridos no cenário simulado.</p>
-        <div class="proof-grid">
+        <section class="sla-view" id="details" aria-labelledby="titulo-details">
+          <h2 id="titulo-details">Details</h2>
+          <p>A visão por chamado mostra a situação dos dois SLAs e as datas que sustentam a avaliação. No chamado fictício TS-2075, a primeira resposta levou 1 h 15 min e a resolução levou 18 h 20 min. Ambos os prazos foram cumpridos no cenário simulado.</p>
           <figure class="card diagram">
             <img src="../assets/data-governance-details.png" alt="Mockup da aba Details com filtros, lista de chamados, situação dos dois SLAs e histórico de atendimento do chamado fictício TS-2075." width="1280" height="1016" loading="lazy">
             <figcaption>
@@ -70,8 +68,8 @@
               <a href="../assets/data-governance-details.png">Abrir Details em tamanho original</a>
             </figcaption>
           </figure>
-        </div>
-      </section>
+        </section>
+      </div>
 
       <section class="case-note" aria-labelledby="contribuicao">
         <h2 id="contribuicao">Contribuição e ferramentas</h2>
