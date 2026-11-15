@@ -6,7 +6,7 @@
   <meta name="description" content="Projetos de análise de dados, automação e IA aplicada de Antonio Sergio.">
   <meta name="theme-color" content="#1c1d2f">
   <link rel="canonical" href="https://asccjr.github.io/portfolio/">
-  <link rel="stylesheet" href="style.css?rev=navegacao">
+  <link rel="stylesheet" href="style.css?rev=codigo">
   <title>Antonio Sergio Jr. | Data, Automation &amp; Applied AI</title>
 </head>
 <body>
@@ -40,7 +40,10 @@
             <p class="category" lang="en">Logistics</p>
             <h3>Copiloto de Entregas</h3>
             <p>Painel de pontualidade com dados históricos da Olist. O chat consulta o recorte ativo do painel e vincula as respostas aos pedidos correspondentes.</p>
-            <a class="action primary" href="https://portfolio-antonio-sergio.vercel.app/copiloto">Abrir painel e chat <span aria-hidden="true">↗</span></a>
+            <div class="feature-actions">
+              <a class="action primary" href="https://portfolio-antonio-sergio.vercel.app/copiloto">Abrir painel e chat <span aria-hidden="true">↗</span></a>
+              <a class="action secondary" href="https://github.com/ASCCJR/copiloto-de-entregas"><svg aria-hidden="true" focusable="false"><use href="/portfolio/assets/nav-icons.svg#github"></use></svg>Código no GitHub</a>
+            </div>
             <ul class="stack-badges" aria-label="Tecnologias utilizadas">
               <li>Next.js</li>
               <li>TypeScript</li>
@@ -73,6 +76,26 @@
       </div>
 
       <div class="grid">
+        <article class="card project">
+          <div class="preview flow-preview award-preview">
+            <div>
+              <strong>1º lugar</strong>
+              <span>Análise Avançada de Dados</span>
+            </div>
+          </div>
+          <div class="project-copy">
+            <p class="category" lang="en">Data Science</p>
+            <h3>Antecipação de alertas críticos em frota de mineração</h3>
+            <p>Pipeline de machine learning para estimar o risco de alertas críticos em frota de mineração em uma janela de até quatro horas. Projeto premiado no Programa Desenvolver 2026 da Vale.</p>
+            <a class="text-action" href="programa-desenvolver-vale/">Ver projeto premiado <span aria-hidden="true">→</span></a>
+            <ul class="stack-badges" aria-label="Tecnologias utilizadas">
+              <li>Python</li>
+              <li>Databricks</li>
+              <li>LightGBM</li>
+            </ul>
+          </div>
+        </article>
+
         <article class="card project">
           <div class="preview graph-preview">
             <img src="assets/evidentgraph.jpg" alt="Mapa que liga versões do contrato da Stripe a campos documentados e leitores simulados." width="1142" height="648" loading="lazy">
@@ -109,6 +132,7 @@
               <li>Greenhouse API</li>
               <li>Google Sheets</li>
               <li>Gmail</li>
+              <li>IA generativa</li>
             </ul>
           </div>
         </article>
@@ -133,6 +157,19 @@
 
         <article class="card project">
           <div class="project-copy">
+            <p class="category" lang="en">Analytics Engineering &amp; BI</p>
+            <h3>Painel de SLAs de atendimento</h3>
+            <p>Indicadores de primeira resposta e resolução para a gestão avaliar o cumprimento de SLAs por prestadores terceirizados. As divergências de cálculo foram corrigidas em SQL e dbt e os resultados foram validados com a liderança e a TI do cliente.</p>
+            <ul class="stack-badges" aria-label="Tecnologias utilizadas">
+              <li>Freshservice</li>
+              <li>Power BI</li>
+              <li>SQL</li>
+              <li>dbt</li>
+            </ul>
+          </div>
+        </article>
+        <article class="card project">
+          <div class="project-copy">
             <p class="category" lang="en">Data Engineering</p>
             <h3>LH Nautical</h3>
             <p>Pipeline de vendas e câmbio PTAX, com camadas Bronze, Silver e Gold para análise de rentabilidade.</p>
@@ -142,6 +179,7 @@
               <li>PySpark</li>
               <li>Delta Lake</li>
               <li>Streamlit</li>
+              <li>API do Banco Central</li>
             </ul>
           </div>
         </article>
@@ -197,6 +235,7 @@
               <li>YOLO11</li>
               <li>OpenCV</li>
               <li>CLIP</li>
+              <li>PyTorch</li>
               <li>Gradio</li>
             </ul>
           </div>
@@ -216,6 +255,7 @@
           </div>
         </article>
       </div>
+      <a class="text-action" lang="en" href="https://github.com/ASCCJR/ASCCJR/blob/main/embedded-systems-iot.md">Embedded Systems &amp; IoT <span aria-hidden="true">↗</span></a>
     </section>
   </main>
   <footer class="wrap footer">
