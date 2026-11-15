@@ -266,6 +266,8 @@ h1 span { color: var(--hero-accent); }
 .project-copy { flex: 1; padding: 1.25rem; display: flex; flex-direction: column; align-items: flex-start; }
 .project h3 { font-size: 1.48rem; }
 .project-copy > p:not(.category) { font-size: .94rem; }
+.project-links { display: flex; flex-wrap: wrap; gap: .35rem .9rem; margin-top: auto; padding-top: .95rem; }
+.project-links > .text-action { margin-top: 0; padding-top: 0; }
 .text-action {
   display: inline-flex;
   align-items: baseline;
