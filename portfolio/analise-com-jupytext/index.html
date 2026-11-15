@@ -3,28 +3,51 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Fluxo de análise exploratória com Claude, Python e Jupytext. O código gera a descrição textual a partir dos dados do gráfico.">
+  <meta name="description" content="O mesmo código Python gera um gráfico para revisão no notebook e uma descrição dos dados para o Claude.">
+  <meta name="theme-color" content="#1c1d2f">
   <link rel="canonical" href="https://asccjr.github.io/portfolio/analise-com-jupytext/">
   <link rel="stylesheet" href="../style.css">
   <title>Análise com Jupytext | Antonio Sergio</title>
 </head>
-<body class="site">
-  <header class="header"><div class="wrap">
-    <a class="name" href="/portfolio/">Antonio Sergio</a>
-    <nav aria-label="Navegação"><a href="/portfolio/#projetos">Projetos</a><a href="/">Currículo</a></nav>
-  </div></header>
-  <main class="wrap study">
-    <a class="back" href="../">← Voltar ao portfólio</a>
-    <h1>Análise exploratória com Jupytext</h1>
-    <p class="summary">Na exploração de dados, eu trabalhava com o Claude em scripts Python e usava o Jupytext para revisar a análise e os gráficos no notebook.</p>
-    <figure class="diagram">
-      <img src="../assets/fluxo-analise-jupytext.png" alt="Um script Python passa pelo Jupytext e vira notebook. O código gera um gráfico com 80% para a equipe A e 62,5% para a equipe B, além de um texto com os mesmos valores para o Claude ler." width="1672" height="941">
-      <figcaption>Exemplo com dados fictícios. O código Python gera o gráfico e a descrição textual a partir dos mesmos dados.</figcaption>
-    </figure>
-    <section>
-      <h2>Como eu revisava a análise</h2>
-      <p>No notebook, conferia visualmente as distribuições e tendências antes de decidir o próximo recorte. A descrição trazia a métrica, os rótulos e os valores do gráfico para o Claude usar na etapa seguinte. Eu acrescentava as regras de negócio necessárias para interpretar o resultado.</p>
+<body>
+  <a class="skip" href="#conteudo">Ir para o conteúdo</a>
+  <header class="header">
+    <div class="wrap header-inner">
+      <a class="name" href="/portfolio/">Antonio Sergio</a>
+      <nav aria-label="Navegação do portfólio">
+        <a href="/portfolio/#projetos">Projetos</a>
+        <a href="/">Currículo</a>
+        <a href="https://github.com/ASCCJR">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+  <main id="conteudo">
+    <section class="hero case-hero" aria-labelledby="titulo">
+      <div class="wrap hero-inner">
+        <a class="back" href="/portfolio/#projetos"><span aria-hidden="true">←</span> Todos os projetos</a>
+        <h1 id="titulo">Análise exploratória<br class="desktop-break"> <span>com Jupytext</span></h1>
+        <p>Eu revisava os gráficos no notebook. O Claude consultava uma descrição que o código gerava a partir dos mesmos dados.</p>
+      </div>
     </section>
+
+    <div class="wrap case-content">
+      <figure class="card diagram">
+        <img src="../assets/fluxo-analise-jupytext.png" alt="O Jupytext converte o script Python em notebook. A partir dos mesmos dados, o código gera um gráfico e um texto para o Claude com 80% para a equipe A e 62,5% para a B." width="1672" height="941">
+        <figcaption>
+          <span>Demonstração com dados fictícios. A descrição registra a métrica, os rótulos e os valores do gráfico.</span>
+          <a href="../assets/fluxo-analise-jupytext.png">Abrir diagrama em tamanho original</a>
+        </figcaption>
+      </figure>
+
+      <section class="case-note" aria-labelledby="titulo-revisao">
+        <h2 id="titulo-revisao">Onde entrava minha revisão</h2>
+        <p>Trabalhava com o Claude no script Python e usava o Jupytext para abrir a análise no notebook. Lá, eu conferia distribuições e tendências, acrescentava as regras de negócio e decidia qual recorte investigar em seguida.</p>
+      </section>
+    </div>
   </main>
+  <footer class="wrap footer">
+    <span>Antonio Sergio</span>
+    <a href="/">Currículo <span aria-hidden="true">↗</span></a>
+  </footer>
 </body>
 </html>

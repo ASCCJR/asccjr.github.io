@@ -3,36 +3,60 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Como o Monitor de Vagas corrige a interpretação de anúncios com várias trilhas.">
+  <meta name="description" content="Como uma mudança no Monitor de Vagas corrigiu a leitura de anúncios do iFood com várias trilhas.">
+  <meta name="theme-color" content="#1c1d2f">
   <link rel="canonical" href="https://asccjr.github.io/portfolio/monitor-de-vagas/">
   <link rel="stylesheet" href="../style.css">
   <title>Monitor de Vagas | Antonio Sergio</title>
 </head>
-<body class="site">
-  <header class="header"><div class="wrap">
-    <a class="name" href="/portfolio/">Antonio Sergio</a>
-    <nav aria-label="Navegação"><a href="/portfolio/#projetos">Projetos</a><a href="/">Currículo</a></nav>
-  </div></header>
-  <main class="wrap study">
-    <a class="back" href="../">← Voltar ao portfólio</a>
-    <h1>Monitor de Vagas</h1>
-    <p class="summary">Automatizei a leitura de anúncios públicos e o envio de oportunidades por e-mail. O piloto acompanhava vagas do iFood usando Greenhouse e Make.</p>
-    <section>
-      <h2>Onde a análise falhava</h2>
-      <p>Um mesmo anúncio descrevia várias trilhas. A IA reunia requisitos de partes diferentes e chegou a interpretar uma vaga aberta a estudantes como se exigisse graduação concluída.</p>
+<body>
+  <a class="skip" href="#conteudo">Ir para o conteúdo</a>
+  <header class="header">
+    <div class="wrap header-inner">
+      <a class="name" href="/portfolio/">Antonio Sergio</a>
+      <nav aria-label="Navegação do portfólio">
+        <a href="/portfolio/#projetos">Projetos</a>
+        <a href="/">Currículo</a>
+        <a href="https://github.com/ASCCJR">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+  <main id="conteudo">
+    <section class="hero case-hero" aria-labelledby="titulo">
+      <div class="wrap hero-inner">
+        <a class="back" href="/portfolio/#projetos"><span aria-hidden="true">←</span> Todos os projetos</a>
+        <h1 id="titulo">Monitor de Vagas</h1>
+        <p>Um fluxo em Make que lê vagas públicas e envia por e-mail os requisitos da trilha que interessa.</p>
+      </div>
     </section>
-    <section>
-      <h2>Como corrigi o fluxo</h2>
-      <ol>
-        <li>Busquei os anúncios pela API do Greenhouse e converti o HTML em texto legível.</li>
-        <li>Selecionei o trecho da trilha antes de enviá-lo à IA para extrair os requisitos.</li>
-        <li>Apliquei regras explícitas para interpretar formação e datas e usei o histórico para evitar reenvios do mesmo anúncio.</li>
-      </ol>
-    </section>
-    <section>
-      <h2>O que validei</h2>
-      <p>Conferi a triagem em três descrições reais do iFood e validei o envio automático do resumo. A descoberta de vagas em outras empresas ficou como evolução do projeto.</p>
-    </section>
+
+    <div class="wrap case-content">
+      <section aria-labelledby="titulo-comparacao">
+        <h2 id="titulo-comparacao">Um anúncio, várias trilhas</h2>
+        <p class="lead">Em um anúncio do iFood, a IA misturou requisitos de trilhas diferentes. Mudei o fluxo para separar o trecho da vaga antes de extrair os requisitos.</p>
+        <div class="comparison">
+          <article class="card comparison-card">
+            <p class="category">Anúncio inteiro</p>
+            <h3>Graduação concluída</h3>
+            <p>O modelo trouxe para a vaga um requisito de outra trilha.</p>
+          </article>
+          <article class="card comparison-card corrected">
+            <p class="category">Trecho da trilha</p>
+            <h3>Estudantes elegíveis</h3>
+            <p>Com o texto da vaga certa, o modelo reconheceu que estudantes podiam se candidatar.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="case-note" aria-labelledby="titulo-validacao">
+        <h2 id="titulo-validacao">Do anúncio ao e-mail</h2>
+        <p>Integrei a API pública do Greenhouse ao Make, separei o texto por trilha e usei o histórico do monitor para evitar reenvios. Conferi a triagem em três descrições reais do iFood e validei o envio automático do resumo.</p>
+      </section>
+    </div>
   </main>
+  <footer class="wrap footer">
+    <span>Antonio Sergio</span>
+    <a href="/">Currículo <span aria-hidden="true">↗</span></a>
+  </footer>
 </body>
 </html>

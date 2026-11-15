@@ -4,13 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Projetos de análise de dados, automação e IA aplicada de Antonio Sergio.">
+  <meta name="theme-color" content="#1c1d2f">
   <link rel="canonical" href="https://asccjr.github.io/portfolio/">
   <link rel="stylesheet" href="style.css">
   <title>Antonio Sergio | Dados, automação e IA</title>
 </head>
-<body class="site">
+<body>
+  <a class="skip" href="#conteudo">Ir para o conteúdo</a>
   <header class="header">
-    <div class="wrap">
+    <div class="wrap header-inner">
       <a class="name" href="/portfolio/">Antonio Sergio</a>
       <nav aria-label="Navegação do portfólio">
         <a href="#projetos">Projetos</a>
@@ -19,60 +21,75 @@
       </nav>
     </div>
   </header>
-  <main class="wrap">
-    <section class="intro" aria-labelledby="headline">
-      <h1 id="headline">Dados, automação e IA aplicada</h1>
-      <p>Construo ferramentas para investigar indicadores, automatizar rotinas e conferir as evidências por trás dos resultados.</p>
-      <a href="#projetos">Ver projetos <span aria-hidden="true">↓</span></a>
+  <main id="conteudo">
+    <section class="hero" aria-labelledby="titulo">
+      <div class="wrap hero-inner">
+        <h1 id="titulo">Dados, automação<br class="desktop-break"> <span>e IA aplicada.</span></h1>
+        <p>Sou Antonio Sergio, residente em IA. Construo ferramentas para investigar dados e automatizar rotinas.</p>
+        <a class="action hero-action" href="#projetos">Ver projetos <span aria-hidden="true">↓</span></a>
+      </div>
     </section>
-    <section class="projects" id="projetos" aria-labelledby="projects-heading">
-      <h2 id="projects-heading">Projetos</h2>
-      <article class="feature">
-        <div class="featureCopy">
+
+    <section class="wrap gallery" id="projetos" aria-labelledby="titulo-projetos">
+      <h2 id="titulo-projetos">Projetos</h2>
+      <article class="card feature">
+        <div class="feature-copy">
+          <p class="category">Dados · Logística</p>
           <h3>Copiloto de Entregas</h3>
-          <p>Investigue a pontualidade do e-commerce brasileiro com dados históricos da Olist. Use os filtros do painel ou pergunte ao Copiloto para chegar aos pedidos por trás de cada resposta.</p>
-          <a class="primary" href="https://portfolio-antonio-sergio.vercel.app/copiloto">Abrir painel <span aria-hidden="true">↗</span></a>
+          <p>Compare entregas adiantadas, pontuais e atrasadas com dados da Olist. O chat usa os filtros do painel e abre os pedidos que sustentam a resposta.</p>
+          <a class="action primary" href="https://portfolio-antonio-sergio.vercel.app/copiloto">Experimentar o Copiloto <span aria-hidden="true">↗</span></a>
         </div>
-        <figure class="preview">
-          <figcaption>Maranhão · Histórico da Olist</figcaption>
-          <p class="previewTotal"><strong>717</strong> entregas analisadas</p>
-          <div class="previewBar" aria-hidden="true">
-            <span class="early" style="flex-grow:576"></span>
-            <span class="on-date" style="flex-grow:16"></span>
-            <span class="late" style="flex-grow:125"></span>
-          </div>
-          <dl class="breakdown">
-            <div><dt><i class="early" aria-hidden="true"></i>Antes da data</dt><dd>576</dd></div>
-            <div><dt><i class="on-date" aria-hidden="true"></i>Na data</dt><dd>16</dd></div>
-            <div><dt><i class="late" aria-hidden="true"></i>Após a data</dt><dd>125</dd></div>
-          </dl>
-        </figure>
+        <div class="feature-visual">
+          <img src="assets/copiloto-entregas.jpg" alt="Painel de entregas da Olist ao lado do chat. A resposta mostra 51 de 60 entregas até a data prometida, com acesso aos pedidos." width="1255" height="1211">
+        </div>
       </article>
+
       <div class="grid">
-        <article class="project">
-          <h3>EvidentGraph</h3>
-          <p class="focus">APIs e dependências</p>
-          <p>Compare versões de um contrato de API e investigue quais dependências podem ser afetadas. O protótipo mostra as evidências e a incerteza de cada relação.</p>
-          <a href="https://evidentgraph.github.io/evidence-graph/caso-stripe/">Explorar o caso Stripe <span aria-hidden="true">↗</span></a>
+        <article class="card project">
+          <div class="preview graph-preview">
+            <img src="assets/evidentgraph.jpg" alt="Mapa que liga versões do contrato da Stripe a campos documentados e leitores simulados." width="1142" height="648" loading="lazy">
+          </div>
+          <div class="project-copy">
+            <p class="category">APIs · Dependências</p>
+            <h3>EvidentGraph</h3>
+            <p>Uma mudança em um contrato de API pode afetar quem depende dele. Explore o que mudou na Stripe e como o protótipo exibe as evidências de cada relação.</p>
+            <a class="text-action" href="https://evidentgraph.github.io/evidence-graph/caso-stripe/">Explorar o caso Stripe <span aria-hidden="true">↗</span></a>
+          </div>
         </article>
-        <article class="project">
-          <h3>Monitor de Vagas</h3>
-          <p class="focus">Make e Greenhouse</p>
-          <p>O monitor lê vagas públicas e envia um resumo por e-mail. No piloto com o iFood, isolei o texto de cada trilha para a IA interpretar os requisitos da vaga certa.</p>
-          <a href="monitor-de-vagas/">Ler estudo de caso <span aria-hidden="true">→</span></a>
+
+        <article class="card project">
+          <div class="preview flow-preview">
+            <ol class="mini-flow" aria-label="Etapas do monitor">
+              <li>Anúncio público</li>
+              <li class="flow-current">Triagem por trilha</li>
+              <li>Resumo por e-mail</li>
+            </ol>
+          </div>
+          <div class="project-copy">
+            <p class="category">Make · IA</p>
+            <h3>Monitor de Vagas</h3>
+            <p>Transformei anúncios públicos em resumos por e-mail. Um teste com vagas do iFood revelou como a IA podia misturar requisitos de trilhas diferentes.</p>
+            <a class="text-action" href="monitor-de-vagas/">Ver a correção <span aria-hidden="true">→</span></a>
+          </div>
         </article>
-        <article class="project">
-          <h3>Exploração assistida por IA</h3>
-          <p class="focus">Python e Jupytext</p>
-          <p>Revisei no notebook os gráficos da análise. No mesmo fluxo, o código gerava uma descrição textual a partir dos dados do gráfico para a IA consultar.</p>
-          <a href="analise-com-jupytext/">Ver o fluxo de análise <span aria-hidden="true">→</span></a>
+
+        <article class="card project">
+          <div class="preview notebook-preview">
+            <img src="assets/fluxo-analise-jupytext.png" alt="Fluxo de análise com Claude, um script Python, Jupytext e um notebook com gráfico." width="1672" height="941" loading="lazy">
+          </div>
+          <div class="project-copy">
+            <p class="category">Python · Jupytext</p>
+            <h3>Exploração assistida por IA</h3>
+            <p>O mesmo código gerava um gráfico para minha revisão no notebook e uma descrição fiel dos dados para o Claude consultar.</p>
+            <a class="text-action" href="analise-com-jupytext/">Ver o gráfico e a descrição <span aria-hidden="true">→</span></a>
+          </div>
         </article>
       </div>
     </section>
   </main>
   <footer class="wrap footer">
     <span>Antonio Sergio</span>
-    <a href="/">Currículo</a>
+    <a href="/">Currículo <span aria-hidden="true">↗</span></a>
   </footer>
 </body>
 </html>
