@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Como a gestão passou a acompanhar o cumprimento dos SLAs de primeira resposta e resolução de chamados por prestador terceirizado.">
+  <meta name="theme-color" content="#1c1d2f">
+  <link rel="canonical" href="https://asccjr.github.io/portfolio/painel-de-slas/">
+  <link rel="stylesheet" href="../style.css?rev=codigo">
+  <title>Painel de SLAs de atendimento | Antonio Sergio</title>
+</head>
+<body>
+  <a class="skip" href="#conteudo">Ir para o conteúdo</a>
+  <header class="header">
+    <div class="wrap header-inner">
+      <nav class="header-nav" aria-label="Navegação do portfólio">
+        <a href="/portfolio/#projetos"><svg aria-hidden="true" focusable="false"><use href="/portfolio/assets/nav-icons.svg#projects"></use></svg>Projetos</a>
+        <a href="/"><svg aria-hidden="true" focusable="false"><use href="/portfolio/assets/nav-icons.svg#resume"></use></svg>Currículo</a>
+        <a href="https://github.com/ASCCJR"><svg aria-hidden="true" focusable="false"><use href="/portfolio/assets/nav-icons.svg#github"></use></svg>GitHub</a>
+      </nav>
+    </div>
+  </header>
+  <main id="conteudo">
+    <section class="hero case-hero" aria-labelledby="titulo">
+      <div class="wrap hero-inner">
+        <a class="back" href="/portfolio/#projetos"><span aria-hidden="true">←</span> Todos os projetos</a>
+        <h1 id="titulo">Painel de SLAs de atendimento</h1>
+        <p>Prazos de primeira resposta e resolução de chamados para avaliar o atendimento dos prestadores terceirizados.</p>
+      </div>
+    </section>
+
+    <div class="wrap case-content">
+      <!--
+        Inserir aqui os mockups exportados do Figma, antes do contexto do projeto.
+        Usar um elemento figure por imagem, com as dimensões e texto alternativo da exportação.
+        As legendas devem identificar as telas como mockups de portfólio.
+
+        <section aria-labelledby="titulo-mockups">
+          <h2 id="titulo-mockups">Mockups do painel</h2>
+          <div class="proof-grid">
+            <figure class="card diagram">
+              <img src="../assets/painel-de-slas-visao-geral.webp" alt="Visão geral do painel de SLAs de atendimento">
+              <figcaption>Visão geral do painel. Mockup de portfólio criado no Figma.</figcaption>
+            </figure>
+          </div>
+        </section>
+      -->
+
+      <div class="split-case">
+        <section aria-labelledby="impacto">
+          <h2 id="impacto">O que a gestão passou a avaliar</h2>
+          <p class="lead">A gestão passou a acompanhar, por prestador, o cumprimento dos tempos de primeira resposta e resolução acordados em contrato. Os indicadores também permitiram avaliar os prazos dos chamados urgentes e deram à gestão uma base para analisar a renovação dos contratos.</p>
+        </section>
+        <section aria-labelledby="contexto">
+          <h2 id="contexto">Antes do painel</h2>
+          <p class="lead">A gestão dependia de relatórios enviados por alguns prestadores, que solicitavam exportações do Freshservice e preparavam seus próprios relatórios manualmente.</p>
+        </section>
+      </div>
+
+      <div class="comparison">
+        <section class="card comparison-card" aria-labelledby="dados">
+          <h3 id="dados">Construção e validação</h3>
+          <p>Os chamados do Freshservice alimentaram os indicadores no Power BI. Divergências entre relatórios foram corrigidas nas regras em SQL e dbt, com validação da liderança e da TI do cliente.</p>
+        </section>
+        <section class="card comparison-card" aria-labelledby="stack">
+          <h3 id="stack">Ferramentas</h3>
+          <ul class="stack-badges" aria-label="Tecnologias utilizadas">
+            <li>Freshservice</li>
+            <li>Power BI</li>
+            <li>SQL</li>
+            <li>dbt</li>
+            <li>Figma (mockups)</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </main>
+  <footer class="wrap footer">
+    <span>Antonio Sergio Castro de Carvalho Junior</span>
+    <nav aria-label="Links do rodapé">
+      <a href="https://www.linkedin.com/in/asccjr/">LinkedIn</a>
+      <a href="https://github.com/ASCCJR">GitHub</a>
+      <a href="/">Currículo</a>
+    </nav>
+  </footer>
+</body>
+</html>
