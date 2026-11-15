@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Relatório executivo do LH Nautical para leitura no portfólio de Antonio Sergio.">
+  <meta name="theme-color" content="#1c1d2f">
+  <link rel="canonical" href="https://asccjr.github.io/portfolio/lh-nautical/">
+  <link rel="stylesheet" href="../style.css?rev=colunas-sla">
+  <link rel="stylesheet" href="reader.css">
+  <script type="module" src="reader.js"></script>
+  <title>LH Nautical — Relatório executivo | Antonio Sergio</title>
+</head>
+<body>
+  <a class="skip" href="#conteudo">Ir para o conteúdo</a>
+  <header class="header">
+    <div class="wrap header-inner">
+      <nav class="header-nav" aria-label="Navegação do portfólio">
+        <a href="/portfolio/#projetos"><svg aria-hidden="true" focusable="false"><use href="/portfolio/assets/nav-icons.svg#projects"></use></svg>Projetos</a>
+        <a href="/"><svg aria-hidden="true" focusable="false"><use href="/portfolio/assets/nav-icons.svg#resume"></use></svg>Currículo</a>
+        <a href="https://github.com/ASCCJR"><svg aria-hidden="true" focusable="false"><use href="/portfolio/assets/nav-icons.svg#github"></use></svg>GitHub</a>
+      </nav>
+    </div>
+  </header>
+  <main id="conteudo">
+    <section class="hero case-hero" aria-labelledby="titulo">
+      <div class="wrap hero-inner">
+        <a class="back" href="/portfolio/#projetos"><span aria-hidden="true">←</span> Todos os projetos</a>
+        <h1 id="titulo">LH Nautical</h1>
+        <p>Relatório executivo sobre rentabilidade, previsão de demanda e sistema de recomendação.</p>
+      </div>
+    </section>
+
+    <div class="wrap case-content">
+      <section class="card report-reader" aria-labelledby="report-title">
+        <div class="report-toolbar">
+          <h2 id="report-title">Relatório executivo</h2>
+          <div class="report-controls" hidden>
+            <button type="button" id="previous-page">Anterior</button>
+            <label for="page-number">Página</label>
+            <select id="page-number"></select>
+            <button type="button" id="next-page">Próxima</button>
+          </div>
+          <a class="report-original" href="../assets/lh-nautical-relatorio-executivo.pdf">Abrir PDF original <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="report-content" role="region" aria-label="Leitor do relatório executivo" tabindex="0">
+          <p class="report-status" id="report-status" role="status"></p>
+          <canvas class="report-page" hidden aria-hidden="true"></canvas>
+          <div class="report-page-text"></div>
+          <noscript><p class="report-empty">Use o link “Abrir PDF original” para ler o documento com o JavaScript desativado.</p></noscript>
+        </div>
+      </section>
+    </div>
+  </main>
+  <footer class="wrap footer">
+    <span>Antonio Sergio Castro de Carvalho Junior</span>
+    <nav aria-label="Links do rodapé">
+      <a href="https://www.linkedin.com/in/asccjr/">LinkedIn</a>
+      <a href="https://github.com/ASCCJR">GitHub</a>
+      <a href="/">Currículo</a>
+    </nav>
+  </footer>
+</body>
+</html>

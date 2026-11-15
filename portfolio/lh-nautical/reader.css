@@ -1,0 +1,59 @@
+.report-reader { max-width: 68rem; margin-inline: auto; overflow: hidden; }
+.report-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .65rem 1rem;
+  padding: 1rem clamp(.85rem, 2.6vw, 1.45rem);
+  border-bottom: 1px solid var(--line);
+}
+.report-toolbar h2 { font-size: clamp(1.1rem, 2vw, 1.35rem); }
+.report-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; font-size: .85rem; }
+.report-controls[hidden], .report-page[hidden] { display: none; }
+.report-controls button, .report-controls select {
+  min-height: 2.4rem;
+  padding: .35rem .5rem;
+  border: 1px solid var(--line);
+  border-radius: .45rem;
+  background: var(--canvas);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 620;
+}
+.report-controls button:not(:disabled), .report-controls select:not(:disabled) { cursor: pointer; }
+.report-controls button:hover:not(:disabled) { background: var(--lavender); }
+.report-controls button:disabled { opacity: .55; }
+.report-controls :focus-visible, .report-content:focus-visible { outline: 2px solid var(--link); outline-offset: -2px; }
+.report-original { font-size: .85rem; font-weight: 650; white-space: nowrap; }
+.report-content {
+  position: relative;
+  max-height: min(76vh, 54rem);
+  min-height: 9rem;
+  overflow: auto;
+  background: var(--lavender);
+  padding: clamp(.5rem, 1.8vw, 1.2rem);
+}
+.report-page {
+  display: block;
+  width: min(100%, 53rem);
+  height: auto;
+  margin-inline: auto;
+  background: var(--paper);
+  box-shadow: 0 1px .6rem #1c1d2f22;
+}
+.report-status { margin: 0 auto; color: var(--muted); }
+.report-status:empty { display: none; }
+.report-empty { color: var(--muted); }
+.report-page-text {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: pre-wrap;
+}
+.report-content:has(.report-page:not([hidden])) .report-status { margin: 0 0 .3rem; font-size: .8rem; }
+@media (max-width: 43rem) {
+  .report-toolbar h2 { flex-basis: 100%; }
+}
